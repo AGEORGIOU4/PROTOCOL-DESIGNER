@@ -22,7 +22,6 @@ const AppSidebar = () => {
 
   return (
     <CSidebar
-      size="sm"
       colorScheme="light"
       position="fixed"
       visible={sidebarShow}

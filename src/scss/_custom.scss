@@ -165,3 +165,23 @@ pre {
   margin: 0;
   padding: 20px;
 }
+
+.min-vh-85 {
+  min-height: 85vh !important;
+}
+
+.min-vh-40 {
+  min-height: 60vh !important;
+}
+
+.basic-btn {
+  border-radius: 35px !important;
+  font-style: normal;
+  font-weight: 700 !important;
+  color: white !important;
+}
+
+.basic-btn:hover {
+  background-color: black;
+  border: 1px solid black;
+}

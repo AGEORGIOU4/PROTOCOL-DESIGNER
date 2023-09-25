@@ -9,7 +9,7 @@ import AppBreadcrumb from './AppBreadcrumb'
 const AppContent = () => {
   return (
     <CContainer lg>
-      {/* <AppBreadcrumb /> */}
+      <AppBreadcrumb />
       <Suspense fallback={<CSpinner color="primary" />}>
         <Routes>
           {routes.map((route, idx) => {
@@ -25,7 +25,7 @@ const AppContent = () => {
               )
             )
           })}
-          <Route path="/" element={<Navigate to="dashboard" replace />} />
+          <Route path="/" element={<Navigate to="protocol-designer" replace />} />
         </Routes>
       </Suspense>
     </CContainer>
