@@ -2,6 +2,18 @@ import { CButton, CCol, CForm, CFormCheck, CFormFeedback, CFormInput, CFormLabel
 import { cilPlus } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import { useState } from 'react'
+import Colors from 'src/views/theme/colors/Colors'
+
+const colors = [
+  { label: 'Red', value: 'red', text: 'Red', color: 'Red' },
+  { label: 'Blue', value: 'blue', text: 'Blue', color: 'Blue' },
+  { label: 'Green', value: 'green', text: 'Green', color: 'Green' },
+  { label: 'Yellow', value: 'yellow', text: 'Yellow', color: 'Yellow' },
+  { label: 'Purple', value: 'purple', text: 'Purple', color: 'Purple' },
+  { label: 'Orange', value: 'orange', text: 'Orange', color: 'Orange' },
+  { label: 'Black', value: 'black', text: 'Black', color: 'Black' },
+  { label: 'White', value: 'white', text: 'White', color: 'White' },
+]
 
 const options = [
   {
@@ -62,22 +74,35 @@ export const AddLabwareForm = (selectedSlot) => {
         </CCol>
         <CCol md={12}>
           <CFormLabel htmlFor="validationCustom01">Labware Name</CFormLabel>
-          <CFormInput type="text" id="validationCustom01" placeholder="Orinda Charisse" required />
+          <CFormInput type="text" id="validationCustom01" placeholder="" required />
           <CFormFeedback valid>Looks good!</CFormFeedback>
         </CCol>
 
-        <CCol md={12}>
-          <CFormLabel htmlFor="validationCustom02">Organization</CFormLabel>
-          <CFormInput type="text" id="validationCustom02" placeholder="Efevre" required />
+
+        <CCol md={6}>
+          <CFormLabel htmlFor="validationCustom02">Liquid Name</CFormLabel>
+          <CFormInput type="text" id="validationCustom02" placeholder="" required />
           <CFormFeedback valid>Looks good!</CFormFeedback>
         </CCol>
 
-        <CCol md={12}>
-          <CFormLabel htmlFor="validationCustom03">Description</CFormLabel>
-          <CFormTextarea id="validationCustom03" required />
+        <CCol md={3}>
+          <CFormLabel htmlFor="validationCustom03">Volume (ml)</CFormLabel>
+          <CFormInput type="number" id="validationCustom03" placeholder="" required />
           <CFormFeedback valid>Looks good!</CFormFeedback>
         </CCol>
 
+        <CCol md={3}>
+          <CFormLabel htmlFor="validationCustom04">Color</CFormLabel>
+          <CMultiSelect multiple={false} id="validationCustom04" placeholder="" required options={colors}
+            optionsTemplate={
+              (option) => (
+                <div className="flex dot-div">
+                  <span className="dot" style={{ backgroundColor: option.color }}></span> {option.text}
+                </div>
+              )
+            } />
+          <CFormFeedback valid>Looks good!</CFormFeedback>
+        </CCol>
 
         <hr />
         <CCol md={12} style={{ userSelect: 'none' }}>
