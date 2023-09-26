@@ -1,7 +1,13 @@
 import React from 'react'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
+
+
 const CreateProtocol = React.lazy(() => import('./views/dashboard/create-protocol/CreateProtocol'))
+const AddLabware = React.lazy(() => import('./views/dashboard/create-protocol/AddLabware/index'))
+
+
+
 const ImportProtocol = React.lazy(() => import('./views/dashboard/import-protocol/ImportProtocol'))
 
 
@@ -69,7 +75,10 @@ const Invoice = React.lazy(() => import('./views/apps/invoicing/Invoice'))
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/protocol-designer', name: 'Protocol Designer', element: Dashboard },
+
   { path: '/create-protocol', name: 'Create Protocol', element: CreateProtocol },
+  { path: '/add-labware', name: 'Add Labware', element: AddLabware },
+
   { path: '/import-protocol', name: 'Import Protocol', element: ImportProtocol },
 
   { path: '/theme', name: 'Theme', element: Colors, exact: true },

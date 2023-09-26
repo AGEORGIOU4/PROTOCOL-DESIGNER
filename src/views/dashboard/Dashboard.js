@@ -19,12 +19,12 @@ import { cilCloudUpload, cilLockLocked, cilPlus, cilUser } from '@coreui/icons'
 const Dashboard = () => {
   return (
     <>
-      <div className="min-vh-40 d-flex flex-row align-items-center">
+      <div className="min-vh-40 d-flex flex-row align-items-center ">
         <CContainer>
           <CRow className="justify-content-center">
             <CCol md={12}>
               <CCardGroup>
-                <CCard className="p-4">
+                <CCard className="p-4 bg-light" >
                   <CCardBody>
                     <CForm>
                       <h1>Create</h1>
@@ -39,10 +39,10 @@ const Dashboard = () => {
                     </CForm>
                   </CCardBody>
                 </CCard>
-                <CCard className="bg-secondary p-4">
+                <CCard className="bg-dark p-4 text-white">
                   <CCardBody>
                     <div>
-                      <h1>Import</h1>
+                      <h1 className='text-white'>Import</h1>
                       <p>
                         Import an existing protocol. Use the graphical interface to import a predefined protocol.
                       </p>
