@@ -73,7 +73,7 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 const Invoice = React.lazy(() => import('./views/apps/invoicing/Invoice'))
 
 const routes = [
-  { path: '/', exact: true, name: 'Home' },
+  { path: '/', exact: true, name: 'Start' },
   { path: '/protocol-designer', name: 'Protocol Designer', element: Dashboard },
 
   { path: '/create-protocol', name: 'Create Protocol', element: CreateProtocol },

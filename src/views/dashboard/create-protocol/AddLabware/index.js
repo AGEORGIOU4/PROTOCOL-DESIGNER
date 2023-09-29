@@ -12,10 +12,10 @@ const AddLabware = () => {
   return (
     <>
       <CRow>
-        <CCol md={6} className='flex-box'>
+        <CCol md={4} className='flex-box'>
           <Deck handleSelectedSlot={handleSelectedSlot} />
         </CCol>
-        <CCol md={6}>
+        <CCol md={8}>
           <AddLabwareForm selectedSlot={selectedSlot} />
         </CCol>
       </CRow>

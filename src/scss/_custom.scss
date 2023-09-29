@@ -129,7 +129,7 @@ h2 {
   font-weight: bold;
   padding: 1em 0 0.5em 0;
   margin-bottom: 1em;
-  border-bottom: 1px solid #ECECEB;
+  // border-bottom: 1px solid #ECECEB;
   color: black;
 }
 
@@ -175,10 +175,12 @@ pre {
 }
 
 .basic-btn {
-  border-radius: 35px !important;
+  border-radius: 0.375rem !important;
+  padding: 0.375rem 0.75rem !important;
   font-style: normal;
   font-weight: 700 !important;
   color: white !important;
+  width: 100%;
 }
 
 .basic-btn:hover {
@@ -188,13 +190,42 @@ pre {
 
 
 // ============== ADD LABWARE ============== //
+.add-labware-btn {
+  background-color: #585858;
+  border: 2px solid #585858;
+  padding: 0.375rem 0.75rem !important;
+  border-radius: 0.375rem !important;
+  color: white;
+  width: 100%;
+  font-weight: 900;
+}
+
+.add-labware-btn:active {
+  background-color: #585858;
+  border: 2px solid #585858;
+  box-shadow: none !important;
+  outline: 0;
+}
+
+.add-labware-btn:focus {
+  outline: 0;
+}
+
+.add-labware-btn:hover {
+  background-color: black;
+  border: 2px solid black;
+  border-radius: 0;
+  color: #dedede;
+  font-weight: 900;
+}
+
 .add-labware-slot-btn {
   background-color: white;
   border: none;
   width: 100%;
-  height: 8rem;
+  height: 4rem;
   text-align: center;
-  font-size: 50px;
+  font-size: 20px;
   color: #dedede;
   font-weight: 900;
 }
@@ -208,38 +239,6 @@ pre {
 
 .add-labware-slot-btn:hover {
   background-color: #585858;
-  color: #dedede;
-}
-
-.add-labware-btn {
-  background-color: white;
-  border: 2px solid #585858;
-  border-radius: 0;
-  color: #585858;
-  width: 100%;
-  height: 4em;
-  text-align: center;
-  font-size: 20px;
-  font-weight: 900;
-  margin-bottom: 20px;
-}
-
-.add-labware-btn:active {
-  background-color: #585858 !important;
-  color: white !important;
-  border: none !important;
-  box-shadow: none !important;
-  outline: 0;
-}
-
-.add-labware-btn:focus {
-  outline: 0;
-}
-
-.add-labware-btn:hover {
-  background-color: #585858;
-  border: 2px solid #585858;
-  border-radius: 0;
   color: #dedede;
 }
 
@@ -263,4 +262,83 @@ pre {
   width: 100%;
 }
 
+.action-row {
+  padding: 6px 6px 0 !important;
+}
+
+.css-v68sna-control {
+  display: block;
+  width: 100%;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  border: var(--cui-border-width) solid var(--cui-form-select-border-color, var(--cui-border-color));
+  border-color: var(--cui-border-color) !important;
+  border-radius: 0.375rem !important;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  border-style: none;
+}
+
+.css-blhudp-control:hover {
+  border-color: var(--cui-form-select-focus-border-color, #80d5d8) !important;
+  outline: 0 !important;
+  box-shadow: 0 0 0 0.25rem rgba(1, 170, 177, 0.25) !important;
+}
+
+.css-blhudp-control {
+  border-color: var(--cui-form-select-focus-border-color, #80d5d8) !important;
+  outline: 0 !important;
+  box-shadow: 0 0 0 0.25rem rgba(1, 170, 177, 0.25) !important;
+}
+
+.css-13iuoa8-control {
+  background: #ebedef !important;
+}
+
+.color-picker {
+  padding: 0 !important;
+  width: 100% !important;
+  box-shadow: none !important;
+  border-radius: var(--cui-border-radius) !important;
+  border: var(--cui-border-width) solid var(--cui-input-border-color, var(--cui-border-color)) !important;
+  margin-bottom: 6px;
+}
+
 //=======================//
+
+.custom-breadcrumb {
+  position: fixed;
+  top: 0;
+  right: 20px;
+  color: #01aab1;
+  background: #e9ecef;
+  padding: 10px;
+  border-radius: 0.25rem;
+  z-index: 10000000;
+}
+
+.swal2-confirm {
+  background: #01aab1 !important;
+  padding: 0.375rem 0.75rem !important;
+  font-style: normal;
+  font-weight: 700 !important;
+}
+
+.swal2-confirm:hover {
+  background: black !important;
+}
+
+.swal2-cancel {
+  background: #585858 !important;
+  padding: 0.375rem 0.75rem !important;
+  font-style: normal;
+  font-weight: 700 !important;
+}
+
+.swal2-cancel:hover {
+  background: black !important;
+}
+
+.swal2-popup .swal2-styled:focus {
+  box-shadow: none !important;
+}
