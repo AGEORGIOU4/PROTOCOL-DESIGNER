@@ -2,7 +2,6 @@ import { CButton, CCol, CForm, CFormCheck, CFormFeedback, CFormInput, CFormLabel
 import { cilPlus } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import { useState } from 'react'
-import Colors from 'src/views/theme/colors/Colors'
 
 const colors = [
   { label: 'Red', value: 'red', text: 'Red', color: 'Red' },
@@ -72,6 +71,7 @@ export const AddLabwareForm = (selectedSlot) => {
         <CCol md={12}>
           <h2>Slot {selectedSlot.selectedSlot} Labware</h2>
         </CCol>
+
         <CCol md={12}>
           <CFormLabel htmlFor="validationCustom01">Labware Name</CFormLabel>
           <CFormInput type="text" id="validationCustom01" placeholder="" required />
