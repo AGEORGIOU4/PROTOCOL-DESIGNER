@@ -92,16 +92,14 @@ export const AddLabwareForm = (selectedSlot) => {
       <h2 style={{ paddingTop: '0px' }}>Labware for {selectedSlot.selectedSlot}</h2>
 
 
-
       <hr />
-      <br />
 
       <CRow>
-        <CCol md={6}>
+        <CCol md={3}>
           <CForm className="row g-3 needs-validation" noValidate validated={validated} onSubmit={handleSubmit}>
 
             <CCol md={12}>
-              <CFormLabel htmlFor="validationCustom01">Name</CFormLabel>
+              <CFormLabel htmlFor="validationCustom01">Protocol Name</CFormLabel>
               <CFormInput type="text" id="validationCustom01" placeholder="" required />
               <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
@@ -142,16 +140,16 @@ export const AddLabwareForm = (selectedSlot) => {
 
 
         {/* LIQUIDS */}
-        <CCol md={6}>
+        <CCol md={9}>
           <CForm className="row g-3 needs-validation" noValidate validated={validated} onSubmit={handleSubmit}>
 
-            <CCol md={9}>
+            <CCol md={8}>
               <CFormLabel htmlFor="validationCustom02">Liquid Name</CFormLabel>
               <CFormInput autoComplete={'off'} type="text" id="validationCustom02" placeholder="" required value={liquidName} onChange={(e) => { setLiquidName(e.target.value) }} />
               <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
 
-            <CCol md={3}>
+            <CCol md={4}>
               <CFormLabel htmlFor="validationCustom03">Volume (ml)</CFormLabel>
               <CFormInput autoComplete={'off'} type="number" id="validationCustom03" placeholder="" required value={liquidVolume} onChange={(e) => { setLiquidVolume(e.target.value) }} />
               <CFormFeedback valid>Looks good!</CFormFeedback>
@@ -168,7 +166,7 @@ export const AddLabwareForm = (selectedSlot) => {
             </CCol>
 
             <CCol md={12}>
-              <CButton className='add-labware-btn' onClick={handleAddLiquid}>+ Add liquid</CButton>
+              <CButton className='add-labware-btn' onClick={handleAddLiquid}><small>+ ADD LIQUID</small></CButton>
             </CCol>
 
             <CCol md={12}>
@@ -229,7 +227,7 @@ export const AddLabwareForm = (selectedSlot) => {
       </CRow>
 
       <CCol md={12}>
-        <CButton color="primary" className='mt-3 basic-btn' type="submit">
+        <CButton color="primary" className='mt-3 form-btn' style={{ padding: '20px !important', borderRadius: '0 !important' }} type="submit">
           <CIcon icon={cilPlus} /> Create
         </CButton>
       </CCol>

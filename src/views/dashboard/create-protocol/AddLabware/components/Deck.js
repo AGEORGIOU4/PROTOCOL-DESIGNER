@@ -1,24 +1,26 @@
 import { cilTrash } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
-import { CButton, CFormLabel } from "@coreui/react-pro"
+import { CButton } from "@coreui/react-pro"
 import { useEffect, useState } from "react";
 import { PromptWithConfirm } from "src/_common/alerts/swal";
 
-const DECK_TOTAL_COLUMNS = 6;
+const DECK_TOTAL_COLUMNS = 3;
 
 const Deck = ({ handleSelectedSlot }) => {
-  const [isSelected, setIsSelected] = useState(1);
+  const [isSelected, setIsSelected] = useState(0);
   const [board, setBoard] = useState([]);
+  const [tmp_board, setTmpBoard] = useState([]);
 
 
   useEffect(() => {
     let preset = [
       [
-        { id: 1, name: 'Slot 1' },
+        { id: 0, name: 'Slot 0' }
       ]
     ]
 
     setBoard(preset)
+    setTmpBoard(preset)
   }, [])
 
   const handleSelect = (id) => {
@@ -27,36 +29,34 @@ const Deck = ({ handleSelectedSlot }) => {
   };
 
   const handleCreate = () => {
-    const tmp_add = [...board];
-    let first_row = 0;
-    let last_row = 0;
-
     let id = 0;
     let name = '';
 
-    // Get latest array
-    tmp_add?.map((row, index) => {
-      last_row = index;
+    tmp_board?.map((row, index_row) => {
+      if (index_row === (tmp_board.length - 1)) {
+        row?.map((col, index_col) => {
+          if (index_col === (row.length - 1)) {
+            id = col.id + 1;
+            name = 'Slot ' + id;
+            tmp_board[index_row].push({ id, name })
+          }
+        })
+      }
     })
 
-    // Get last num
-    tmp_add[first_row].map((item, index) => {
-      id = item.id + 1;
-      name = 'Slot ' + id;
-    })
+    let array = tmp_board[0];
 
-    // Check if row is full
-    if (tmp_add[first_row].length === DECK_TOTAL_COLUMNS) {
-      tmp_add.unshift([]); // Add new row as first row
-      last_row += 1;
+    let subarrayLength = DECK_TOTAL_COLUMNS;
 
-
-      tmp_add[first_row].push({ id, name });
-      setBoard(tmp_add)
-    } else {
-      tmp_add[first_row].push({ id, name });
-      setBoard(tmp_add)
+    let subarrays = [];
+    for (let i = 0; i < array.length; i += subarrayLength) {
+      subarrays.push(array.slice(i, i + subarrayLength));
     }
+
+    const mirrorArray = subarrays.slice().reverse();
+
+    setBoard(mirrorArray)
+
     handleSelect(id)
 
   };
@@ -76,13 +76,11 @@ const Deck = ({ handleSelectedSlot }) => {
       })
     })
     console.log(tmp_delete)
-    handleSelect(1)
+    handleSelect(0)
   }
 
   return (
     <>
-      <CButton onClick={() => handleCreate()} className='add-labware-btn'>+ Add slot</CButton>
-
       <table className="add-labware-table">
         <tbody>
           {board?.map((rows, index) => { //iterate through row array
@@ -92,12 +90,12 @@ const Deck = ({ handleSelectedSlot }) => {
                   return (
                     <>
                       {/* Slot */}
-                      <td key={index} style={{ border: '4px solid #dedede', textAlign: 'center' }} >
-                        <CFormLabel>{item.name}</CFormLabel>
+                      <td key={index} style={{ border: '2px solid #efefef', maxWidth: '20px', textAlign: 'center' }} >
+                        <div style={{ background: '#dedede', color: '#fff' }}><strong>{item.name}</strong></div>
                         <CButton key={item.id} onClick={() => handleSelect(item.id)} id={item.id} className={isSelected == item.id ? 'add-labware-slot-btn btn-selected' : 'add-labware-slot-btn'} >{item.id}</CButton>
 
-                        {/* Delete */}
-                        <CButton key={item.name} id={item.name} variant="ghost" size="sm" color="danger" onClick={() => handleDelete(item.id, item.name)}><CIcon icon={cilTrash} /></CButton>
+                        <CButton key={item.name} id={item.name} variant="ghost" size="sm" color="danger" style={{ visibility: item.id === 0 ? 'hidden' : 'initial' }} onClick={() => handleDelete(item.id, item.name)}><CIcon icon={cilTrash} /></CButton>
+
                       </td >
                     </>
                   )
@@ -107,8 +105,8 @@ const Deck = ({ handleSelectedSlot }) => {
           })}
         </tbody>
       </table >
-
       <p><strong>Hint:</strong> Please create a new slot and add labware or select an existing slot to modify</p>
+      <CButton onClick={() => handleCreate()} className='add-labware-btn'><small>+ ADD SLOT</small></CButton>
     </>
   )
 }

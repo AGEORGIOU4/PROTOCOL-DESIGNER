@@ -43,10 +43,11 @@ const AppAside = () => {
   return (
     <CSidebar
       colorScheme="light"
-      size="lg"
-      overlaid
-      placement="end"
-      visible={asideShow}
+      size="sm"
+
+      placement="start"
+      position='fixed'
+      visible={true}
       onVisibleChange={(visible) => {
         dispatch({ type: 'set', asideShow: visible })
       }}
