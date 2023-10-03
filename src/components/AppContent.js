@@ -8,7 +8,7 @@ import AppBreadcrumb from './AppBreadcrumb'
 
 const AppContent = () => {
   return (
-    <CContainer fluid>
+    <CContainer fluid style={{ padding: '0' }}>
       <AppBreadcrumb />
       <Suspense fallback={<CSpinner color="primary" />}>
         <Routes>

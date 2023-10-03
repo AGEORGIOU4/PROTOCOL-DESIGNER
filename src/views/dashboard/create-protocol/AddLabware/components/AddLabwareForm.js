@@ -1,6 +1,6 @@
 import React from 'react';
 import { CButton, CCol, CForm, CFormCheck, CFormFeedback, CFormInput, CFormLabel, CFormSelect, CFormTextarea, CMultiSelect, CRow } from '@coreui/react-pro'
-import { cilPlus } from '@coreui/icons'
+import { cilInfo, cilPlus } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import { useState } from 'react'
 import Select from 'react-select';
@@ -89,18 +89,15 @@ export const AddLabwareForm = (selectedSlot) => {
 
   return (
     <>
-      <h2 style={{ paddingTop: '0px' }}>Labware for {selectedSlot.selectedSlot}</h2>
-
-
-      <hr />
+      <h2 style={{}}>Labware for {selectedSlot.selectedSlot}</h2>
 
       <CRow>
-        <CCol md={3}>
+        <CCol md={7}>
           <CForm className="row g-3 needs-validation" noValidate validated={validated} onSubmit={handleSubmit}>
 
             <CCol md={12}>
-              <CFormLabel htmlFor="validationCustom01">Protocol Name</CFormLabel>
-              <CFormInput type="text" id="validationCustom01" placeholder="" required />
+              <CFormLabel htmlFor="validationCustom01">Slot Name</CFormLabel>
+              <CFormInput type='text' id="validationCustom01" required />
               <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
 
@@ -134,13 +131,19 @@ export const AddLabwareForm = (selectedSlot) => {
               <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
 
+            <br />
+
+            <CCol md={12} style={{ textAlign: 'end' }}>
+              <CButton className='add-labware-btn' ><small>+ ADD LABWARE</small></CButton>
+            </CCol>
           </CForm>
 
         </CCol>
 
 
         {/* LIQUIDS */}
-        <CCol md={9}>
+        <CCol md={5}>
+
           <CForm className="row g-3 needs-validation" noValidate validated={validated} onSubmit={handleSubmit}>
 
             <CCol md={8}>
@@ -169,6 +172,10 @@ export const AddLabwareForm = (selectedSlot) => {
               <CButton className='add-labware-btn' onClick={handleAddLiquid}><small>+ ADD LIQUID</small></CButton>
             </CCol>
 
+            <br />
+            <br />
+
+
             <CCol md={12}>
               <CFormLabel htmlFor="validationCustom04">Select Liquids</CFormLabel>
               <Select
@@ -182,13 +189,8 @@ export const AddLabwareForm = (selectedSlot) => {
               />
             </CCol>
 
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-
             <CCol md={4} style={{ userSelect: 'none' }}>
+              <CFormLabel htmlFor="validationCustom04">Mixtures</CFormLabel>
               <CFormCheck
                 type="checkbox"
                 id="mixtureCheckbox"
@@ -200,6 +202,7 @@ export const AddLabwareForm = (selectedSlot) => {
             </CCol>
 
             <CCol md={8}>
+              <CFormLabel htmlFor="validationCustom04"></CFormLabel>
               <CFormInput type="text" id="validationCustom11" placeholder="Mixture name" disabled={mixtureDisabled ? false : true} />
               <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
@@ -221,16 +224,11 @@ export const AddLabwareForm = (selectedSlot) => {
           </CForm>
         </CCol>
 
-
-
-
       </CRow>
 
-      <CCol md={12}>
-        <CButton color="primary" className='mt-3 form-btn' style={{ padding: '20px !important', borderRadius: '0 !important' }} type="submit">
-          <CIcon icon={cilPlus} /> Create
-        </CButton>
-      </CCol>
+
+      <br />
+
     </>
   )
 }

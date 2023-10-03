@@ -8,7 +8,7 @@ const DefaultLayout = () => {
   return (
     <>
       {/* <AppSidebar /> */}
-      {currentHash.includes('add-labware') && <LabwareSteps />}
+      {/* {currentHash.includes('add-labware') && <LabwareSteps />} */}
 
       <div className="wrapper d-flex flex-column min-vh-100 ">
         {/* <AppHeader /> */}

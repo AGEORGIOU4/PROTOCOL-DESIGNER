@@ -1,0 +1,38 @@
+.card-steps {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  margin: 0px;
+  background-color: #fff;
+
+}
+
+.list-container {
+  display: flex;
+  background-color: #eee;
+  flex-direction: column;
+}
+
+.item-container {
+  background-color: #fff;
+}
+
+.dropdownMenu {
+  background: #585858;
+  width: 100%;
+  border-radius: 0;
+}
+
+.dropdownItem {
+  color: #fff;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none !important;
+}
+
+.dropdownItem:hover {
+  background: #000;
+  color: #fff;
+  font-weight: 500;
+}
