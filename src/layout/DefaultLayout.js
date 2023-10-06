@@ -1,6 +1,7 @@
 import React from 'react'
-import { AppAside, AppContent, AppSidebar, AppFooter, AppHeader } from '../components/index'
-import LabwareSteps from 'src/views/dashboard/create-protocol/LabwareSteps'
+import { AppContent, AppSidebar } from '../components/index'
+import LabwareSteps from 'src/views/_dashboard/create-protocol/AddLabware/components/Steps';
+
 
 const DefaultLayout = () => {
   const currentHash = window.location.hash;
@@ -8,7 +9,7 @@ const DefaultLayout = () => {
   return (
     <>
       {/* <AppSidebar /> */}
-      {/* {currentHash.includes('add-labware') && <LabwareSteps />} */}
+      {currentHash.includes('add-labware') && <LabwareSteps />}
 
       <div className="wrapper d-flex flex-column min-vh-100 ">
         {/* <AppHeader /> */}

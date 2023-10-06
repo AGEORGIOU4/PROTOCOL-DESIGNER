@@ -1,13 +1,20 @@
-import React from 'react';
-import { CButton, CCol, CForm, CFormCheck, CFormFeedback, CFormInput, CFormLabel, CFormSelect, CFormTextarea, CMultiSelect, CRow } from '@coreui/react-pro'
-import { cilInfo, cilPlus } from '@coreui/icons'
-import CIcon from '@coreui/icons-react'
+import React, { useEffect } from 'react';
+import { CButton, CCol, CForm, CFormCheck, CFormFeedback, CFormInput, CFormLabel, CFormSelect, CRow } from '@coreui/react-pro'
 import { useState } from 'react'
 import Select from 'react-select';
-import { colourStyles } from './Liquids/data'
+import { colourStyles } from '../Liquids/data'
 import { TwitterPicker } from 'react-color';
+import { Title } from '../helpers';
 
 const options = [
+  {
+    value: 0,
+    text: '',
+    color: '',
+    label: ''
+    // selected: true,
+    // disabled: true,
+  },
   {
     value: 1,
     text: 'Water',
@@ -50,10 +57,10 @@ const options = [
 ]
 
 
-export const AddLabwareForm = (selectedSlot) => {
+export const Liquids = (selectedSlot) => {
   const [validated, setValidated] = useState(false)
 
-  const [name, setName] = useState('')
+  const [slotName, setSlotName] = useState('Slot ' + selectedSlot.selectedSlot)
   const [tubeRack, setTubeRack] = useState('')
   const [wellPlate, setWellPlate] = useState('')
   const [reservoir, setReservoir] = useState('')
@@ -67,7 +74,7 @@ export const AddLabwareForm = (selectedSlot) => {
   const [mixtureDisabled, setMixtureDisabled] = useState(false)
 
   const handleAddLiquid = (e) => {
-    // { value: 'ocean', label: 'Ocean', color: '#00B8D9', isFixed: true },
+
 
     let liquid = { value: liquidName, label: liquidName, color: liquidColor }
     let options = liquidOptions;
@@ -76,7 +83,6 @@ export const AddLabwareForm = (selectedSlot) => {
     setSelectedLiquids(options[0])
     setLiquidName('')
   }
-
 
   const handleSubmit = (event) => {
     const form = event.currentTarget
@@ -87,62 +93,13 @@ export const AddLabwareForm = (selectedSlot) => {
     setValidated(true)
   }
 
+
+
   return (
     <>
-      <h2 style={{}}>Labware for {selectedSlot.selectedSlot}</h2>
-
       <CRow>
-        <CCol md={7}>
-          <CForm className="row g-3 needs-validation" noValidate validated={validated} onSubmit={handleSubmit}>
-
-            <CCol md={12}>
-              <CFormLabel htmlFor="validationCustom01">Slot Name</CFormLabel>
-              <CFormInput type='text' id="validationCustom01" required />
-              <CFormFeedback valid>Looks good!</CFormFeedback>
-            </CCol>
-
-            <CCol md={12}>
-              <CFormLabel htmlFor="validationCustom02">Tube Rack</CFormLabel>
-              <CFormSelect options={options} id="validationCustom02" required />
-              <CFormFeedback valid>Looks good!</CFormFeedback>
-            </CCol>
-
-            <CCol md={12}>
-              <CFormLabel htmlFor="validationCustom03">Well Plate</CFormLabel>
-              <CFormSelect options={options} id="validationCustom03" required />
-              <CFormFeedback valid>Looks good!</CFormFeedback>
-            </CCol>
-
-            <CCol md={12}>
-              <CFormLabel htmlFor="validationCustom04">Well Plate</CFormLabel>
-              <CFormSelect options={options} id="validationCustom04" required />
-              <CFormFeedback valid>Looks good!</CFormFeedback>
-            </CCol>
-
-            <CCol md={12}>
-              <CFormLabel htmlFor="validationCustom05">Reservoir</CFormLabel>
-              <CFormSelect options={options} id="validationCustom05" required />
-              <CFormFeedback valid>Looks good!</CFormFeedback>
-            </CCol>
-
-            <CCol md={12}>
-              <CFormLabel htmlFor="validationCustom06">Aluminium Block</CFormLabel>
-              <CFormSelect options={options} id="validationCustom06" required />
-              <CFormFeedback valid>Looks good!</CFormFeedback>
-            </CCol>
-
-            <br />
-
-            <CCol md={12} style={{ textAlign: 'end' }}>
-              <CButton className='add-labware-btn' ><small>+ ADD LABWARE</small></CButton>
-            </CCol>
-          </CForm>
-
-        </CCol>
-
-
         {/* LIQUIDS */}
-        <CCol md={5}>
+        <CCol md={12}>
 
           <CForm className="row g-3 needs-validation" noValidate validated={validated} onSubmit={handleSubmit}>
 
@@ -189,8 +146,8 @@ export const AddLabwareForm = (selectedSlot) => {
               />
             </CCol>
 
-            <CCol md={4} style={{ userSelect: 'none' }}>
-              <CFormLabel htmlFor="validationCustom04">Mixtures</CFormLabel>
+            <CCol md={4} style={{ userSelect: 'none', marginBottom: '11px' }}>
+              <CFormLabel htmlFor="validationCustom04" >Mixtures</CFormLabel>
               <CFormCheck
                 type="checkbox"
                 id="mixtureCheckbox"
@@ -228,7 +185,6 @@ export const AddLabwareForm = (selectedSlot) => {
 
 
       <br />
-
     </>
   )
 }

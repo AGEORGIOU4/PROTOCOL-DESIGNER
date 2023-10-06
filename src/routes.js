@@ -1,14 +1,14 @@
 import React from 'react'
 
-const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
+const Dashboard = React.lazy(() => import('./views/_dashboard/Dashboard'))
 
 
-const CreateProtocol = React.lazy(() => import('./views/dashboard/create-protocol/CreateProtocol'))
-const AddLabware = React.lazy(() => import('./views/dashboard/create-protocol/AddLabware/index'))
+const CreateProtocol = React.lazy(() => import('./views/_dashboard/create-protocol'))
+const AddLabware = React.lazy(() => import('./views/_dashboard/create-protocol/AddLabware/index'))
 
 
 
-const ImportProtocol = React.lazy(() => import('./views/dashboard/import-protocol/ImportProtocol'))
+const ImportProtocol = React.lazy(() => import('./views/_dashboard/import-protocol/ImportProtocol'))
 
 
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))

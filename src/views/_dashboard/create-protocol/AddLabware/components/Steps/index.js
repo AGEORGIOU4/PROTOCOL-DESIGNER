@@ -1,10 +1,13 @@
 import React, { useState } from 'react'
-import { CListGroup, CListGroupItem, CDropdown, CDropdownToggle, CDropdownMenu, CDropdownItem } from '@coreui/react-pro'
+import { CListGroup, CListGroupItem, CDropdown, CDropdownToggle, CDropdownMenu, CDropdownItem, CSidebar, CButton } from '@coreui/react-pro'
 import CIcon from '@coreui/icons-react'
-import { cilAperture, cilArrowRight, cilAvTimer, cilColorFill, cilMediaPause, cilMove } from '@coreui/icons'
+import { cilAperture, cilArrowRight, cilAvTimer, cilColorFill, cilMediaPause, cilMove, cilTrash } from '@coreui/icons'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
-import { cilLink, cilSwapVertical, cilTemperature } from '@coreui/icons-pro'
+import { cil3dRotate, cilLink, cilSwapVertical, cilTemperature } from '@coreui/icons-pro'
 import './styles.css'
+import { Title } from '../helpers'
+import AddLabwareModal from '../Modal'
+
 
 // HELPER FUNCTIONS
 const CustomDraggable = ({ item, value, index }) => {
@@ -51,15 +54,9 @@ const generateRandomNumber = () => {
 
 const getColor = (action) => {
   switch (action) {
-    case 'Transfer':
-    case 'Mix':
-      return 'success';
     case 'Delay':
       return 'warning';
-    case 'Magnet':
-      return 'info';
-    case 'Thermomix':
-    case 'Temperature':
+    case 'Trash':
       return 'danger';
     default:
       return 'success'
@@ -74,14 +71,18 @@ const getIcons = (action) => {
       return cilColorFill;
     case 'Delay':
       return cilMediaPause;
-    case 'Temperature':
+    case 'Thermoblock':
       return cilTemperature;
     case 'Magnet':
       return cilLink;
-    case 'Thermomix':
+    case 'Heater Shaker':
       return cilSwapVertical;
-    case 'Thermocycler':
+    case 'PCR':
+      return cil3dRotate;
+    case 'Centrifuge':
       return cilAperture;
+    case 'Trash':
+      return cilTrash;
   }
 }
 
@@ -93,29 +94,35 @@ const getDuration = (action) => {
       return '15';
     case 'Delay':
       return '22';
-    case 'Thermomix':
+    case 'Heater Shaker':
       return '10';
     case 'Magnet':
       return '45';
-    case 'Temperature':
+    case 'Thermoblock':
       return '60';
-    case 'Thermocycler':
+    case 'PCR':
       return '75';
+    case 'Centrifuge':
+      return '65';
+    case 'Trash':
+      return '5';
   }
 }
 
 // MAIN COMPONENT
 const LabwareSteps = () => {
-  const [stepsList, setStepsList] = useState(["Transfer", "Mix", "Delay", "Thermomix", "Magnet", "Temperature", "Thermocycler"]);
-
-
+  const [stepsList, setStepsList] = useState(["Transfer", "Mix", "Delay", "Heater Shaker", "Centrifuge", "Magnet", "Thermoblock", "PCR", "Trash"]);
   const [selectedSteps, setSelectedSteps] = useState([])
+
+  const [visible, setVisible] = useState(false)
 
   const handleAddStep = (e) => {
     let text = e.target.innerText;
     text = text.substring(1)
     let obj = { id: e.target.id, value: text };
     setSelectedSteps(current => [...current, obj])
+
+    setVisible(true);
   }
 
   const handleDrop = (droppedItem) => {
@@ -128,16 +135,44 @@ const LabwareSteps = () => {
 
   return (
     <>
+      <CSidebar
+        colorScheme="light"
+        placement="start"
+        position='fixed'
+        visible={true}
+        style={{ padding: '0 6px 6px 6px ', overflowY: 'scroll', zIndex: '1056' }}
+      >
 
-      <div>
+        <Title title={"TIMELINE"} />
+
+        {/* <hr />
+        <div style={{ textAlign: 'center', padding: '2px' }}>
+          <p style={{ marginBottom: '10px', fontSize: 'small', fontWeight: '600' }}>STARTING DECK STATE</p>
+        </div>
+        <hr /> */}
+
+        <CButton style={{ background: '#fff', border: '1px solid #585858', color: '#585858', borderRadius: '0', padding: '20px', fontSize: 'small', fontWeight: '700', margin: '0px 0 0 0' }}>
+          STARTING DECK STATE
+        </CButton>
+
+        {/* ADD STEP */}
+        <div style={{ padding: '6px 0 ' }}>
+          <CDropdown style={{ width: '100%', userSelect: 'none' }}>
+            <CDropdownToggle className='add-labware-btn'><small>+ ADD STEP</small></CDropdownToggle>
+            <CDropdownMenu className='dropdownMenu'>
+              {stepsList?.map((item, index) => {
+                let id = generateRandomNumber();
+                return (
+                  < CDropdownItem key={item} className='dropdownItem' id={id} value={item} onClick={(e) => handleAddStep(e)}>
+                    <CIcon key={index} icon={getIcons(item)} /> {item}
+                  </CDropdownItem>
+                )
+              })}
+            </CDropdownMenu>
+          </CDropdown>
+        </div>
 
         <CListGroup>
-          <hr />
-          <div style={{ textAlign: 'center', padding: '2px' }}>
-            <p style={{ marginBottom: '10px', fontSize: 'small', fontWeight: '600' }}>STARTING DECK STATE</p>
-          </div>
-          <hr />
-
           {/* SELECTED STEPS LIST */}
           <div >
             <DragDropContext onDragEnd={handleDrop}>
@@ -159,40 +194,24 @@ const LabwareSteps = () => {
               </Droppable>
             </DragDropContext>
           </div>
-
         </CListGroup>
-        <br />
 
-        {/* ADD STEP */}
-        <div style={{ padding: '10px 0' }}>
-          <CDropdown style={{ width: '100%', userSelect: 'none' }}>
-            <CDropdownToggle className='add-step-btn'><small>+ ADD STEP</small></CDropdownToggle>
-            <CDropdownMenu className='dropdownMenu'>
-              {stepsList?.map((item, index) => {
-                let id = generateRandomNumber();
-                return (
-                  < CDropdownItem className='dropdownItem' id={id} value={item} onClick={(e) => handleAddStep(e)}>
-                    <CIcon key={index} icon={getIcons(item)} /> {item}
-                  </CDropdownItem>
-                )
-              })}
-            </CDropdownMenu>
-          </CDropdown>
-        </div>
-
-        <hr />
+        {/* <hr />
         <div style={{ textAlign: 'center', padding: '2px' }}>
           <p style={{ marginBottom: '10px', fontSize: 'small', fontWeight: '600' }}>FINAL DECK STATE</p>
         </div>
-        <hr />
-        <br />
-        <br />
+        <hr /> */}
 
+        <CButton style={{ background: '#fff', border: '1px solid #585858', color: '#585858', borderRadius: '0', padding: '20px', fontSize: 'small', fontWeight: '700', margin: '6px 0' }}>
+          FINAL DECK STATE
+        </CButton>
 
-      </div >
+      </CSidebar >
+
+      <AddLabwareModal visible={visible} setVisible={setVisible} />
 
     </>
   )
 }
 
-export default React.memo(LabwareSteps)
+export default LabwareSteps
