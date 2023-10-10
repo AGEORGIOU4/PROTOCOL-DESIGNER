@@ -5,6 +5,8 @@ import Select from 'react-select';
 import { colourStyles } from '../Liquids/data'
 import { TwitterPicker } from 'react-color';
 import { Title } from '../helpers';
+import CIcon from '@coreui/icons-react';
+import { cilPlus } from '@coreui/icons';
 
 const options = [
   {
@@ -126,7 +128,7 @@ export const Liquids = (selectedSlot) => {
             </CCol>
 
             <CCol md={12}>
-              <CButton className='add-labware-btn' onClick={handleAddLiquid}><small>+ ADD LIQUID</small></CButton>
+              <CButton className='standard-btn' onClick={handleAddLiquid}><CIcon size='sm' icon={cilPlus} /> ADD LIQUID</CButton>
             </CCol>
 
             <br />

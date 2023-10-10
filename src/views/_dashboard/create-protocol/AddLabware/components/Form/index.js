@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { CButton, CCol, CForm, CFormCheck, CFormFeedback, CFormInput, CFormLabel, CFormSelect, CRow } from '@coreui/react-pro'
 import { useState } from 'react'
+import CIcon from '@coreui/icons-react';
+import { cilPlus } from '@coreui/icons';
 
 const options = [
   {
@@ -100,50 +102,50 @@ export const Form = (selectedSlot) => {
 
   return (
     <>
-      <CRow>
-        <CCol md={12}>
-          <CForm className="row g-3 needs-validation" noValidate validated={validated} onSubmit={handleSubmit}>
 
-            <CCol md={12}>
-              <CFormLabel htmlFor="validationCustom01">Slot Name</CFormLabel>
-              <CFormInput type='text' id="validationCustom01" value={slotName} onChange={(e) => setSlotName(e.target.value)} required />
-              <CFormFeedback valid>Looks good!</CFormFeedback>
-            </CCol>
+      <CCol md={12}>
+        <CForm className="row g-3 needs-validation" noValidate validated={validated} onSubmit={handleSubmit}>
 
-            <CCol md={12}>
-              <CFormLabel htmlFor="validationCustom02">Tube Rack</CFormLabel>
-              <CFormSelect options={options} id="validationCustom02" required />
-              <CFormFeedback valid>Looks good!</CFormFeedback>
-            </CCol>
+          <CCol md={12}>
+            <CFormLabel htmlFor="validationCustom01">Slot Name</CFormLabel>
+            <CFormInput type='text' id="validationCustom01" value={slotName} onChange={(e) => setSlotName(e.target.value)} required />
+            <CFormFeedback valid>Looks good!</CFormFeedback>
+          </CCol>
 
-            <CCol md={12}>
-              <CFormLabel htmlFor="validationCustom03">Well Plate</CFormLabel>
-              <CFormSelect options={options} id="validationCustom03" required />
-              <CFormFeedback valid>Looks good!</CFormFeedback>
-            </CCol>
+          <CCol md={12}>
+            <CFormLabel htmlFor="validationCustom02">Tube Rack</CFormLabel>
+            <CFormSelect options={options} id="validationCustom02" required />
+            <CFormFeedback valid>Looks good!</CFormFeedback>
+          </CCol>
 
-            <CCol md={12}>
-              <CFormLabel htmlFor="validationCustom04">Reservoir</CFormLabel>
-              <CFormSelect options={options} id="validationCustom04" required />
-              <CFormFeedback valid>Looks good!</CFormFeedback>
-            </CCol>
+          <CCol md={12}>
+            <CFormLabel htmlFor="validationCustom03">Well Plate</CFormLabel>
+            <CFormSelect options={options} id="validationCustom03" required />
+            <CFormFeedback valid>Looks good!</CFormFeedback>
+          </CCol>
 
-            <CCol md={12}>
-              <CFormLabel htmlFor="validationCustom05">Aluminium Block</CFormLabel>
-              <CFormSelect options={options} id="validationCustom05" required />
-              <CFormFeedback valid>Looks good!</CFormFeedback>
-            </CCol>
+          <CCol md={12}>
+            <CFormLabel htmlFor="validationCustom04">Reservoir</CFormLabel>
+            <CFormSelect options={options} id="validationCustom04" required />
+            <CFormFeedback valid>Looks good!</CFormFeedback>
+          </CCol>
 
-            <br />
+          <CCol md={12}>
+            <CFormLabel htmlFor="validationCustom05">Aluminium Block</CFormLabel>
+            <CFormSelect options={options} id="validationCustom05" required />
+            <CFormFeedback valid>Looks good!</CFormFeedback>
+          </CCol>
 
-            <CCol md={12} style={{ textAlign: 'end' }}>
-              <CButton className='add-labware-btn'><small>+ ADD LABWARE</small></CButton>
-            </CCol>
-          </CForm>
+          <br />
 
-        </CCol>
+          <CCol md={12} style={{ textAlign: 'end' }}>
+            <CButton className='standard-btn'><CIcon size='sm' icon={cilPlus} /> ADD LABWARE</CButton>
+          </CCol>
+        </CForm>
 
-      </CRow>
+      </CCol>
+
+
 
 
       <br />
