@@ -2,22 +2,22 @@ import { cilSave, cilX } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from "@coreui/react-pro";
 
-const AddLabwareModal = ({ children, title, step, visible, setVisible }) => {
-  let title2 = title.toUpperCase();
+const AddLabwareModal = ({ children, stepID, stepIndex, stepTitle, visible, handleClose }) => {
+  let titleToUpper = stepTitle.toUpperCase();
   return (
     <>
 
-      <CModal fullscreen backdrop={'static'} className="add-labware-modal" visible={visible} onClose={() => setVisible(false)}>
-        <CModalHeader>
-          <CModalTitle id="StaticBackdropExampleLabel" >{title2}</CModalTitle>
+      <CModal fullscreen backdrop={'static'} className="add-labware-modal" visible={visible} onClose={handleClose} >
+        <CModalHeader style={{ background: '#585858' }} closeButton={false}>
+          <CModalTitle id="StaticBackdropExampleLabel" style={{ color: 'white' }}>{titleToUpper}</CModalTitle>
         </CModalHeader>
         <CModalBody>
 
           {children}
         </CModalBody>
         <CModalFooter>
-          <h6 className="modal-step-h">{step}</h6>
-          <CButton color="secondary" className="cancel-btn" onClick={() => setVisible(false)}>
+          <h6 className="modal-step-h">Step {stepIndex} <span style={{ fontSize: '14px', fontWeight: '400' }}>({stepID})</span></h6>
+          <CButton color="secondary" className="cancel-btn" onClick={handleClose}>
             <CIcon size="sm" icon={cilX} /> CLOSE
           </CButton>
           <CButton className='standard-btn' color="primary">

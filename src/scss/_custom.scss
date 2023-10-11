@@ -433,9 +433,28 @@ pre {
 }
 
 .modal-title {
-  font-size: medium !important;
+  font-size: large !important;
   font-weight: 600 !important;
   color: #666666;
+}
+
+.modal-subtitle {
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  color: #666666;
+}
+
+.modal-header-row {
+  display: flex;
+  margin: 0;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px 16px 10px;
+  border-bottom: var(--cui-modal-header-border-width) solid var(--cui-modal-header-border-color);
+  border-top-left-radius: var(--cui-modal-inner-border-radius);
+  border-top-right-radius: var(--cui-modal-inner-border-radius);
+
 }
 
 //=======================//

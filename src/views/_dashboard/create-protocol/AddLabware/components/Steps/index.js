@@ -11,8 +11,12 @@ import { DraggableStep } from './components/DraggableStep'
 import { cilPlus } from '@coreui/icons'
 import { TransferForm } from '../Modal/Steps/Transfer'
 
+
+var STEP_ID = -1
+var STEP_INDEX = -1;
+var STEP_TITLE = "";
+
 const RenderStepForm = (modalTitle) => {
-  console.log(modalTitle)
   switch (modalTitle) {
     case 'Transfer':
       return <TransferForm />
@@ -28,11 +32,14 @@ const LabwareSteps = () => {
   const [stepsList, setStepsList] = useState(["Transfer", "Mix", "Delay", "Heater Shaker", "Centrifuge", "Magnet", "Thermoblock", "PCR", "Trash"]);
   const [selectedSteps, setSelectedSteps] = useState([])
 
-  const [modalID, setModalID] = useState("")
-  const [modalTitle, setModalTitle] = useState("")
+  // States for Modal
+  const [stepID, setStepID] = useState(STEP_ID)
+  const [stepIndex, setStepIndex] = useState(STEP_INDEX)
+  const [stepTitle, setStepTitle] = useState(STEP_TITLE)
+
   const [visible, setVisible] = useState(false)
 
-  //Drag and Drop
+  // Drag and Drop
   const handleDrop = (droppedItem) => {
     if (!droppedItem.destination) return;
     var updatedList = [...selectedSteps];
@@ -40,40 +47,94 @@ const LabwareSteps = () => {
     updatedList.splice(droppedItem.destination.index, 0, reorderedItem);
 
     setSelectedSteps(updatedList);
+
+
+    // console.log("Dropped item source: " + droppedItem.source.index);
+    // console.log("Current Index: " + STEP_INDEX);
+    // console.log("Dropped item destination: " + droppedItem.destination.index);
+
+
+    if (droppedItem.source.index === STEP_INDEX) { // Check 1: Check if dropped item is on current step (Modal Step) and replace
+      STEP_INDEX = droppedItem.destination.index;
+      setStepIndex(STEP_INDEX)
+    }
+
+    else if (droppedItem.destination.index === STEP_INDEX) { // Check 2: check if dropped item drops on current step (Modal step)
+      if (droppedItem.source.index > STEP_INDEX) { // Check 2.1: check if dropped item comes from greater index and add to current index +1
+        STEP_INDEX += 1;
+        setStepIndex(STEP_INDEX)
+      }
+      if (droppedItem.source.index < STEP_INDEX) { // Check 2.2: check if dropped item comes from lower index and subtract from current index -1
+        STEP_INDEX -= 1;
+        setStepIndex(STEP_INDEX)
+      }
+    }
+
+    else if (droppedItem.destination.index < STEP_INDEX && droppedItem.source.index > STEP_INDEX) { // Check 3: Check if dropped item source is greater that current index and destination is less. Increment position of current index
+      STEP_INDEX += 1;
+      setStepIndex(STEP_INDEX)
+    }
+    else if (droppedItem.source.index < STEP_INDEX && droppedItem.destination.index > STEP_INDEX) { // Check 4: Check if dropped item source is less that current index and destination is greater. Dercement position of current index
+      STEP_INDEX -= 1;
+      setStepIndex(STEP_INDEX)
+    }
+  }
+
+  const handleClose = () => {
+    handleReset(true);
   }
 
   // Operations
   const handleReset = (flag) => {
-    if (flag) {
-      setModalID("");
-      setModalTitle("");
+    STEP_ID = -1;
+    setStepID(STEP_ID);
+
+    STEP_INDEX = -1;
+    setStepIndex(STEP_INDEX);
+
+    STEP_TITLE = "";
+    setStepTitle(STEP_TITLE);
+
+    if (flag) { // Close current modal if deleted
       setVisible(false);
     }
   }
 
   const handleAddStep = (e) => {
-    let id = e.target.id;
-    let title = e.target.innerText;
+    STEP_ID = e.target.id;
+    STEP_TITLE = e.target.innerText;
 
-    title = title.substring(1)
+    STEP_TITLE = STEP_TITLE.substring(1)
 
-    let obj = { id: e.target.id, value: title };
+    let obj = { id: STEP_ID, value: STEP_TITLE };
     setSelectedSteps(current => [...current, obj])
 
-    setModalID(id);
-    setModalTitle(title);
+
+    STEP_INDEX = selectedSteps.length;
+
+    setStepID(STEP_ID);
+    setStepIndex(STEP_INDEX)
+    setStepTitle(STEP_TITLE);
+
     setVisible(true);
   }
 
   const handleViewStep = (e) => {
-    let id = e.target.id;
-    let title = e.target.value;
+    STEP_ID = e.target.id;
+    STEP_TITLE = e.target.value;
 
-    setModalID(id);
-    setModalTitle(title);
+
+    STEP_INDEX = selectedSteps.findIndex((element) => element.id === STEP_ID);
+
+    setStepID(STEP_ID);
+    setStepIndex(STEP_INDEX)
+    setStepTitle(STEP_TITLE);
+
     setVisible(true);
   }
 
+
+  // FIX WHEN DELETED REARRANGE INDEX
   const handleDeleteStep = (e) => {
     let id = e.target.id;
     let title = e.target.value;
@@ -88,7 +149,7 @@ const LabwareSteps = () => {
       if (item.id === id) {
         tmp_delete.splice(index, 1)
 
-        if (item.id === modalID) {
+        if (item.id === stepID) {
           handleReset(true)
         }
       }
@@ -163,8 +224,8 @@ const LabwareSteps = () => {
 
       </CSidebar >
 
-      <AddLabwareModal visible={visible} setVisible={setVisible} title={modalTitle} step={modalID}>
-        {RenderStepForm(modalTitle)}
+      <AddLabwareModal visible={visible} setVisible={setVisible} stepID={stepID} stepIndex={stepIndex} stepTitle={stepTitle} handleClose={handleClose}>
+        {RenderStepForm(stepTitle)}
       </AddLabwareModal>
 
     </>

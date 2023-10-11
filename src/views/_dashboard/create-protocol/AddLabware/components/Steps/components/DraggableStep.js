@@ -21,10 +21,10 @@ export const DraggableStep = ({ id, value, index, handleViewStep, handleDeleteSt
 
               <CIcon icon={cilMove} className='float-end' style={{ margin: '4px 8px' }} />
               <div>
-                <strong>Step {index + 1}</strong> <small>({id})</small>
+                <strong> <CIcon icon={getIcons(value)} /> {value}</strong>
               </div>
               <small className="text-medium-emphasis me-3">
-                <CIcon icon={getIcons(value)} /> {value}
+                Step {index} ({id})
               </small>
               <br></br>
               <small className="text-medium-emphasis">
@@ -42,7 +42,6 @@ export const DraggableStep = ({ id, value, index, handleViewStep, handleDeleteSt
                 <CIcon icon={cilPencil} style={{ pointerEvents: 'none' }} />
               </CButton>
 
-
               <CButton
                 id={id}
                 value={value}
@@ -53,10 +52,6 @@ export const DraggableStep = ({ id, value, index, handleViewStep, handleDeleteSt
                 onClick={(e) => { e.stopPropagation(); handleDeleteStep(e) }}>
                 <CIcon icon={cilTrash} style={{ pointerEvents: 'none' }} />
               </CButton>
-
-
-
-
 
             </CListGroupItem>
 
