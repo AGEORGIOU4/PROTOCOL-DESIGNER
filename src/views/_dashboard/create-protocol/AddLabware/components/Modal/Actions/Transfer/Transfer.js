@@ -1,6 +1,7 @@
 import React from 'react';
 import { CCol, CForm, CFormCheck, CFormFeedback, CFormInput, CFormLabel, CFormSelect, CInputGroup, CInputGroupText, CRow } from '@coreui/react-pro'
 import { useState } from 'react'
+import { options_ChangeTip, options_Pipettes } from './data';
 
 export const TransferForm = () => {
   const [validated, setValidated] = useState(false)
@@ -29,7 +30,7 @@ export const TransferForm = () => {
 
             <CCol md={3}>
               <CFormLabel htmlFor="validationCustom01">Pipette</CFormLabel>
-              <CFormSelect options={[]} id="validationCustom01" required />
+              <CFormSelect options={options_Pipettes} id="validationCustom01" required />
               <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
 
@@ -97,7 +98,7 @@ export const TransferForm = () => {
 
             <CCol md={4}>
               <CFormLabel htmlFor="validationCustom05">Change Tip</CFormLabel>
-              <CFormSelect options={[]} id="validationCustom05" required />
+              <CFormSelect options={options_ChangeTip} id="validationCustom05" required />
               <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
 

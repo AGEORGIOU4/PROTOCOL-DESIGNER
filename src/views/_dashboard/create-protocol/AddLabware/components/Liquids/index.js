@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { CButton, CCol, CForm, CFormCheck, CFormFeedback, CFormInput, CFormLabel, CFormSelect, CRow } from '@coreui/react-pro'
 import { useState } from 'react'
 import Select from 'react-select';
 import { colourStyles } from '../Liquids/data'
 import { TwitterPicker } from 'react-color';
-import { Title } from '../helpers';
 import CIcon from '@coreui/icons-react';
 import { cilPlus } from '@coreui/icons';
 

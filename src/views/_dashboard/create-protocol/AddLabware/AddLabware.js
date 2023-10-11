@@ -3,11 +3,11 @@ import { CCol, CNav, CNavItem, CNavLink, CRow, CTabContent, CTabPane } from '@co
 
 import { Form } from './components/Form';
 import Deck from './components/Deck';
-import { Title } from './components/helpers';
 import { Liquids } from './components/Liquids';
 import CIcon from '@coreui/icons-react';
 import { cilBeaker, cilDrop, cilList, cilSpeech } from '@coreui/icons';
 import LabwareSteps from './components/Steps';
+import { TitleBar } from 'src/_common/helpers';
 
 const AddLabware = () => {
   const [selectedSlot, setSelectedSlot] = useState(1);
@@ -67,7 +67,7 @@ const AddLabware = () => {
 
             <CTabPane className="p-3" visible={activeKey === 2}>
               <CCol md={12}>
-                <Title title={"LIQUIDS"} />
+                <TitleBar title={"LIQUIDS"} />
                 <Liquids selectedSlot={selectedSlot} />
               </CCol>
 

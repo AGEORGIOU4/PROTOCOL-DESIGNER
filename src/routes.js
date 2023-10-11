@@ -3,8 +3,8 @@ import React from 'react'
 const Dashboard = React.lazy(() => import('./views/_dashboard/Dashboard'))
 
 
-const CreateProtocol = React.lazy(() => import('./views/_dashboard/create-protocol'))
-const AddLabware = React.lazy(() => import('./views/_dashboard/create-protocol/AddLabware/index'))
+const CreateProtocol = React.lazy(() => import('./views/_dashboard/create-protocol/CreateProtocol'))
+const AddLabware = React.lazy(() => import('./views/_dashboard/create-protocol/AddLabware/AddLabware'))
 
 
 

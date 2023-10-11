@@ -3,13 +3,13 @@ import { CListGroup, CDropdown, CDropdownToggle, CDropdownMenu, CDropdownItem, C
 import CIcon from '@coreui/icons-react'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import './styles.css'
-import { Title } from '../helpers'
 import AddLabwareModal from '../Modal'
 import { generateStepID, getIcons } from './helpers'
 import { PromptWithConfirm } from 'src/_common/alerts/swal'
 import { DraggableStep } from './components/DraggableStep'
 import { cilPlus } from '@coreui/icons'
-import { TransferForm } from '../Modal/Steps/Transfer'
+import { TransferForm } from '../Modal/Actions/Transfer/Transfer'
+import { TitleBar } from 'src/_common/helpers'
 
 
 var STEP_ID = -1
@@ -86,18 +86,20 @@ const LabwareSteps = () => {
 
   // Operations
   const handleReset = (flag) => {
-    STEP_ID = -1;
-    setStepID(STEP_ID);
-
-    STEP_INDEX = -1;
-    setStepIndex(STEP_INDEX);
-
-    STEP_TITLE = "";
-    setStepTitle(STEP_TITLE);
-
     if (flag) { // Close current modal if deleted
       setVisible(false);
     }
+
+    setTimeout(() => {
+      STEP_ID = -1;
+      setStepID(STEP_ID);
+
+      STEP_INDEX = -1;
+      setStepIndex(STEP_INDEX);
+
+      STEP_TITLE = "";
+      setStepTitle(STEP_TITLE);
+    }, 120)
   }
 
   const handleAddStep = (e) => {
@@ -121,7 +123,7 @@ const LabwareSteps = () => {
 
   const handleViewStep = (e) => {
     STEP_ID = e.target.id;
-    STEP_TITLE = e.target.value;
+    STEP_TITLE = e.target.title;
 
 
     STEP_INDEX = selectedSteps.findIndex((element) => element.id === STEP_ID);
@@ -169,7 +171,7 @@ const LabwareSteps = () => {
         style={{ padding: '0 6px 6px 6px ', overflowY: 'scroll', zIndex: '1056' }}
       >
 
-        <Title title={"TIMELINE"} />
+        <TitleBar title={"TIMELINE"} />
 
         <CButton style={{ background: '#fff', border: '1px solid #585858', color: '#585858', borderRadius: '0', padding: '20px', fontSize: 'small', fontWeight: '700', margin: '0 0 0 0' }}>
           STARTING DECK STATE
