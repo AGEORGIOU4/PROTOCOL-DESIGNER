@@ -6,7 +6,7 @@ import './styles.css'
 import AddLabwareModal from '../Modal'
 import { generateStepID, getIcons } from './helpers'
 import { PromptWithConfirm } from 'src/_common/alerts/swal'
-import { DraggableStep } from './components/DraggableStep'
+import { DraggableStep } from './DraggableStep'
 import { cilPlus } from '@coreui/icons'
 import { TransferForm } from '../Modal/Actions/Transfer/Transfer'
 import { TitleBar } from 'src/_common/helpers'
@@ -39,6 +39,33 @@ const LabwareSteps = () => {
 
   const [visible, setVisible] = useState(false)
 
+  const arrangeIndex = (sourceIndex, destinationIndex) => {
+    if (sourceIndex === STEP_INDEX) { // Check 1: Check if dropped item is on current step (Modal Step) and replace
+      STEP_INDEX = destinationIndex;
+      setStepIndex(STEP_INDEX)
+    }
+
+    else if (destinationIndex === STEP_INDEX) { // Check 2: check if dropped item drops on current step (Modal step)
+      if (sourceIndex > STEP_INDEX) { // Check 2.1: check if dropped item comes from greater index and add to current index +1
+        STEP_INDEX += 1;
+        setStepIndex(STEP_INDEX)
+      }
+      if (sourceIndex < STEP_INDEX) { // Check 2.2: check if dropped item comes from lower index and subtract from current index -1
+        STEP_INDEX -= 1;
+        setStepIndex(STEP_INDEX)
+      }
+    }
+
+    else if (destinationIndex < STEP_INDEX && sourceIndex > STEP_INDEX) { // Check 3: Check if dropped item source is greater that current index and destination is less. Increment position of current index
+      STEP_INDEX += 1;
+      setStepIndex(STEP_INDEX)
+    }
+    else if (sourceIndex < STEP_INDEX && destinationIndex > STEP_INDEX) { // Check 4: Check if dropped item source is less that current index and destination is greater. Dercement position of current index
+      STEP_INDEX -= 1;
+      setStepIndex(STEP_INDEX)
+    }
+  }
+
   // Drag and Drop
   const handleDrop = (droppedItem) => {
     if (!droppedItem.destination) return;
@@ -54,30 +81,32 @@ const LabwareSteps = () => {
     // console.log("Dropped item destination: " + droppedItem.destination.index);
 
 
-    if (droppedItem.source.index === STEP_INDEX) { // Check 1: Check if dropped item is on current step (Modal Step) and replace
-      STEP_INDEX = droppedItem.destination.index;
-      setStepIndex(STEP_INDEX)
-    }
+    // if (droppedItem.source.index === STEP_INDEX) { // Check 1: Check if dropped item is on current step (Modal Step) and replace
+    //   STEP_INDEX = droppedItem.destination.index;
+    //   setStepIndex(STEP_INDEX)
+    // }
 
-    else if (droppedItem.destination.index === STEP_INDEX) { // Check 2: check if dropped item drops on current step (Modal step)
-      if (droppedItem.source.index > STEP_INDEX) { // Check 2.1: check if dropped item comes from greater index and add to current index +1
-        STEP_INDEX += 1;
-        setStepIndex(STEP_INDEX)
-      }
-      if (droppedItem.source.index < STEP_INDEX) { // Check 2.2: check if dropped item comes from lower index and subtract from current index -1
-        STEP_INDEX -= 1;
-        setStepIndex(STEP_INDEX)
-      }
-    }
+    // else if (droppedItem.destination.index === STEP_INDEX) { // Check 2: check if dropped item drops on current step (Modal step)
+    //   if (droppedItem.source.index > STEP_INDEX) { // Check 2.1: check if dropped item comes from greater index and add to current index +1
+    //     STEP_INDEX += 1;
+    //     setStepIndex(STEP_INDEX)
+    //   }
+    //   if (droppedItem.source.index < STEP_INDEX) { // Check 2.2: check if dropped item comes from lower index and subtract from current index -1
+    //     STEP_INDEX -= 1;
+    //     setStepIndex(STEP_INDEX)
+    //   }
+    // }
 
-    else if (droppedItem.destination.index < STEP_INDEX && droppedItem.source.index > STEP_INDEX) { // Check 3: Check if dropped item source is greater that current index and destination is less. Increment position of current index
-      STEP_INDEX += 1;
-      setStepIndex(STEP_INDEX)
-    }
-    else if (droppedItem.source.index < STEP_INDEX && droppedItem.destination.index > STEP_INDEX) { // Check 4: Check if dropped item source is less that current index and destination is greater. Dercement position of current index
-      STEP_INDEX -= 1;
-      setStepIndex(STEP_INDEX)
-    }
+    // else if (droppedItem.destination.index < STEP_INDEX && droppedItem.source.index > STEP_INDEX) { // Check 3: Check if dropped item source is greater that current index and destination is less. Increment position of current index
+    //   STEP_INDEX += 1;
+    //   setStepIndex(STEP_INDEX)
+    // }
+    // else if (droppedItem.source.index < STEP_INDEX && droppedItem.destination.index > STEP_INDEX) { // Check 4: Check if dropped item source is less that current index and destination is greater. Dercement position of current index
+    //   STEP_INDEX -= 1;
+    //   setStepIndex(STEP_INDEX)
+    // }
+
+    arrangeIndex(droppedItem.source.index, droppedItem.destination.index);
   }
 
   const handleClose = () => {
@@ -135,8 +164,6 @@ const LabwareSteps = () => {
     setVisible(true);
   }
 
-
-  // FIX WHEN DELETED REARRANGE INDEX
   const handleDeleteStep = (e) => {
     let id = e.target.id;
     let title = e.target.value;
@@ -153,6 +180,11 @@ const LabwareSteps = () => {
 
         if (item.id === stepID) {
           handleReset(true)
+        }
+
+        if (index < STEP_INDEX) {
+          STEP_INDEX -= 1;
+          setStepIndex(STEP_INDEX)
         }
       }
     })

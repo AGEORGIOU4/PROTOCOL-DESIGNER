@@ -2,7 +2,7 @@ import { cilAvTimer, cilMove, cilTrash } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import { CButton, CListGroupItem } from '@coreui/react-pro'
 import { Draggable } from 'react-beautiful-dnd'
-import { getColor, getDuration, getIcons } from '../helpers'
+import { getColor, getDuration, getIcons } from './helpers'
 import { cidPencil } from '@coreui/icons-pro'
 
 export const DraggableStep = ({ id, value, index, handleViewStep, handleDeleteStep }) => {
@@ -18,9 +18,9 @@ export const DraggableStep = ({ id, value, index, handleViewStep, handleDeleteSt
             {...provided.draggableProps}
           >
 
-            <CListGroupItem href="#" id={id} title={value} className={`border-start-4 border-start-${getColor(value)}`} style={{ paddingRight: '8px' }} onClick={(e) => handleViewStep(e)}>
+            <CListGroupItem href="#" id={id} title={value} className={`border-start-4 border-start-${getColor(value)}`} style={{ paddingRight: '8px', cursor: 'pointer' }} onClick={(e) => handleViewStep(e)}>
 
-              <CIcon icon={cilMove} className='float-end' style={{ margin: '5px 8px' }} />
+              <CIcon icon={cilMove} className='float-end' style={{ margin: '5px 8px', cursor: 'grab' }} />
 
               <div style={{ pointerEvents: 'none' }}>
                 <strong> <CIcon icon={getIcons(value)} /> {value}</strong>

@@ -3,7 +3,7 @@ import CIcon from "@coreui/icons-react";
 import { CButton, CCol, CRow } from "@coreui/react-pro"
 import { useEffect, useState } from "react";
 import { PromptWithConfirm } from "src/_common/alerts/swal";
-const DECK_TOTAL_COLUMNS = 12;
+const DECK_TOTAL_COLUMNS = 10;
 
 const getSlotClassName = (id) => {
 
@@ -25,9 +25,8 @@ const Deck = ({ handleSelectedSlot }) => {
   useEffect(() => {
     let preset = [
       [
-        { id: createButton, name: 'Create Slot' }, { id: 1, name: 'Slot 1' }, { id: 2, name: 'Slot 2' }, { id: 3, name: 'Slot 3' },
-        { id: 4, name: 'Slot 4' }, { id: 5, name: 'Slot 5' }, { id: 6, name: 'Slot 6' }, { id: 7, name: 'Slot 7' }, { id: 8, name: 'Slot 8' }, { id: 9, name: 'Slot 9' },
-        { id: 10, name: 'Slot 10' }, { id: 11, name: 'Slot 11' },
+        { id: createButton, name: 'Create Slot' }, { id: 1, name: 'Slot 1' }, { id: 2, name: 'Slot 2' }, { id: 3, name: 'Slot 3' }, { id: 4, name: 'Slot 4' },
+        { id: 5, name: 'Slot 5' }, { id: 6, name: 'Slot 6' }, { id: 7, name: 'Slot 7' }, { id: 8, name: 'Slot 8' }, { id: 9, name: 'Slot 9' }
       ]
     ]
 
