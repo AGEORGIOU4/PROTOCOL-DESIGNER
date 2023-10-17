@@ -286,6 +286,7 @@ pre {
 }
 
 .add-labware-slot-btn:hover {
+  border: none;
   background-color: #01aab1;
   color: #ffffff;
 }
@@ -535,5 +536,31 @@ pre {
   border: 2px solid black;
   border-radius: 0;
   color: #dedede;
+  font-weight: 900;
+}
+
+.go-back-btn {
+  border: none;
+  color: #585858;
+}
+
+.go-back-btn:active {
+  background-color: transparent;
+  border: none;
+  box-shadow: none !important;
+  outline: 0;
+}
+
+.go-back-btn:focus {
+  background-color: transparent;
+  border: none;
+  outline: 0;
+}
+
+.go-back-btn:hover {
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  color: black;
   font-weight: 900;
 }

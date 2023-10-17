@@ -3,7 +3,7 @@ import CIcon from "@coreui/icons-react";
 import { CButton, CCol, CRow } from "@coreui/react-pro"
 import { useEffect, useState } from "react";
 import { PromptWithConfirm } from "src/_common/alerts/swal";
-const DECK_TOTAL_COLUMNS = 10;
+const DECK_TOTAL_COLUMNS = 5;
 
 const getSlotClassName = (id) => {
 
@@ -15,49 +15,87 @@ const getSlotClassName = (id) => {
   }
 }
 
-const Deck = ({ handleSelectedSlot }) => {
-  const [isSelected, setIsSelected] = useState(1);
-  const [deckRow, setDeckRow] = useState([]);
+const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
+  const [isSelected, setIsSelected] = useState();
+  const [deckSlots, setDeckSlots] = useState([]);
   const [deckGrid, setDeckGrid] = useState([]);
 
   const createButton = -1;
 
+  // Set up Slots
   useEffect(() => {
-    let preset = [
-      [
-        { id: createButton, name: 'Create Slot' }, { id: 1, name: 'Slot 1' }, { id: 2, name: 'Slot 2' }, { id: 3, name: 'Slot 3' }, { id: 4, name: 'Slot 4' },
-        { id: 5, name: 'Slot 5' }, { id: 6, name: 'Slot 6' }, { id: 7, name: 'Slot 7' }, { id: 8, name: 'Slot 8' }, { id: 9, name: 'Slot 9' }
-      ]
-    ]
+    let arr = [{ id: createButton, name: 'Create Slot' }];
+    for (let i = 1; i < 2; i++) {
+      arr.push({ id: i, name: 'Slot ' + i, tube_rack: "", well_plate: "", reservoir: "", aluminium_block: "" });
+    }
 
-    setDeckRow(preset)
+    let preset = [arr];
+
+    setDeckSlots(preset)
     setDeckGrid(preset)
+
+    let item = preset[0].filter((item => item.id == 1));
+    item = item[0]
+    handleSelect(item)
   }, [])
 
-  const handleSelect = (id) => {
-    setIsSelected(id);
-    handleSelectedSlot(id)
+  const setDefaultSelection = () => {
+    let item = deckSlots[0].filter((item => item.id === 1));
+    item = item[0];
+    handleSelect(item)
+  }
+
+  const handleSelect = (item) => {
+    setIsSelected(item.id);
+    handleSelectedSlot(item)
+    console.log(deckSlots)
   };
+
+  const handleEdit = () => {
+    if (deckSlots.length > 0) {
+      let tmp_arr = deckSlots;
+
+      let index = tmp_arr[0].findIndex(item => item.name == newLabwareSelection.name);
+      tmp_arr[0][index] = newLabwareSelection;
+      setDeckSlots(tmp_arr)
+    }
+
+  };
+
+  useEffect(() => {
+    handleEdit()
+  }, [newLabwareSelection])
 
   const handleCreate = () => {
     let id = 0;
-    let name = '';
+    let name = 'Slot ' + id;
+    let tube_rack = '';
+    let well_plate = '';
+    let reservoir = '';
+    let aluminium_block = '';
 
-    deckRow?.map((row, index_row) => {
-      if (index_row === (deckRow.length - 1)) {
+
+    deckSlots?.map((row, index_row) => {
+      if (index_row === (deckSlots.length - 1)) {
         row?.map((col, index_col) => {
           if (index_col === (row.length - 1)) {
             id = col.id + 1;
             name = 'Slot ' + id;
-            deckRow[index_row].push({ id, name })
+            tube_rack = '';
+            well_plate = '';
+            reservoir = '';
+            aluminium_block = '';
+            deckSlots[index_row].push({ id, name, tube_rack, well_plate, reservoir, aluminium_block })
           }
         })
       }
     })
 
+    let item = { id: id, name: name, tube_rack: tube_rack, well_plate: well_plate, reservoir: reservoir, aluminium_block: aluminium_block };
+
     splitBoard();
 
-    handleSelect(id)
+    handleSelect(item)
   };
 
   const handleDelete = (id, name) => {
@@ -65,22 +103,25 @@ const Deck = ({ handleSelectedSlot }) => {
   }
 
   const deleteSlot = (id) => {
-    const tmp_delete = [...deckRow];
+    const tmp_delete = [...deckSlots];
     tmp_delete?.map((array, index_1) => {
       array?.map((item, index_2) => {
         if (item.id === id) {
           tmp_delete[index_1].splice([index_2], 1)
-          setDeckRow(tmp_delete)
+          setDeckSlots(tmp_delete)
         }
       })
     })
     splitBoard();
 
-    handleSelect(1)
+    if (id === isSelected) {
+      setDefaultSelection();
+    }
+
   }
 
   const splitBoard = () => {
-    let array = deckRow[0];
+    let array = deckSlots[0];
 
     let subarrayLength = DECK_TOTAL_COLUMNS;
 
@@ -94,6 +135,7 @@ const Deck = ({ handleSelectedSlot }) => {
 
   return (
     <>
+
       <table className="add-labware-table">
         <tbody>
           {deckGrid?.map((rows, index) => { //iterate through row array
@@ -107,7 +149,7 @@ const Deck = ({ handleSelectedSlot }) => {
                         <div key={item} style={{ border: '1px solid #f0f0f0' }}><small>{item.name}</small></div>
 
                         <CButton key={item.id}
-                          onClick={() => item.id === createButton ? handleCreate() : handleSelect(item.id)} id={item.id}
+                          onClick={() => item.id === createButton ? handleCreate() : handleSelect(item)} id={item.id}
                           className={isSelected === item.id ? 'add-labware-slot-btn btn-selected' : getSlotClassName(item.id)} >
                           {item.id === createButton ? '+' : item.id}
                         </CButton>
@@ -132,7 +174,9 @@ const Deck = ({ handleSelectedSlot }) => {
           })}
         </tbody>
       </table>
+      <h6><strong>Please select an existing slot or create new one</strong></h6>
       <br />
+
     </>
   )
 }

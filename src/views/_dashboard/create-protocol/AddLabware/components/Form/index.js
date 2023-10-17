@@ -1,147 +1,115 @@
 import React, { useEffect } from 'react';
-import { CButton, CCol, CForm, CFormCheck, CFormFeedback, CFormInput, CFormLabel, CFormSelect, CRow } from '@coreui/react-pro'
+import { CButton, CCol, CForm, CFormFeedback, CFormInput, CFormLabel, CFormSelect } from '@coreui/react-pro'
 import { useState } from 'react'
 import CIcon from '@coreui/icons-react';
-import { cilPlus } from '@coreui/icons';
+import { cilPlus, cilSave } from '@coreui/icons';
+import { aluminium_blocks, reservoirs, tube_racks, well_plates } from '../Labware/data';
 
-const options = [
-  {
-    value: 0,
-    text: '',
-    color: '',
-    label: ''
-    // selected: true,
-    // disabled: true,
-  },
-  {
-    value: 1,
-    text: 'Water',
-    color: 'red',
-    label: 'Water'
-    // selected: true,
-    // disabled: true,
-  },
-  {
-    value: 2,
-    text: 'Oil',
-    color: 'purple',
-    label: 'Oil'
-  },
-  {
-    value: 3,
-    text: 'Cryogenic liquid',
-    color: 'blue',
-    label: 'Cryogenic liquid'
-  },
-  {
-    value: 4,
-    text: 'Petrol',
-    color: 'grey',
-    label: 'Petrol'
-  },
-  {
-    value: 5,
-    text: 'Kean',
-    color: 'orange',
-    label: 'Kean'
-  },
-  {
-    value: 6,
-    text: 'Lux',
-    color: 'green',
-    label: 'Lux'
-  },
-
-]
-
-
-export const Form = (selectedSlot) => {
+export const Form = ({ selectedSlot, handleSubmit }) => {
   const [validated, setValidated] = useState(false)
 
-  const [slotName, setSlotName] = useState('Slot ' + selectedSlot.selectedSlot)
+
+  const [slotName, setSlotName] = useState('')
   const [tubeRack, setTubeRack] = useState('')
   const [wellPlate, setWellPlate] = useState('')
   const [reservoir, setReservoir] = useState('')
   const [aluminiumBlock, setAluminiumBlock] = useState('')
 
-  const [liquidOptions, setLiquidOptions] = useState([])
-  const [selectedLiquids, setSelectedLiquids] = useState([])
-  const [liquidName, setLiquidName] = useState('')
-  const [liquidVolume, setLiquidVolume] = useState('0')
-  const [liquidColor, setLiquidColor] = useState('#9900EF')
-  const [mixtureDisabled, setMixtureDisabled] = useState(false)
-
-  const handleSubmit = (event) => {
-    const form = event.currentTarget
-    if (form.checkValidity() === false) {
-      event.preventDefault()
-      event.stopPropagation()
-    }
-    setValidated(true)
-  }
 
   useEffect(() => {
-    setSlotName('Slot ' + selectedSlot.selectedSlot)
+    console.log(selectedSlot)
+    setSlotName(selectedSlot.name);
+    setTubeRack(selectedSlot.tube_rack);
+    setWellPlate(selectedSlot.well_plate);
+    setReservoir(selectedSlot.reservoir);
+    setAluminiumBlock(selectedSlot.aluminium_block);
+
   }, [selectedSlot])
+
+  const handleChangeTubeRack = (e) => {
+    setTubeRack(e.target.value);
+
+    // if (e.target.value != 0) {
+    //   document.getElementById("validationCustom03").disabled = true;
+    //   document.getElementById("validationCustom04").disabled = true;
+    //   document.getElementById("validationCustom05").disabled = true;
+    // } else {
+    //   document.getElementById("validationCustom03").disabled = false;
+    //   document.getElementById("validationCustom04").disabled = false;
+    //   document.getElementById("validationCustom05").disabled = false;
+    // }
+  }
 
   const handleChangeWellPlate = (e) => {
     setWellPlate(e.target.value);
 
-    if (e.target.value != 0) {
-      document.getElementById("validationCustom02").disabled = true;
-      document.getElementById("validationCustom03").disabled = true;
-      document.getElementById("validationCustom05").disabled = true;
-      document.getElementById("validationCustom06").disabled = true;
-    } else {
-      document.getElementById("validationCustom02").disabled = false;
-      document.getElementById("validationCustom03").disabled = false;
-      document.getElementById("validationCustom05").disabled = false;
-      document.getElementById("validationCustom06").disabled = false;
-    }
   }
+
+  const handleChangeReservoir = (e) => {
+    setReservoir(e.target.value);
+  }
+
+  const handleChangeAluminiumBlock = (e) => {
+    setAluminiumBlock(e.target.value);
+  }
+
+  const handleSubmitForm = () => {
+    let item = {
+      name: slotName,
+      tube_rack: tubeRack,
+      well_plate: wellPlate,
+      reservoir: reservoir,
+      aluminium_block: aluminiumBlock
+
+    }
+    handleSubmit(item);
+  }
+
 
   return (
     <>
 
       <CCol md={12}>
-        <CForm className="row g-3 needs-validation" noValidate validated={validated} onSubmit={handleSubmit}>
+        <CForm >
 
           <CCol md={12}>
             <CFormLabel htmlFor="validationCustom01">Slot Name</CFormLabel>
-            <CFormInput type='text' id="validationCustom01" value={slotName} onChange={(e) => setSlotName(e.target.value)} required />
+            <CFormInput type='text' id="validationCustom01" value={slotName} onChange={(e) => setSlotName(e.target.value)} />
             <CFormFeedback valid>Looks good!</CFormFeedback>
           </CCol>
 
           <CCol md={12}>
             <CFormLabel htmlFor="validationCustom02">Tube Rack</CFormLabel>
-            <CFormSelect options={options} id="validationCustom02" required />
+            <CFormSelect options={tube_racks} id="validationCustom02" value={tubeRack} onChange={(e) => handleChangeTubeRack(e)} />
             <CFormFeedback valid>Looks good!</CFormFeedback>
           </CCol>
 
           <CCol md={12}>
             <CFormLabel htmlFor="validationCustom03">Well Plate</CFormLabel>
-            <CFormSelect options={options} id="validationCustom03" required />
+            <CFormSelect options={well_plates} id="validationCustom03" value={wellPlate} onChange={(e) => handleChangeWellPlate(e)} />
             <CFormFeedback valid>Looks good!</CFormFeedback>
           </CCol>
 
           <CCol md={12}>
             <CFormLabel htmlFor="validationCustom04">Reservoir</CFormLabel>
-            <CFormSelect options={options} id="validationCustom04" required />
+            <CFormSelect options={reservoirs} id="validationCustom04" value={reservoir} onChange={(e) => handleChangeReservoir(e)} />
             <CFormFeedback valid>Looks good!</CFormFeedback>
           </CCol>
 
           <CCol md={12}>
             <CFormLabel htmlFor="validationCustom05">Aluminium Block</CFormLabel>
-            <CFormSelect options={options} id="validationCustom05" required />
+            <CFormSelect options={aluminium_blocks} id="validationCustom05" value={aluminiumBlock} onChange={(e) => handleChangeAluminiumBlock(e)} />
             <CFormFeedback valid>Looks good!</CFormFeedback>
           </CCol>
 
           <br />
 
-          <CCol md={12} style={{ textAlign: 'end' }}>
-            <CButton className='standard-btn'><CIcon size='sm' icon={cilPlus} /> ADD LABWARE</CButton>
-          </CCol>
         </CForm>
+
+        <CCol md={12} style={{ textAlign: 'end' }}>
+          <CButton className='standard-btn'><CIcon size='sm' icon={cilPlus} /> ADD LABWARE</CButton> <CButton className='standard-btn' onClick={handleSubmitForm}><CIcon size='sm' icon={cilSave} /> SAVE</CButton>
+        </CCol>
+
 
       </CCol>
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import { AppContent, AppSidebar } from '../components/index'
+import { AppContent, AppHeader, AppSidebar } from '../components/index'
 import LabwareSteps from 'src/views/_dashboard/create-protocol/AddLabware/components/Steps';
 
 
@@ -12,8 +12,8 @@ const DefaultLayout = () => {
       {/* {currentHash.includes('add-labware') && <LabwareSteps />} */}
 
       <div className="wrapper d-flex flex-column min-vh-100 ">
-        {/* <AppHeader /> */}
         <div className="body flex-grow-1 px-3">
+          {/* <AppHeader /> */}
           <AppContent />
         </div>
         {/* <AppFooter /> */}

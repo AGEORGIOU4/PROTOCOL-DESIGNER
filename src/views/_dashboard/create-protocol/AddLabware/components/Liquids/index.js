@@ -58,14 +58,8 @@ const options = [
 ]
 
 
-export const Liquids = (selectedSlot) => {
+export const Liquids = () => {
   const [validated, setValidated] = useState(false)
-
-  const [slotName, setSlotName] = useState('Slot ' + selectedSlot.selectedSlot)
-  const [tubeRack, setTubeRack] = useState('')
-  const [wellPlate, setWellPlate] = useState('')
-  const [reservoir, setReservoir] = useState('')
-  const [aluminiumBlock, setAluminiumBlock] = useState('')
 
   const [liquidOptions, setLiquidOptions] = useState([])
   const [selectedLiquids, setSelectedLiquids] = useState([])

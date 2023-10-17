@@ -18,7 +18,7 @@ export const DraggableStep = ({ id, value, index, handleViewStep, handleDeleteSt
             {...provided.draggableProps}
           >
 
-            <CListGroupItem href="#" id={id} title={value} className={`border-start-4 border-start-${getColor(value)}`} style={{ paddingRight: '8px', cursor: 'pointer' }} onClick={(e) => handleViewStep(e)}>
+            <CListGroupItem href="#" id={id} title={value} className={`border-start-4 border-start-${getColor(value)}`} style={{ paddingRight: '8px', cursor: 'pointer', marginBottom: '4px' }} onClick={(e) => handleViewStep(e)}>
 
               <CIcon icon={cilMove} className='float-end' style={{ margin: '5px 8px', cursor: 'grab' }} />
 

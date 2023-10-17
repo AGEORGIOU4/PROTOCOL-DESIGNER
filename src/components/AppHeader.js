@@ -1,17 +1,22 @@
 import React from 'react'
-import { CContainer, CHeader, CHeaderBrand, CLink, CNavItem, CNavLink } from '@coreui/react-pro'
+import { CButton, CContainer, CHeader, CHeaderBrand, CLink, CNavItem, CNavLink } from '@coreui/react-pro'
 import CIcon from '@coreui/icons-react'
 import { logo } from 'src/assets/brand/logo'
-import { NavLink } from 'react-router-dom'
+import { cilArrowLeft } from '@coreui/icons'
+import { useNavigate } from 'react-router'
+import { cisChevronLeftAlt } from '@coreui/icons-pro'
 
 const AppHeader = () => {
+  const navigate = useNavigate()
+
+  const goBack = () => {
+    navigate(-1);
+  };
+
   return (
-    <CHeader position="sticky" className="bg-primary mb-4">
+    <CHeader position="fixed">
       <CContainer fluid>
-        <CLink href='/' style={{ textDecoration: 'none' }}><h5 className='text-white' ><strong>PROTOCOL DESIGNER</strong></h5></CLink>
-        <CHeaderBrand className="mx-auto d-md-none" to="/">
-          <CIcon icon={logo} height={48} alt="Logo" />
-        </CHeaderBrand>
+        <CButton onClick={(goBack)} variant='ghost' className='go-back-btn float-end'><CIcon icon={cisChevronLeftAlt} /></CButton>
       </CContainer>
     </CHeader>
   )

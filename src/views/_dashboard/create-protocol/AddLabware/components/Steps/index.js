@@ -75,37 +75,6 @@ const LabwareSteps = () => {
 
     setSelectedSteps(updatedList);
 
-
-    // console.log("Dropped item source: " + droppedItem.source.index);
-    // console.log("Current Index: " + STEP_INDEX);
-    // console.log("Dropped item destination: " + droppedItem.destination.index);
-
-
-    // if (droppedItem.source.index === STEP_INDEX) { // Check 1: Check if dropped item is on current step (Modal Step) and replace
-    //   STEP_INDEX = droppedItem.destination.index;
-    //   setStepIndex(STEP_INDEX)
-    // }
-
-    // else if (droppedItem.destination.index === STEP_INDEX) { // Check 2: check if dropped item drops on current step (Modal step)
-    //   if (droppedItem.source.index > STEP_INDEX) { // Check 2.1: check if dropped item comes from greater index and add to current index +1
-    //     STEP_INDEX += 1;
-    //     setStepIndex(STEP_INDEX)
-    //   }
-    //   if (droppedItem.source.index < STEP_INDEX) { // Check 2.2: check if dropped item comes from lower index and subtract from current index -1
-    //     STEP_INDEX -= 1;
-    //     setStepIndex(STEP_INDEX)
-    //   }
-    // }
-
-    // else if (droppedItem.destination.index < STEP_INDEX && droppedItem.source.index > STEP_INDEX) { // Check 3: Check if dropped item source is greater that current index and destination is less. Increment position of current index
-    //   STEP_INDEX += 1;
-    //   setStepIndex(STEP_INDEX)
-    // }
-    // else if (droppedItem.source.index < STEP_INDEX && droppedItem.destination.index > STEP_INDEX) { // Check 4: Check if dropped item source is less that current index and destination is greater. Dercement position of current index
-    //   STEP_INDEX -= 1;
-    //   setStepIndex(STEP_INDEX)
-    // }
-
     arrangeIndex(droppedItem.source.index, droppedItem.destination.index);
   }
 
@@ -205,7 +174,7 @@ const LabwareSteps = () => {
 
         <TitleBar title={"TIMELINE"} />
 
-        <CButton style={{ background: '#fff', border: '1px solid #585858', color: '#585858', borderRadius: '0', padding: '20px', fontSize: 'small', fontWeight: '700', margin: '0 0 0 0' }}>
+        <CButton style={{ background: '#fff', border: '1px solid #585858', color: '#585858', borderRadius: '0', padding: '20px', fontSize: 'small', fontWeight: '700', margin: '0 0 0px 0' }}>
           STARTING DECK STATE
         </CButton>
 
@@ -252,7 +221,7 @@ const LabwareSteps = () => {
           </div>
         </CListGroup>
 
-        <CButton style={{ background: '#fff', border: '1px solid #585858', color: '#585858', borderRadius: '0', padding: '20px', fontSize: 'small', fontWeight: '700', margin: '6px 0' }}>
+        <CButton style={{ background: '#fff', border: '1px solid #585858', color: '#585858', borderRadius: '0', padding: '20px', fontSize: 'small', fontWeight: '700', margin: '0' }}>
           FINAL DECK STATE
         </CButton>
 

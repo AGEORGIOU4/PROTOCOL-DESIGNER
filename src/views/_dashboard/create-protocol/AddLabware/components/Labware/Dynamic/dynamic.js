@@ -1,43 +1,48 @@
 import { CCol, CRow } from "@coreui/react-pro";
-import "./styles.css";
+import "./dynamic_styles.css";
 import DragSelect from "dragselect";
 import { useRef, useState, useEffect, createRef } from "react";
+import { GetLetter } from "src/_common/helpers";
 
-const ROWS = 12;
+const ROWS = 8;
 const COLUMNS = 12;
-
-const NumberToLetter = (number) => {
-  return String.fromCharCode(64 + parseInt(number, 10));
-}
+const SQUARED_WELL_PLATE = false;
+const WELL_PLATE_ml = 50;
 
 const WellsSelection = () => {
   const [boxes, setBoxes] = useState([]);
   const itemsRef = useRef([]);
 
+
+  // Set Up GRID
   useEffect(() => {
     const elems = [];
     let i = 0;
+
     while (i < ROWS) {
       const row = Array.from({ length: COLUMNS }).map((item, index) => {
         const ref = createRef();
         itemsRef.current.push(ref);
         const id = Math.floor(Math.random() * 1e10).toString(16);
-        return <div key={id} className="box" ref={ref}></div>
+        return <CCol key={id} className="selectables" style={{ borderRadius: SQUARED_WELL_PLATE ? '0' : '100%' }} ref={ref}></CCol>
       })
-
       elems.push(row)
-
       i++;
     }
     setBoxes(elems);
-
   }, []);
 
+  // Configure Drag Select
   useEffect(() => {
     const ds = new DragSelect({
-      selectables: document.getElementsByClassName("box"),
-      area: document.querySelector('#well-selection-area'),
       draggability: false,
+      immediateDrag: false,
+      selectables: document.getElementsByClassName("selectables"),
+      area: document.querySelector('#well-selection-area'),
+      selectionThreshold: 0,
+      // multiSelectMode: false,
+      // multiSelectToggling: false,
+      // multiSelectKeys: ['Control']
 
     });
 
@@ -46,7 +51,7 @@ const WellsSelection = () => {
     );
 
     return () => {
-      // ds.unsubscribe();
+      ds.unsubscribe();
     };
   }, [boxes]);
 
@@ -55,21 +60,19 @@ const WellsSelection = () => {
 
   return (
     <>
-      <div id='well-selection-area' className="wells-selection"
+      <h2>{ROWS * COLUMNS} Well Plate {SQUARED_WELL_PLATE ? 'Flat' : ''} {WELL_PLATE_ml}μL</h2>
+      <div id='well-selection-area' className="wells-selection-frame"
       // onMouseUp={(e) => console.log(e)}
       >
 
-
-
         <CRow className="label-row">
           {boxes?.map((row, index) => {
-            console.log(row)
-            if (index === 0) {
+            if (index === 0) { // LABEL HEADERS 
               return (
                 row?.map((col, index) => {
                   return (
-                    <CCol className="label-col">
-                      <span className="box" style={{ border: 'none' }}>{index + 1}</span>
+                    <CCol style={{ userSelect: 'none' }}>
+                      <span  >{index + 1}</span>
                     </CCol>
                   )
                 })
@@ -79,19 +82,18 @@ const WellsSelection = () => {
 
         </CRow>
 
-        {boxes?.map((row, index) => {
 
+        {boxes?.map((row, index) => {
           return (
             <>
-              <CRow className="well-row">
-                <span style={{ userSelect: 'none', width: 'auto', display: 'flex', alignItems: 'center', width: '50px' }}>{NumberToLetter(index + 1)}</span>
+              <CRow>
+                <span style={{ userSelect: 'none', display: 'flex', alignItems: 'center', width: '40px' }}>{GetLetter(index)}</span>
                 {row}
               </CRow>
-
-
             </>
           )
         })}
+
       </div>
     </>
   )

@@ -10,11 +10,18 @@ import LabwareSteps from './components/Steps';
 import { TitleBar } from 'src/_common/helpers';
 
 const AddLabware = () => {
-  const [selectedSlot, setSelectedSlot] = useState(1);
   const [activeKey, setActiveKey] = useState(1)
+  const [selectedSlot, setSelectedSlot] = useState("");
+
+  const [newLabwareSelection, setNewLabwareSelection] = useState("");
+
 
   const handleSelectedSlot = (selectedSlot) => {
     setSelectedSlot(selectedSlot);
+  }
+
+  const handleSubmit = (newData) => {
+    setNewLabwareSelection(newData);
   }
 
   return (
@@ -56,11 +63,11 @@ const AddLabware = () => {
             <CTabPane className="p-3" visible={activeKey === 1}>
 
               <CCol md={12}>
-                <Deck handleSelectedSlot={handleSelectedSlot} />
+                <Deck handleSelectedSlot={handleSelectedSlot} newLabwareSelection={newLabwareSelection} />
               </CCol>
 
               <CCol md={12}>
-                <Form selectedSlot={selectedSlot} />
+                <Form selectedSlot={selectedSlot} handleSubmit={handleSubmit} />
               </CCol>
 
             </CTabPane>
@@ -68,7 +75,7 @@ const AddLabware = () => {
             <CTabPane className="p-3" visible={activeKey === 2}>
               <CCol md={12}>
                 <TitleBar title={"LIQUIDS"} />
-                <Liquids selectedSlot={selectedSlot} />
+                <Liquids />
               </CCol>
 
             </CTabPane>

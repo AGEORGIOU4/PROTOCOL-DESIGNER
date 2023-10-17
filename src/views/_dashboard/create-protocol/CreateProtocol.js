@@ -43,7 +43,7 @@ const CreateProtocol = () => {
   return (
     <>
       <div className="min-vh-60 d-flex flex-row align-items-center">
-        <CCol xs={6}>
+        <CCol>
           <CForm
             className="row g-3 needs-validation"
             noValidate
@@ -52,7 +52,7 @@ const CreateProtocol = () => {
           >
             <CCol md={12}>
               <CFormLabel htmlFor="validationCustom01">Protocol Name</CFormLabel>
-              <CFormInput autoComplete={'off'} type="text" id="validationCustom01" placeholder="Sample Protocol" required />
+              <CFormInput autoComplete={'off'} type="text" id="validationCustom01" placeholder="Sample Protocol" />
               <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
             <CCol md={12}>
@@ -62,17 +62,17 @@ const CreateProtocol = () => {
             </CCol>
             <CCol md={12}>
               <CFormLabel htmlFor="validationCustom02">Author</CFormLabel>
-              <CFormInput autoComplete={'off'} type="text" id="validationCustom02" placeholder="Orinda Charisse" required />
+              <CFormInput autoComplete={'off'} type="text" id="validationCustom02" placeholder="Orinda Charisse" />
               <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
             <CCol md={12}>
               <CFormLabel htmlFor="validationCustom04">Organization</CFormLabel>
-              <CFormInput autoComplete={'off'} type="text" id="validationCustom04" placeholder="Efevre Tech Labs" required />
+              <CFormInput autoComplete={'off'} type="text" id="validationCustom04" placeholder="Efevre Tech Labs" />
               <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
             <CCol md={12}>
               <CFormLabel htmlFor="validationCustom03">Description</CFormLabel>
-              <CFormTextarea autoComplete={'off'} id="validationCustom03" required />
+              <CFormTextarea autoComplete={'off'} id="validationCustom03" />
               <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
             <CCol xs={12}>

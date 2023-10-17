@@ -14,7 +14,7 @@ import {
   CRow,
 } from '@coreui/react-pro'
 import CIcon from '@coreui/icons-react'
-import { cilCloudUpload, cilLockLocked, cilPlus, cilUser } from '@coreui/icons'
+import { cilCloudUpload, cilList, cilLockLocked, cilPlus, cilUser } from '@coreui/icons'
 
 const Dashboard = () => {
   return (
@@ -46,12 +46,27 @@ const Dashboard = () => {
                       <p>
                         Import an existing protocol. Use the graphical interface to import a predefined protocol.
                       </p>
-                      <Link to="/import-protocol">
+                      <Link to="/">
                         <CButton color="primary" className="mt-3 basic-btn float-end" active tabIndex={-1}>
                           <CIcon icon={cilCloudUpload} /> Import
                         </CButton>
                       </Link>
                     </div>
+                  </CCardBody>
+                </CCard>
+                <CCard className="p-4 bg-light" >
+                  <CCardBody>
+                    <CForm>
+                      <h1>Labware</h1>
+                      <p>
+                        Check out existing labware and learn the definitions, capacity, usages
+                      </p>
+                      <Link to="/labware-collection">
+                        <CButton color="primary" className="mt-3 basic-btn float-end" active tabIndex={-1}>
+                          <CIcon icon={cilList} /> Collection
+                        </CButton>
+                      </Link>
+                    </CForm>
                   </CCardBody>
                 </CCard>
               </CCardGroup>
