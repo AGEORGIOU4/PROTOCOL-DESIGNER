@@ -79,17 +79,15 @@ const CreateProtocol = () => {
               <CFormCheck
                 type="checkbox"
                 id="consentCheck"
-                checked={true}
+                defaultChecked={true}
                 label="I authorize Efevre Tech LTD to publish this protocol in the Protocol Library"
-                onChange={{}}
                 required
               />
               <CFormFeedback invalid>You must agree before submitting.</CFormFeedback>
             </CCol>
             <CCol xs={12}>
-              <CButton color="primary" className='mt-3 basic-btn' type="submit">
-                <CIcon icon={cilPlus} /> Create
-              </CButton>
+              {/* <CButton color="primary" className='mt-3 basic-btn' type="submit"><CIcon icon={cilPlus} /> Create</CButton> */}
+              <CButton className='standard-btn' style={{ width: '100%', height: '60px' }} type='submit'><CIcon size='sm' icon={cilPlus} /> CREATE</CButton>
             </CCol>
           </CForm>
         </CCol>

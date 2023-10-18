@@ -183,14 +183,16 @@ const LabwareSteps = () => {
           <CDropdown style={{ width: '100%', userSelect: 'none' }}>
             <CDropdownToggle className='standard-btn'><CIcon size='sm' icon={cilPlus} /> ADD STEP</CDropdownToggle>
             <CDropdownMenu className='dropdownMenu'>
-              {stepsList?.map((item, index) => {
-                let id = generateStepID();
-                return (
-                  < CDropdownItem key={item} className='dropdownItem' id={id} value={item} onClick={(e) => handleAddStep(e)}>
-                    <CIcon key={index} icon={getIcons(item)} /> {item}
-                  </CDropdownItem>
-                )
-              })}
+              {React.Children.toArray(
+                stepsList?.map((item, index) => {
+                  let id = generateStepID();
+                  return (
+                    < CDropdownItem key={item} className='dropdownItem' id={id} value={item} onClick={(e) => handleAddStep(e)}>
+                      <CIcon key={index} icon={getIcons(item)} /> {item}
+                    </CDropdownItem>
+                  )
+                })
+              )}
             </CDropdownMenu>
           </CDropdown>
         </div>
@@ -206,13 +208,15 @@ const LabwareSteps = () => {
                     {...provided.droppableProps}
                     ref={provided.innerRef}
                   >
-                    {selectedSteps?.map((item, index) => {
-                      return (
-                        <>
-                          <DraggableStep key={item.id} id={item.id} value={item.value} index={index} handleViewStep={(e) => handleViewStep(e)} handleDeleteStep={(e) => handleDeleteStep(e)} />
-                        </>
-                      )
-                    })}
+                    {React.Children.toArray(
+                      selectedSteps?.map((item, index) => {
+                        return (
+                          <>
+                            <DraggableStep key={item.id} id={item.id} value={item.value} index={index} handleViewStep={(e) => handleViewStep(e)} handleDeleteStep={(e) => handleDeleteStep(e)} />
+                          </>
+                        )
+                      })
+                    )}
                     {provided.placeholder}
                   </div>
                 )}
@@ -227,7 +231,7 @@ const LabwareSteps = () => {
 
       </CSidebar >
 
-      <AddLabwareModal visible={visible} setVisible={setVisible} stepID={stepID} stepIndex={stepIndex} stepTitle={stepTitle} handleClose={handleClose}>
+      <AddLabwareModal visible={visible} setVisible={setVisible} title={stepTitle} stepID={stepID} stepIndex={stepIndex} handleClose={handleClose}>
         {RenderStepForm(stepTitle)}
       </AddLabwareModal>
 

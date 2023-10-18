@@ -32,5 +32,9 @@
   border: 2px solid #01aab1;
   outline: 3px solid #01aab1;
   outline-offset: -1px;
+}
 
+.ds-selector {
+  background: #01aab1 !important;
+  opacity: 0.05;
 }

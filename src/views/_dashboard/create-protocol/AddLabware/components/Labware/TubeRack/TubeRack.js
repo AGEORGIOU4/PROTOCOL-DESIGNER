@@ -3,22 +3,24 @@ import DragSelect from "dragselect";
 import React, { useRef, useState, useEffect, createRef } from "react";
 import { GetLetter } from "src/_common/helpers";
 
-import './styles.css'
-import { reservoirs } from "../data";
+import "./styles.css";
+import { tube_racks } from "../data";
 
-const ReservoirSelection = ({ name }) => {
+const TubeRackSelection = ({ name }) => {
   const [boxes, setBoxes] = useState([]);
   const itemsRef = useRef([]);
 
-  const [selected, setSelected] = useState(reservoirs[0])
-  const [rows, setRows] = useState(reservoirs[0].rows);
-  const [cols, setCols] = useState(reservoirs[0].cols);
+  const [selected, setSelected] = useState(tube_racks[0])
+  const [rows, setRows] = useState(tube_racks[0].rows);
+  const [cols, setCols] = useState(tube_racks[0].cols);
+  const [squared, setSquared] = useState(false);
 
-  const handleChangeWellPlate = (e) => {
-    const item = reservoirs.filter(item => item.label === e.target.value);
+  const handleChangeTubeRack = (e) => {
+    const item = tube_racks.filter(item => item.label === e.target.value);
     setSelected(item[0])
     setRows(item[0].rows);
     setCols(item[0].cols);
+    setSquared(item[0].squared);
   }
 
   // Set Up GRID
@@ -31,7 +33,7 @@ const ReservoirSelection = ({ name }) => {
         const ref = createRef();
         itemsRef.current.push(ref);
         const id = Math.floor(Math.random() * 1e10).toString(16);
-        return <CCol key={id} className={"r_selectables"} ref={ref}></CCol>
+        return <CCol key={id} className="wp_selectables" style={{ borderRadius: squared ? '0' : '100%' }} ref={ref}></CCol>
       })
       elems.push(row)
       i++;
@@ -44,10 +46,11 @@ const ReservoirSelection = ({ name }) => {
     const ds = new DragSelect({
       draggability: false,
       immediateDrag: false,
-      selectables: document.getElementsByClassName("r_selectables"),
+      selectables: document.getElementsByClassName("wp_selectables"),
       multiSelectMode: false,
       multiSelectToggling: true,
       refreshMemoryRate: 1000000000000000,
+
     });
 
     ds.subscribe("DS:end",// (e) => console.log(e.items)
@@ -60,33 +63,31 @@ const ReservoirSelection = ({ name }) => {
 
   // console.log(itemsRef);
 
-
   // Set Selected Labware
   useEffect(() => {
-    const item = reservoirs.filter(item => item.label === name);
+    const item = tube_racks.filter(item => item.label === name);
     setSelected(item[0])
     setRows(item[0].rows);
     setCols(item[0].cols);
+    setSquared(item[0].squared);
   }, [name])
-
 
   return (
     <>
       {/* <CCol md={12}>
-        <CFormLabel>Select Reservoir</CFormLabel>
-        <CFormSelect options={reservoirs} onChange={handleChangeWellPlate}></CFormSelect>
+        <CFormLabel>Select Well Plate</CFormLabel>
+        <CFormSelect options={tube_racks} onChange={handleChangeWellPlate}></CFormSelect>
       </CCol>
 
       <br /> */}
-
       <div style={{ display: selected.name != 'N/A' ? 'block' : 'none' }}>
         <h2 style={{ userSelect: 'none' }}>{selected.name}</h2>
 
-        <div className={"r_selectionFrame"}
+        <div className="wp_selection-frame"
         // onMouseUp={(e) => console.log(e)}
         >
 
-          <CRow className={"r_labelRow"}>
+          <CRow className="wp_label-row">
             {
               React.Children.toArray(
                 boxes?.map((row, index) => {
@@ -94,7 +95,7 @@ const ReservoirSelection = ({ name }) => {
                     return (
                       row?.map((col, index) => {
                         return (
-                          <CCol style={{ userSelect: 'none' }}>
+                          <CCol className="wp_label-col">
                             <span  >{index + 1}</span>
                           </CCol>
                         )
@@ -105,13 +106,13 @@ const ReservoirSelection = ({ name }) => {
               )}
           </CRow>
 
-          <div className={rows && cols < 17 ? "r_wells_grid" : ""}>
+          <div className={rows && cols < 17 ? "wp_wells_grid" : ""}>
             {
               React.Children.toArray(
                 boxes?.map((row, index) => {
                   return (
                     <>
-                      <CRow className={"r_rowGrid"}>
+                      <CRow className={"wp_rowGrid"}>
                         <span style={{ userSelect: 'none', display: 'flex', alignItems: 'center', width: '40px' }}>{GetLetter(index)}</span>
                         {row}
                       </CRow>
@@ -121,11 +122,18 @@ const ReservoirSelection = ({ name }) => {
               )}
           </div>
 
-        </div>
+        </div >
+
+        {/* <div style={{ userSelect: 'none' }}>
+          <br />
+          <h4><small>Click + Drag to select multiple</small></h4>
+          <h4><small>Click + Ctrl to select/unselect </small></h4>
+        </div> */}
 
       </div>
 
     </>
+
   )
 }
-export default ReservoirSelection
+export default TubeRackSelection

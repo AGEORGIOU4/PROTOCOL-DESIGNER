@@ -5,7 +5,7 @@ import { Form } from './components/Form';
 import Deck from './components/Deck';
 import { Liquids } from './components/Liquids';
 import CIcon from '@coreui/icons-react';
-import { cilBeaker, cilDrop, cilList, cilSpeech } from '@coreui/icons';
+import { cilBeaker, cilDrop } from '@coreui/icons';
 import LabwareSteps from './components/Steps';
 import { TitleBar } from 'src/_common/helpers';
 
@@ -15,12 +15,11 @@ const AddLabware = () => {
 
   const [newLabwareSelection, setNewLabwareSelection] = useState("");
 
-
   const handleSelectedSlot = (selectedSlot) => {
     setSelectedSlot(selectedSlot);
   }
 
-  const handleSubmit = (newData) => {
+  const handleSubmitForm = (newData) => {
     setNewLabwareSelection(newData);
   }
 
@@ -31,7 +30,8 @@ const AddLabware = () => {
       <div className="wrapper flex-column ">
         <CRow>
 
-          <CNav layout='fill' variant="underline">
+          <CNav layout='justified' variant="underline">
+
             <CNavItem>
               <CNavLink
                 href="#"
@@ -67,7 +67,7 @@ const AddLabware = () => {
               </CCol>
 
               <CCol md={12}>
-                <Form selectedSlot={selectedSlot} handleSubmit={handleSubmit} />
+                <Form selectedSlot={selectedSlot} handleSubmitForm={handleSubmitForm} />
               </CCol>
 
             </CTabPane>

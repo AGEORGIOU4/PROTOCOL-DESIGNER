@@ -1,34 +1,23 @@
-import { cilTrash } from "@coreui/icons";
+import { cilPlus, cilTrash } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 import { CButton, CCol, CRow } from "@coreui/react-pro"
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PromptWithConfirm } from "src/_common/alerts/swal";
-const DECK_TOTAL_COLUMNS = 5;
-
-const getSlotClassName = (id) => {
-
-  switch (id) {
-    case -1:
-      return 'add-labware-slot-btn add-labware-slot-create-btn'
-    default:
-      return 'add-labware-slot-btn'
-  }
-}
+import { truncateText } from "src/_common/helpers";
+const DECK_TOTAL_COLUMNS = 4;
 
 const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
   const [isSelected, setIsSelected] = useState();
   const [deckSlots, setDeckSlots] = useState([]);
   const [deckGrid, setDeckGrid] = useState([]);
 
-  const createButton = -1;
-
-  // Set up Slots
+  // Set up Slots and select the 1st
   useEffect(() => {
-    let arr = [{ id: createButton, name: 'Create Slot' }];
-    for (let i = 1; i < 2; i++) {
+    // let arr = [{ id: createButton, name: 'Create Slot' }];
+    let arr = [];
+    for (let i = 1; i <= 4; i++) {
       arr.push({ id: i, name: 'Slot ' + i, tube_rack: "", well_plate: "", reservoir: "", aluminium_block: "" });
     }
-
     let preset = [arr];
 
     setDeckSlots(preset)
@@ -39,6 +28,10 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
     handleSelect(item)
   }, [])
 
+  useEffect(() => {
+    handleEdit()
+  }, [newLabwareSelection])
+
   const setDefaultSelection = () => {
     let item = deckSlots[0].filter((item => item.id === 1));
     item = item[0];
@@ -48,23 +41,7 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
   const handleSelect = (item) => {
     setIsSelected(item.id);
     handleSelectedSlot(item)
-    console.log(deckSlots)
   };
-
-  const handleEdit = () => {
-    if (deckSlots.length > 0) {
-      let tmp_arr = deckSlots;
-
-      let index = tmp_arr[0].findIndex(item => item.name == newLabwareSelection.name);
-      tmp_arr[0][index] = newLabwareSelection;
-      setDeckSlots(tmp_arr)
-    }
-
-  };
-
-  useEffect(() => {
-    handleEdit()
-  }, [newLabwareSelection])
 
   const handleCreate = () => {
     let id = 0;
@@ -73,7 +50,6 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
     let well_plate = '';
     let reservoir = '';
     let aluminium_block = '';
-
 
     deckSlots?.map((row, index_row) => {
       if (index_row === (deckSlots.length - 1)) {
@@ -96,6 +72,19 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
     splitBoard();
 
     handleSelect(item)
+  };
+
+  const handleEdit = () => {
+    if (deckSlots.length > 0) {
+      let tmp_arr = deckSlots;
+      let index = tmp_arr[0].findIndex(item => item.id == newLabwareSelection.id);
+      tmp_arr[0][index] = newLabwareSelection;
+      setDeckSlots(tmp_arr)
+
+      splitBoard();
+    }
+
+
   };
 
   const handleDelete = (id, name) => {
@@ -135,48 +124,65 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
 
   return (
     <>
-
       <table className="add-labware-table">
         <tbody>
-          {deckGrid?.map((rows, index) => { //iterate through row array
-            return (
-              <tr key={index}>
-                {rows?.map((item, index) => {
-                  return (
-                    <>
-                      {/* Slot */}
-                      <td key={index} style={{ maxWidth: '20px', textAlign: 'center' }} >
-                        <div key={item} style={{ border: '1px solid #f0f0f0' }}><small>{item.name}</small></div>
+          {React.Children.toArray(
+            deckGrid?.map((rows, index) => { //iterate through row array
+              return (
+                <tr key={index}>
+                  {React.Children.toArray(
+                    rows?.map((item, index) => {
+                      let labwareSelection = item.tube_rack || item.well_plate || item.reservoir || item.aluminium_block;
+                      return (
+                        <>
+                          {/* Slot */}
+                          <td key={index} style={{ maxWidth: '20px', textAlign: 'center' }} >
+                            {/* <div key={item} style={{ border: '1px solid #f0f0f0', height: '50px' }}><small>{item.name}</small></div> */}
 
-                        <CButton key={item.id}
-                          onClick={() => item.id === createButton ? handleCreate() : handleSelect(item)} id={item.id}
-                          className={isSelected === item.id ? 'add-labware-slot-btn btn-selected' : getSlotClassName(item.id)} >
-                          {item.id === createButton ? '+' : item.id}
-                        </CButton>
+                            <CButton key={item.id}
+                              onClick={() => handleSelect(item)} id={item.id}
+                              className={isSelected === item.id ? 'add-labware-slot-btn btn-selected' : "add-labware-slot-btn"} >
+                              <CRow>
+                                <small style={{ height: '70px', display: 'grid', alignItems: 'center' }}>{truncateText(item.name, 46)}</small>
+                              </CRow>
+                              <CRow className={"slot-label-row"}>
+                                <span style={{ fontSize: 'small', fontWeight: '100' }}>{truncateText(labwareSelection, 30) || "Select labware..."}</span>
+                              </CRow>
+                            </CButton>
 
-                        <CButton
-                          key={item.name}
-                          id={item.name}
-                          className='modal-action-btn'
-                          variant="ghost"
-                          size="sm"
-                          color="danger"
-                          style={{ visibility: item.id === 1 || item.id === -1 ? 'hidden' : 'initial' }}
-                          onClick={() => handleDelete(item.id, item.name)}>
-                          <CIcon icon={cilTrash} />
-                        </CButton>
-                      </td >
-                    </>
-                  )
-                })}
-              </tr>
-            )
-          })}
+                            <CButton
+                              key={item.name}
+                              id={item.name}
+                              className='modal-action-btn'
+                              variant="ghost"
+                              size="sm"
+                              color="danger"
+                              style={{ visibility: item.id === 1 || item.id === -1 ? 'hidden' : 'initial' }}
+                              onClick={() => handleDelete(item.id, item.name)}>
+                              <CIcon icon={cilTrash} />
+                            </CButton>
+                          </td >
+                        </>
+                      )
+                    })
+                  )}
+                </tr>
+              )
+            })
+          )}
         </tbody>
       </table>
-      <h6><strong>Please select an existing slot or create new one</strong></h6>
-      <br />
 
+      <hr />
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <CCol md={8}>
+          <strong>Please select an existing slot or create new one</strong>
+        </CCol>
+        <CCol md={4}>
+          <CButton className="standard-btn float-end" onClick={handleCreate}><CIcon size='sm' icon={cilPlus} /> CREATE SLOT</CButton>
+        </CCol>
+      </div>
+      <hr />
     </>
   )
 }

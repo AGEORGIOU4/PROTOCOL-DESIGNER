@@ -3,6 +3,15 @@ export const GetLetter = (num) => {
   return letter;
 }
 
+export const truncateText = (text, maxLength) => {
+  if (text.length <= maxLength) {
+    return text;
+  } else {
+    return text.slice(0, maxLength) + '...';
+  }
+}
+
+
 import { CListGroupItem } from "@coreui/react-pro"
 
 export const TitleBar = ({ title }) => {
@@ -12,3 +21,4 @@ export const TitleBar = ({ title }) => {
     </CListGroupItem>
   )
 }
+

@@ -9,7 +9,7 @@ const COLUMNS = 12;
 const SQUARED_WELL_PLATE = false;
 const WELL_PLATE_ml = 50;
 
-const WellsSelection = () => {
+const DynamicSelection = () => {
   const [boxes, setBoxes] = useState([]);
   const itemsRef = useRef([]);
 
@@ -98,4 +98,4 @@ const WellsSelection = () => {
     </>
   )
 }
-export default WellsSelection
+export default DynamicSelection
