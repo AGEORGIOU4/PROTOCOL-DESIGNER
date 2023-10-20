@@ -143,10 +143,10 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
                               onClick={() => handleSelect(item)} id={item.id}
                               className={isSelected === item.id ? 'add-labware-slot-btn btn-selected' : "add-labware-slot-btn"} >
                               <CRow>
-                                <small style={{ height: '70px', display: 'grid', alignItems: 'center' }}>{truncateText(item.name, 46)}</small>
+                                <small style={{ height: '80px', display: 'grid', alignItems: 'center' }}>{truncateText(item.name, 46)}</small>
                               </CRow>
                               <CRow className={"slot-label-row"}>
-                                <span style={{ fontSize: 'small', fontWeight: '100' }}>{truncateText(labwareSelection, 30) || "Select labware..."}</span>
+                                <span style={{ fontSize: 'small' }}>{truncateText(labwareSelection, 30) || "Select labware..."}</span>
                               </CRow>
                             </CButton>
 
@@ -157,7 +157,7 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
                               variant="ghost"
                               size="sm"
                               color="danger"
-                              style={{ visibility: item.id === 1 || item.id === -1 ? 'hidden' : 'initial' }}
+                              style={{ visibility: item.id === 1 || item.id === -1 ? 'hidden' : 'initial', marginTop: '6px' }}
                               onClick={() => handleDelete(item.id, item.name)}>
                               <CIcon icon={cilTrash} />
                             </CButton>

@@ -14,14 +14,6 @@ const ReservoirSelection = ({ name }) => {
   const [rows, setRows] = useState(reservoirs[0].rows);
   const [cols, setCols] = useState(reservoirs[0].cols);
 
-  const handleChangeWellPlate = (e) => {
-    const item = reservoirs.filter(item => item.label === e.target.value);
-    setSelected(item[0])
-    setRows(item[0].rows);
-    setCols(item[0].cols);
-  }
-
-  // Set Up GRID
   useEffect(() => {
     const elems = [];
     let i = 0;
@@ -39,7 +31,6 @@ const ReservoirSelection = ({ name }) => {
     setBoxes(elems);
   }, [rows, cols]);
 
-  // Configure Drag Select
   useEffect(() => {
     const ds = new DragSelect({
       draggability: false,
@@ -50,18 +41,15 @@ const ReservoirSelection = ({ name }) => {
       refreshMemoryRate: 1000000000000000,
     });
 
-    ds.subscribe("DS:end",// (e) => console.log(e.items)
+    ds.subscribe("DS:end",// 
+      (e) => console.log(e.items)
     );
 
     return () => {
       ds.unsubscribe();
     };
-  }, [boxes]);
+  }, []);
 
-  // console.log(itemsRef);
-
-
-  // Set Selected Labware
   useEffect(() => {
     const item = reservoirs.filter(item => item.label === name);
     setSelected(item[0])
@@ -72,15 +60,9 @@ const ReservoirSelection = ({ name }) => {
 
   return (
     <>
-      {/* <CCol md={12}>
-        <CFormLabel>Select Reservoir</CFormLabel>
-        <CFormSelect options={reservoirs} onChange={handleChangeWellPlate}></CFormSelect>
-      </CCol>
-
-      <br /> */}
 
       <div style={{ display: selected.name != 'N/A' ? 'block' : 'none' }}>
-        <h2 style={{ userSelect: 'none' }}>{selected.name}</h2>
+        {/* <h2 style={{ userSelect: 'none' }}>{selected.name}</h2> */}
 
         <div className={"r_selectionFrame"}
         // onMouseUp={(e) => console.log(e)}

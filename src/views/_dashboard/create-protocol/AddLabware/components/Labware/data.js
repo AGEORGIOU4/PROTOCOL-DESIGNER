@@ -2,11 +2,11 @@
 export const reservoirs = [
   {
     id: 0,
-    label: 'N/A',
-    value: 'N/A',
-    disabled: false,
+    label: 'Select...',
+    value: '',
+    disabled: true,
 
-    name: 'N/A',
+    name: '',
     max_volume: '',
     well_count: "",
     well_shape: '',
@@ -80,12 +80,12 @@ export const reservoirs = [
 export const well_plates = [
   {
     id: 0,
-    label: 'N/A',
-    value: 'N/A',
-    disabled: false,
+    label: 'Select...',
+    value: '',
+    disabled: true,
     squared: false,
 
-    name: 'N/A',
+    name: '',
     max_volume: '',
     well_count: 0,
     well_shape: '',
@@ -307,12 +307,12 @@ export const well_plates = [
 export const aluminium_blocks = [
   {
     id: 0,
-    label: 'N/A',
-    value: 'N/A',
-    disabled: false,
+    label: 'Select...',
+    value: '',
+    disabled: true,
     squared: false,
 
-    name: 'N/A',
+    name: '',
     max_volume: '',
     well_count: 0,
     well_shape: '',
@@ -507,12 +507,12 @@ export const aluminium_blocks = [
 export const tube_racks = [
   {
     id: 0,
-    label: 'N/A',
-    value: 'N/A',
-    disabled: false,
+    label: 'Select...',
+    value: '',
+    disabled: true,
     squared: false,
 
-    name: 'N/A',
+    name: '',
     max_volume: '',
     well_count: 0,
     well_shape: '',

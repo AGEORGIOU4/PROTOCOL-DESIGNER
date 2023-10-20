@@ -10,9 +10,11 @@ import AddLabwareModal from '../Modal';
 import TubeRackSelection from '../Labware/TubeRack/TubeRack';
 import ReservoirSelection from '../Labware/Reservoir/Reservoir';
 import AluminiumBlockSelection from '../Labware/AluminiumBlock/AluminiumBlock';
+import Select from 'react-select';
+import { colourStyles } from '../Liquids/data';
 
 const disableInputFieldsOnSelect = (value, action) => {
-  if (value == 'N/A') {
+  if (value == '') {
     document.getElementById("validationCustom02").disabled = false;
     document.getElementById("validationCustom03").disabled = false;
     document.getElementById("validationCustom04").disabled = false;
@@ -53,6 +55,34 @@ const disableInputFieldsOnSelect = (value, action) => {
   }
 }
 
+const AddLiquids = ({ options, selectedLiquid, liquidVolume, setLiquidVolume }) => {
+  return (
+    <>
+      <CRow>
+        <CCol md={10}>
+          <CFormLabel htmlFor="validationCustom04">Select Liquid</CFormLabel>
+          <Select
+            closeMenuOnSelect={false}
+            defaultValue={selectedLiquid}
+            options={options}
+            styles={colourStyles}
+            className='custom-select'
+
+          />
+        </CCol>
+
+        <CCol md={2}>
+          <CFormLabel htmlFor="validationCustom03">Volume (ml)</CFormLabel>
+          <CFormInput autoComplete={'off'} type="number" id="validationCustom03" placeholder="" required value={liquidVolume} onChange={(e) => { setLiquidVolume(e.target.value) }} />
+          <CFormFeedback valid>Looks good!</CFormFeedback>
+        </CCol>
+      </CRow>
+
+      <br />
+    </>
+  )
+}
+
 export const Form = ({ selectedSlot, handleSubmitForm }) => {
   const [loadingSave, setLoadingSave] = useState(false);
   const [loadingReset, setLoadingReset] = useState(false);
@@ -66,6 +96,14 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
   const [aluminiumBlock, setAluminiumBlock] = useState('')
 
   const [selectedLabwareName, setSelectedLabwareName] = useState('');
+
+  // LIQUIDS
+  const [liquidOptions, setLiquidOptions] = useState([])
+  const [selectedLiquid, setSelectedLiquid] = useState([])
+  const [liquidName, setLiquidName] = useState('')
+  const [liquidVolume, setLiquidVolume] = useState('0')
+  const [liquidColor, setLiquidColor] = useState('#9900EF')
+
 
   useEffect(() => {
     setName(selectedSlot.name);
@@ -244,6 +282,11 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
     if (aluminiumBlock) {
       setSelectedLabwareName(aluminiumBlock);
     }
+
+    if (selectedLabwareName == 'N/A') {
+      setSelectedLabwareName('');
+    }
+
   }
 
   const handleAddLiquids = () => {
@@ -308,10 +351,14 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
 
       <br />
 
-      <AddLabwareModal visible={visible} setVisible={setVisible} handleClose={handleClose} title={name}>
+      <AddLabwareModal visible={visible} setVisible={setVisible} handleClose={handleClose} title={name} footerText={selectedLabwareName}>
 
         {tubeRack && React.Children.toArray(
-          <TubeRackSelection name={selectedLabwareName} />
+          <>
+
+            <AddLiquids options={liquidOptions} selectedLiquid={selectedLiquid} liquidVolume={liquidVolume} setLiquidVolume={setLiquidVolume} />
+            <TubeRackSelection name={selectedLabwareName} />
+          </>
         )}
 
         {wellPlate && React.Children.toArray(

@@ -24,10 +24,10 @@ const Dashboard = () => {
           <CRow className="justify-content-center">
             <CCol md={12}>
               <CCardGroup>
-                <CCard className="p-4 bg-light" >
+                <CCard className="p-4 text-white" style={{ border: '10px solid white', borderRight: 'none', boxShadow: 'none', background: '#585858' }}>
                   <CCardBody>
                     <CForm>
-                      <h1>Create</h1>
+                      <h1 className='text-white'>Create</h1>
                       <p>
                         Create a new protocol. Use the graphical interface to define your protocol's steps.
                       </p>
@@ -39,7 +39,7 @@ const Dashboard = () => {
                     </CForm>
                   </CCardBody>
                 </CCard>
-                <CCard className="bg-dark p-4 text-white">
+                <CCard className=" p-4 text-white" style={{ background: '#000' }}>
                   <CCardBody>
                     <div>
                       <h1 className='text-white'>Import</h1>
@@ -47,17 +47,17 @@ const Dashboard = () => {
                         Import an existing protocol. Use the graphical interface to import a predefined protocol.
                       </p>
                       <Link to="/">
-                        <CButton color="primary" className="mt-3 basic-btn float-end" active tabIndex={-1}>
+                        <CButton color="primary" className="mt-3 basic-btn " active tabIndex={-1}>
                           <CIcon icon={cilCloudUpload} /> Import
                         </CButton>
                       </Link>
                     </div>
                   </CCardBody>
                 </CCard>
-                <CCard className="p-4 bg-light" >
+                <CCard className="p-4 text-white" style={{ border: '10px solid white', borderLeft: 'none', boxShadow: 'none', background: '#585858' }}>
                   <CCardBody>
                     <CForm>
-                      <h1>Labware</h1>
+                      <h1 className='text-white'>Labware</h1>
                       <p>
                         Check out existing labware and learn the definitions, capacity, usages
                       </p>

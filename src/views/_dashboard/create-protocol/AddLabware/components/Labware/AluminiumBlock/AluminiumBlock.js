@@ -81,7 +81,7 @@ const AluminiumBlockSelection = ({ name }) => {
 
       <br /> */}
       <div style={{ display: selected.name != 'N/A' ? 'block' : 'none' }}>
-        <h2 style={{ userSelect: 'none' }}>{selected.name}</h2>
+        {/* <h2 style={{ userSelect: 'none' }}>{selected.name}</h2> */}
 
         <div className="wp_selection-frame"
         // onMouseUp={(e) => console.log(e)}

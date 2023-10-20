@@ -53,7 +53,8 @@ const WellPlateSelection = ({ name }) => {
 
     });
 
-    ds.subscribe("DS:end",// (e) => console.log(e.items)
+    ds.subscribe("DS:end",
+      // (e) => console.log(e.items)
     );
 
     return () => {
@@ -75,14 +76,8 @@ const WellPlateSelection = ({ name }) => {
 
   return (
     <>
-      {/* <CCol md={12}>
-        <CFormLabel>Select Well Plate</CFormLabel>
-        <CFormSelect options={well_plates} onChange={handleChangeWellPlate}></CFormSelect>
-      </CCol>
-
-      <br /> */}
       <div style={{ display: selected.name != 'N/A' ? 'block' : 'none' }}>
-        <h2 style={{ userSelect: 'none' }}>{selected.name}</h2>
+        {/* <h2 style={{ userSelect: 'none' }}>{selected.name}</h2> */}
 
         <div className="wp_selection-frame"
         // onMouseUp={(e) => console.log(e)}

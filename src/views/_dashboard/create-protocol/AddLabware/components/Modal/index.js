@@ -3,7 +3,7 @@ import CIcon from "@coreui/icons-react";
 import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from "@coreui/react-pro";
 import { getIcons } from "../Steps/helpers";
 
-const AddLabwareModal = ({ children, header = true, title = '', stepID = '', stepIndex = '', visible, handleClose }) => {
+const AddLabwareModal = ({ children, header = true, title = '', footerText = '', stepID = '', stepIndex = '', visible, handleClose }) => {
   // let titleToUpper = stepTitle.toUpperCase();
   let titleToUpper = title;
   return (
@@ -22,6 +22,7 @@ const AddLabwareModal = ({ children, header = true, title = '', stepID = '', ste
         </CModalBody>
 
         <CModalFooter>
+          <h6 className="modal-step-h"> {footerText ? footerText : ''}</h6>
           <h6 className="modal-step-h"> {stepIndex ? 'Step ' + stepIndex + 1 : ''} <span style={{ fontSize: '14px', fontWeight: '400' }}>{stepID ? (stepID) : ''}</span></h6>
           <CButton color="secondary" className="cancel-btn" onClick={handleClose}>
             <CIcon size="sm" icon={cilX} /> CLOSE

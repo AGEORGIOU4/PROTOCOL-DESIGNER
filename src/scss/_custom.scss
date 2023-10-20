@@ -265,7 +265,7 @@ pre {
 }
 
 .add-labware-slot-btn {
-  background-color: #c5c5c5;
+  background-color: #585858;
   border: 1px solid #f0f0f0;
   border-radius: 6px;
   width: 100%;
@@ -301,8 +301,11 @@ pre {
 }
 
 .slot-label-row {
-  background: black !important;
+  background: #ebedef !important;
+  color: black;
   padding: 4px;
+  border-radius: 0 0px 6px 6px;
+  font-weight: 100;
 }
 
 
