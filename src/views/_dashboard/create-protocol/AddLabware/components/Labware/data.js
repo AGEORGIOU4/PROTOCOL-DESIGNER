@@ -510,7 +510,6 @@ export const tube_racks = [
     label: 'Select...',
     value: '',
     disabled: true,
-    squared: false,
 
     name: '',
     max_volume: '',
@@ -523,7 +522,6 @@ export const tube_racks = [
     id: 1,
     label: 'Opentrons 10 Tube Rack with Falcon 4x50 mL, 6x15 mL Conical',
     value: 'Opentrons 10 Tube Rack with Falcon 4x50 mL, 6x15 mL Conical',
-    squared: false,
 
     name: 'Opentrons 10 Tube Rack with Falcon 4x50 mL, 6x15 mL Conical',
     max_volume: '4x50 mL & 6x15 mL Conical',
@@ -538,7 +536,6 @@ export const tube_racks = [
     id: 2,
     label: 'Opentrons 10 Tube Rack with NEST 4x50 mL, 6x15 mL Conical',
     value: 'Opentrons 10 Tube Rack with NEST 4x50 mL, 6x15 mL Conical',
-    squared: false,
 
     name: 'Opentrons 10 Tube Rack with NEST 4x50 mL, 6x15 mL Conical',
     max_volume: '4x50 mL & 6x15 mL Conical',
@@ -546,14 +543,11 @@ export const tube_racks = [
     well_shape: 'V-bottom',
     rows: 3,
     cols: 2,
-    rows2: 2,
-    cols2: 2,
   },
   {
     id: 3,
     label: 'Opentrons 15 Tube Rack with Falcon 15 mL Conical',
     value: 'Opentrons 15 Tube Rack with Falcon 15 mL Conical',
-    squared: false,
 
     name: 'Opentrons 15 Tube Rack with Falcon 15 mL Conical',
     max_volume: '15 mL',
@@ -566,7 +560,6 @@ export const tube_racks = [
     id: 4,
     label: 'Opentrons 15 Tube Rack with NEST 15 mL Conical',
     value: 'Opentrons 15 Tube Rack with NEST 15 mL Conical',
-    squared: false,
 
     name: 'Opentrons 15 Tube Rack with NEST 15 mL Conical',
     max_volume: '15 mL',
@@ -579,7 +572,6 @@ export const tube_racks = [
     id: 5,
     label: 'Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap',
     value: 'Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap',
-    squared: false,
 
     name: 'Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap',
     max_volume: '1.5 mL',
@@ -592,7 +584,6 @@ export const tube_racks = [
     id: 6,
     label: 'Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap',
     value: 'Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap',
-    squared: false,
 
     name: 'Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap',
     max_volume: '1.5 mL',
@@ -605,7 +596,6 @@ export const tube_racks = [
     id: 7,
     label: 'Opentrons 24 Tube Rack with Generic 2 mL Screwcap',
     value: 'Opentrons 24 Tube Rack with Generic 2 mL Screwcap',
-    squared: false,
 
     name: 'Opentrons 24 Tube Rack with Generic 2 mL Screwcap',
     max_volume: '2 mL',
@@ -618,7 +608,6 @@ export const tube_racks = [
     id: 8,
     label: 'Opentrons 24 Tube Rack with NEST 0.5 mL Screwcap',
     value: 'Opentrons 24 Tube Rack with NEST 0.5 mL Screwcap',
-    squared: false,
 
     name: 'Opentrons 24 Tube Rack with NEST 0.5 mL Screwcap',
     max_volume: '0.5 mL',
@@ -631,7 +620,6 @@ export const tube_racks = [
     id: 9,
     label: 'Opentrons 24 Tube Rack with NEST 1.5 mL Screwcap',
     value: 'Opentrons 24 Tube Rack with NEST 1.5 mL Screwcap',
-    squared: false,
 
     name: 'Opentrons 24 Tube Rack with NEST 1.5 mL Screwcap',
     max_volume: '1.5 mL',
@@ -644,7 +632,6 @@ export const tube_racks = [
     id: 10,
     label: 'Opentrons 24 Tube Rack with NEST 1.5 mL Snapcap',
     value: 'Opentrons 24 Tube Rack with NEST 1.5 mL Snapcap',
-    squared: false,
 
     name: 'Opentrons 24 Tube Rack with NEST 1.5 mL Snapcap',
     max_volume: '1.5 mL',
@@ -657,7 +644,6 @@ export const tube_racks = [
     id: 11,
     label: 'Opentrons 24 Tube Rack with NEST 2 mL Screwcap',
     value: 'Opentrons 24 Tube Rack with NEST 2 mL Screwcap',
-    squared: false,
 
     name: 'Opentrons 24 Tube Rack with NEST 2 mL Screwcap',
     max_volume: '2 mL',
@@ -670,7 +656,6 @@ export const tube_racks = [
     id: 12,
     label: 'Opentrons 24 Tube Rack with NEST 2 mL Snapcap',
     value: 'Opentrons 24 Tube Rack with NEST 2 mL Snapcap',
-    squared: false,
 
     name: 'Opentrons 24 Tube Rack with NEST 2 mL Snapcap',
     max_volume: '2 mL',
@@ -683,7 +668,6 @@ export const tube_racks = [
     id: 13,
     label: 'Opentrons 6 Tube Rack with Falcon 50 mL Conical',
     value: 'Opentrons 6 Tube Rack with Falcon 50 mL Conical',
-    squared: false,
 
     name: 'Opentrons 6 Tube Rack with Falcon 50 mL Conical',
     max_volume: '50 mL',
@@ -696,7 +680,6 @@ export const tube_racks = [
     id: 14,
     label: 'Opentrons 6 Tube Rack with NEST 50 mL Conical',
     value: 'Opentrons 6 Tube Rack with NEST 50 mL Conical',
-    squared: false,
 
     name: 'Opentrons 6 Tube Rack with NEST 50 mL Conical',
     max_volume: '50 mL',

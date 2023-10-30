@@ -1,4 +1,4 @@
-import { CCol, CFormLabel, CFormSelect, CRow } from "@coreui/react-pro";
+import { CCol, CRow } from "@coreui/react-pro";
 import DragSelect from "dragselect";
 import React, { useRef, useState, useEffect, createRef } from "react";
 import { GetLetter } from "src/_common/helpers";
@@ -8,29 +8,34 @@ import { reservoirs } from "../data";
 
 const ReservoirSelection = ({ name }) => {
   const [boxes, setBoxes] = useState([]);
+
+  const [selectedItems, setSelectedItems] = useState([]);
   const itemsRef = useRef([]);
 
-  const [selected, setSelected] = useState(reservoirs[0])
+  const [selectedLabware, setSelectedLabware] = useState(reservoirs[0])
   const [rows, setRows] = useState(reservoirs[0].rows);
   const [cols, setCols] = useState(reservoirs[0].cols);
 
+  // Set Up GRID
   useEffect(() => {
     const elems = [];
-    let i = 0;
+    let row_index = 0;
 
-    while (i < rows) {
-      const row = Array.from({ length: cols }).map((item, index) => {
+    while (row_index < rows) {
+      const row = Array.from({ length: cols }).map((item, col_index) => {
         const ref = createRef();
         itemsRef.current.push(ref);
-        const id = Math.floor(Math.random() * 1e10).toString(16);
-        return <CCol key={id} className={"r_selectables"} ref={ref}></CCol>
+        let id = (GetLetter(row_index) + (parseInt(col_index) + 1))
+
+        return <CCol key={id} id={id} className={"r_selectables"} ref={ref}></CCol>
       })
       elems.push(row)
-      i++;
+      row_index++;
     }
     setBoxes(elems);
   }, [rows, cols]);
 
+  // Configure Drag Select
   useEffect(() => {
     const ds = new DragSelect({
       draggability: false,
@@ -41,27 +46,27 @@ const ReservoirSelection = ({ name }) => {
       refreshMemoryRate: 1000000000000000,
     });
 
-    ds.subscribe("DS:end",// 
-      (e) => console.log(e.items)
-    );
+    ds.subscribe('DS:end', (callback_object) => {
+      if (callback_object.items) {
+        // do something with the items
+        setSelectedItems(callback_object.items)
+      }
+    })
 
-    return () => {
-      ds.unsubscribe();
-    };
-  }, []);
+    return () => ds.unsubscribe('DS:end')
+  }, [boxes]);
 
+  // Set Selected Labware
   useEffect(() => {
     const item = reservoirs.filter(item => item.label === name);
-    setSelected(item[0])
+    setSelectedLabware(item[0])
     setRows(item[0].rows);
     setCols(item[0].cols);
   }, [name])
 
-
   return (
     <>
-
-      <div style={{ display: selected.name != 'N/A' ? 'block' : 'none' }}>
+      <div style={{ display: selectedLabware.name != 'N/A' ? 'block' : 'none' }}>
         {/* <h2 style={{ userSelect: 'none' }}>{selected.name}</h2> */}
 
         <div className={"r_selectionFrame"}
@@ -105,8 +110,23 @@ const ReservoirSelection = ({ name }) => {
 
         </div>
 
-      </div>
+        <br />
 
+        <h4>Selected: </h4>
+        <table>
+          <tr>
+            {React.Children.toArray(
+              selectedItems?.map((selected, index) => {
+                return (
+                  <td>{selected.id},</td>
+                )
+              })
+
+            )}
+          </tr>
+        </table>
+
+      </div>
     </>
   )
 }

@@ -9,9 +9,6 @@ const LabwareSelection = () => {
   let params = new URLSearchParams(window.location.hash);
   let category = params.get('category');
 
-
-
-
   return (
     <>
       <CContainer style={{ textAlign: 'center', width: 'auto' }}>
@@ -30,8 +27,6 @@ const LabwareSelection = () => {
         <br />
 
         <CRow>
-
-
 
           <CCol md={12}>
             <ReservoirSelection />

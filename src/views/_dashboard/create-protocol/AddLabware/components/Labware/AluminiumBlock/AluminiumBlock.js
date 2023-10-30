@@ -1,4 +1,4 @@
-import { CCol, CFormLabel, CFormSelect, CRow } from "@coreui/react-pro";
+import { CCol, CRow } from "@coreui/react-pro";
 import DragSelect from "dragselect";
 import React, { useRef, useState, useEffect, createRef } from "react";
 import { GetLetter } from "src/_common/helpers";
@@ -8,35 +8,31 @@ import { aluminium_blocks } from "../data";
 
 const AluminiumBlockSelection = ({ name }) => {
   const [boxes, setBoxes] = useState([]);
+
+  const [selectedItems, setSelectedItems] = useState([]);
   const itemsRef = useRef([]);
 
-  const [selected, setSelected] = useState(aluminium_blocks[0])
+  const [selectedLabware, setSelectedLabware] = useState(aluminium_blocks[0])
   const [rows, setRows] = useState(aluminium_blocks[0].rows);
   const [cols, setCols] = useState(aluminium_blocks[0].cols);
-  const [squared, setSquared] = useState(false);
 
-  const handleChangeAluminiumBlock = (e) => {
-    const item = aluminium_blocks.filter(item => item.label === e.target.value);
-    setSelected(item[0])
-    setRows(item[0].rows);
-    setCols(item[0].cols);
-    setSquared(item[0].squared);
-  }
+  const [squared, setSquared] = useState(false);
 
   // Set Up GRID
   useEffect(() => {
     const elems = [];
-    let i = 0;
+    let row_index = 0;
 
-    while (i < rows) {
-      const row = Array.from({ length: cols }).map((item, index) => {
+    while (row_index < rows) {
+      const row = Array.from({ length: cols }).map((item, col_index) => {
         const ref = createRef();
         itemsRef.current.push(ref);
-        const id = Math.floor(Math.random() * 1e10).toString(16);
-        return <CCol key={id} className="wp_selectables" style={{ borderRadius: squared ? '0' : '100%' }} ref={ref}></CCol>
+        let id = (GetLetter(row_index) + (parseInt(col_index) + 1))
+
+        return <CCol key={id} id={id} className="ab_selectables" style={{ borderRadius: squared ? '0' : '100%' }} ref={ref}></CCol>
       })
       elems.push(row)
-      i++;
+      row_index++;
     }
     setBoxes(elems);
   }, [rows, cols]);
@@ -46,27 +42,27 @@ const AluminiumBlockSelection = ({ name }) => {
     const ds = new DragSelect({
       draggability: false,
       immediateDrag: false,
-      selectables: document.getElementsByClassName("wp_selectables"),
+      selectables: document.getElementsByClassName("ab_selectables"),
       multiSelectMode: false,
       multiSelectToggling: true,
       refreshMemoryRate: 1000000000000000,
 
     });
 
-    ds.subscribe("DS:end",// (e) => console.log(e.items)
-    );
+    ds.subscribe('DS:end', (callback_object) => {
+      if (callback_object.items) {
+        // do something with the items
+        setSelectedItems(callback_object.items)
+      }
+    })
 
-    return () => {
-      ds.unsubscribe();
-    };
+    return () => ds.unsubscribe('DS:end')
   }, [boxes]);
-
-  // console.log(itemsRef);
 
   // Set Selected Labware
   useEffect(() => {
     const item = aluminium_blocks.filter(item => item.label === name);
-    setSelected(item[0])
+    setSelectedLabware(item[0])
     setRows(item[0].rows);
     setCols(item[0].cols);
     setSquared(item[0].squared);
@@ -74,20 +70,14 @@ const AluminiumBlockSelection = ({ name }) => {
 
   return (
     <>
-      {/* <CCol md={12}>
-        <CFormLabel>Select Well Plate</CFormLabel>
-        <CFormSelect options={aluminium_blocks} onChange={handleChangeWellPlate}></CFormSelect>
-      </CCol>
-
-      <br /> */}
-      <div style={{ display: selected.name != 'N/A' ? 'block' : 'none' }}>
+      <div style={{ display: selectedLabware.name != 'N/A' ? 'block' : 'none' }}>
         {/* <h2 style={{ userSelect: 'none' }}>{selected.name}</h2> */}
 
-        <div className="wp_selection-frame"
+        <div className="ab_selection-frame"
         // onMouseUp={(e) => console.log(e)}
         >
 
-          <CRow className="wp_label-row">
+          <CRow className="ab_label-row">
             {
               React.Children.toArray(
                 boxes?.map((row, index) => {
@@ -95,7 +85,7 @@ const AluminiumBlockSelection = ({ name }) => {
                     return (
                       row?.map((col, index) => {
                         return (
-                          <CCol className="wp_label-col">
+                          <CCol className="ab_label-col">
                             <span  >{index + 1}</span>
                           </CCol>
                         )
@@ -106,13 +96,13 @@ const AluminiumBlockSelection = ({ name }) => {
               )}
           </CRow>
 
-          <div className={rows && cols < 17 ? "wp_wells_grid" : ""}>
+          <div className={rows && cols < 17 ? "ab_wells_grid" : ""}>
             {
               React.Children.toArray(
                 boxes?.map((row, index) => {
                   return (
                     <>
-                      <CRow className={"wp_rowGrid"}>
+                      <CRow className={"ab_rowGrid"}>
                         <span style={{ userSelect: 'none', display: 'flex', alignItems: 'center', width: '40px' }}>{GetLetter(index)}</span>
                         {row}
                       </CRow>
@@ -124,11 +114,21 @@ const AluminiumBlockSelection = ({ name }) => {
 
         </div >
 
-        {/* <div style={{ userSelect: 'none' }}>
-          <br />
-          <h4><small>Click + Drag to select multiple</small></h4>
-          <h4><small>Click + Ctrl to select/unselect </small></h4>
-        </div> */}
+        <br />
+
+        <h4>Selected: </h4>
+        <table>
+          <tr>
+            {React.Children.toArray(
+              selectedItems?.map((selected, index) => {
+                return (
+                  <td>{selected.id},</td>
+                )
+              })
+
+            )}
+          </tr>
+        </table>
 
       </div>
 

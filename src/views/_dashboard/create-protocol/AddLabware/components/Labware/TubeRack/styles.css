@@ -1,4 +1,4 @@
-.wp_selection-frame {
+.tr_selection-frame {
   text-align: center;
   border: 2px solid grey;
   border-radius: 40px;
@@ -7,22 +7,22 @@
   margin: auto;
 }
 
-.wp_label-row {
+.tr_label-row {
   padding-left: 40px;
   height: 30px;
   user-select: none;
 }
 
-.wp_label-col {
+.tr_label-col {
   padding-right: 0 !important;
   padding-left: 0 !important;
 }
 
-.wp_wells_grid {
+.tr_wells_grid {
   width: 500px;
 }
 
-.wp_selectables {
+.tr_selectables {
   aspect-ratio: 1/1;
   background: #efefef;
   border: 2px solid gray;
@@ -30,13 +30,13 @@
   padding-right: 0 !important;
 }
 
-.ds-selected {
+.tr_ds-selected {
   border: 2px solid #01aab1;
   outline: 3px solid #01aab1;
   outline-offset: -1px;
 }
 
-.ds-selector {
+.tr_ds-selector {
   background: #01aab1 !important;
   border: 1px solid #00575a !important;
   opacity: 0.05;

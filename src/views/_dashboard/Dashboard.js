@@ -24,7 +24,7 @@ const Dashboard = () => {
           <CRow className="justify-content-center">
             <CCol md={12}>
               <CCardGroup>
-                <CCard className="p-4 text-white" style={{ border: '10px solid white', borderRight: 'none', boxShadow: 'none', background: '#585858' }}>
+                <CCard className="p-4 text-white" style={{ border: '10px solid white', borderRight: 'none', boxShadow: 'none', background: '#6c757d' }}>
                   <CCardBody>
                     <CForm>
                       <h1 className='text-white'>Create</h1>
@@ -39,7 +39,7 @@ const Dashboard = () => {
                     </CForm>
                   </CCardBody>
                 </CCard>
-                <CCard className=" p-4 text-white" style={{ background: '#000' }}>
+                <CCard className=" p-4 text-white" style={{ background: '#585858' }}>
                   <CCardBody>
                     <div>
                       <h1 className='text-white'>Import</h1>
@@ -54,7 +54,7 @@ const Dashboard = () => {
                     </div>
                   </CCardBody>
                 </CCard>
-                <CCard className="p-4 text-white" style={{ border: '10px solid white', borderLeft: 'none', boxShadow: 'none', background: '#585858' }}>
+                <CCard className="p-4 text-white" style={{ border: '10px solid white', borderLeft: 'none', boxShadow: 'none', background: '#6c757d' }}>
                   <CCardBody>
                     <CForm>
                       <h1 className='text-white'>Labware</h1>

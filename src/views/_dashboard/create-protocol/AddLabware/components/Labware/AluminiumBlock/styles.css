@@ -1,4 +1,4 @@
-.wp_selection-frame {
+.ab_selection-frame {
   text-align: center;
   border: 2px solid grey;
   border-radius: 40px;
@@ -7,22 +7,22 @@
   margin: auto;
 }
 
-.wp_label-row {
+.ab_label-row {
   padding-left: 40px;
   height: 30px;
   user-select: none;
 }
 
-.wp_label-col {
+.ab_label-col {
   padding-right: 0 !important;
   padding-left: 0 !important;
 }
 
-.wp_wells_grid {
+.ab_wells_grid {
   width: 500px;
 }
 
-.wp_selectables {
+.ab_selectables {
   aspect-ratio: 1/1;
   background: #efefef;
   border: 2px solid gray;

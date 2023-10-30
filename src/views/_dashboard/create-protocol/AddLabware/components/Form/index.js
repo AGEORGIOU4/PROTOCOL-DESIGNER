@@ -169,7 +169,6 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
       reservoir: "",
       aluminium_block: ""
     }
-
     handleSubmitForm(item);
   }
 
@@ -355,7 +354,6 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
 
         {tubeRack && React.Children.toArray(
           <>
-
             <AddLiquids options={liquidOptions} selectedLiquid={selectedLiquid} liquidVolume={liquidVolume} setLiquidVolume={setLiquidVolume} />
             <TubeRackSelection name={selectedLabwareName} />
           </>
@@ -372,8 +370,6 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
         {aluminiumBlock && React.Children.toArray(
           <AluminiumBlockSelection name={selectedLabwareName} />
         )}
-
-
 
       </AddLabwareModal>
     </>
