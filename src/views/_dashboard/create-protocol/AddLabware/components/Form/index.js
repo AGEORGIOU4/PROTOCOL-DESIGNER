@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { CButton, CCol, CForm, CFormFeedback, CFormInput, CFormLabel, CFormSelect, CLoadingButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle, CRow } from '@coreui/react-pro'
+import { CButton, CCol, CForm, CFormFeedback, CFormInput, CFormLabel, CFormSelect, CLoadingButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle, CMultiSelect, CRow } from '@coreui/react-pro'
 import { useState } from 'react'
 import CIcon from '@coreui/icons-react';
 import { cilReload, cilSave } from '@coreui/icons';
@@ -55,20 +55,28 @@ const disableInputFieldsOnSelect = (value, action) => {
   }
 }
 
-const AddLiquids = ({ options, selectedLiquid, liquidVolume, setLiquidVolume }) => {
+const AddLiquids = ({ liquidVolume, setLiquidVolume }) => {
+
+  const [selectedLiquid, setSelectedLiquid] = useState('');
+
   return (
     <>
       <CRow>
-        <CCol md={10}>
+        <CCol md={8}>
           <CFormLabel htmlFor="validationCustom04">Select Liquid</CFormLabel>
           <Select
-            closeMenuOnSelect={false}
-            defaultValue={selectedLiquid}
-            options={options}
+            isMulti={false}
+            closeMenuOnSelect={true}
+            options={JSON.parse(localStorage.getItem('liquids')) || []}
             styles={colourStyles}
-            className='custom-select'
-
+            isSearchable={false}
+            onChange={(e) => setSelectedLiquid(e)}
           />
+        </CCol>
+
+        <CCol md={2}>
+          <CFormLabel htmlFor="validationCustom02">Liquid Color</CFormLabel>
+          <CFormInput disabled value={selectedLiquid.color || ''} type='color' style={{ width: '100%', background: 'white' }} />
         </CCol>
 
         <CCol md={2}>
@@ -305,11 +313,15 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
             <CFormFeedback valid>Looks good!</CFormFeedback>
           </CCol>
 
+          <br />
+
           <CCol md={12}>
             <CFormLabel htmlFor="validationCustom02">Tube Rack</CFormLabel>
             <CFormSelect options={tube_racks} id="validationCustom02" value={tubeRack || ''} onChange={(e) => handleChangeTubeRack(e)} />
             <CFormFeedback valid>Looks good!</CFormFeedback>
           </CCol>
+
+          <br />
 
           <CCol md={12}>
             <CFormLabel htmlFor="validationCustom03">Well Plate</CFormLabel>
@@ -317,11 +329,15 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
             <CFormFeedback valid>Looks good!</CFormFeedback>
           </CCol>
 
-          <CCol md={12}>
+          <br />
+
+          <CCol md4={12}>
             <CFormLabel htmlFor="validationCustom04">Reservoir</CFormLabel>
             <CFormSelect options={reservoirs} id="validationCustom04" value={reservoir || ''} onChange={(e) => handleChangeReservoir(e)} />
             <CFormFeedback valid>Looks good!</CFormFeedback>
           </CCol>
+
+          <br />
 
           <CCol md={12}>
             <CFormLabel htmlFor="validationCustom05">Aluminium Block</CFormLabel>
@@ -339,8 +355,8 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
 
             <CCol md={8} style={{ textAlign: 'end' }}>
 
-              <CButton className='standard-btn' style={{ marginRight: '10px' }} onClick={handleAddLiquids}><CIcon size='sm' icon={cidEyedropper} /> ADD LIQUIDS</CButton>
-              <CLoadingButton loading={loadingSave} className='standard-btn' onClick={handleSubmit}><CIcon size='sm' icon={cilSave} /> SAVE</CLoadingButton>
+              <CButton className='standard-btn' style={{ marginRight: '10px' }} disabled={tubeRack || wellPlate || reservoir || aluminiumBlock ? false : true} onClick={handleAddLiquids}><CIcon size='sm' icon={cidEyedropper} /> ADD LIQUIDS</CButton>
+              {/* <CLoadingButton loading={loadingSave} className='standard-btn' onClick={handleSubmit}><CIcon size='sm' icon={cilSave} /> SAVE</CLoadingButton> */}
             </CCol>
 
           </CRow>
@@ -360,15 +376,24 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
         )}
 
         {wellPlate && React.Children.toArray(
-          <WellPlateSelection name={selectedLabwareName} />
+          <>
+            <AddLiquids options={liquidOptions} selectedLiquid={selectedLiquid} liquidVolume={liquidVolume} setLiquidVolume={setLiquidVolume} />
+            <WellPlateSelection name={selectedLabwareName} />
+          </>
         )}
 
         {reservoir && React.Children.toArray(
-          <ReservoirSelection name={selectedLabwareName} />
+          <>
+            <AddLiquids options={liquidOptions} selectedLiquid={selectedLiquid} liquidVolume={liquidVolume} setLiquidVolume={setLiquidVolume} />
+            <ReservoirSelection name={selectedLabwareName} />
+          </>
         )}
 
         {aluminiumBlock && React.Children.toArray(
-          <AluminiumBlockSelection name={selectedLabwareName} />
+          <>
+            <AddLiquids options={liquidOptions} selectedLiquid={selectedLiquid} liquidVolume={liquidVolume} setLiquidVolume={setLiquidVolume} />
+            <AluminiumBlockSelection name={selectedLabwareName} />
+          </>
         )}
 
       </AddLabwareModal>

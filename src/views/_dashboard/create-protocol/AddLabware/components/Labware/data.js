@@ -543,6 +543,8 @@ export const tube_racks = [
     well_shape: 'V-bottom',
     rows: 3,
     cols: 2,
+    rows2: 2,
+    cols2: 2,
   },
   {
     id: 3,

@@ -137,7 +137,10 @@ const LabwareSteps = () => {
     let id = e.target.id;
     let title = e.target.value;
 
-    PromptWithConfirm('Are you sure you want to delete ' + title + ' Step ' + id + '?', 'warning', () => deleteSlot(id))
+    if (confirm('Are you sure you want to delete ' + title + ' Step ' + id + '?')) {
+      deleteSlot(id)
+    }
+    // PromptWithConfirm('Are you sure you want to delete ' + title + ' Step ' + id + '?', 'warning', () => deleteSlot(id))
   }
 
   const deleteSlot = (id) => {

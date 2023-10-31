@@ -62,19 +62,20 @@ const AddLabware = () => {
           <CTabContent>
             <CTabPane className="p-3" visible={activeKey === 1}>
 
-              <CCol md={12}>
-                <Deck handleSelectedSlot={handleSelectedSlot} newLabwareSelection={newLabwareSelection} />
-              </CCol>
+              <CRow>
+                <CCol md={6}>
+                  <Deck handleSelectedSlot={handleSelectedSlot} newLabwareSelection={newLabwareSelection} />
+                </CCol>
 
-              <CCol md={12}>
-                <Form selectedSlot={selectedSlot} handleSubmitForm={handleSubmitForm} />
-              </CCol>
+                <CCol md={6}>
+                  <Form selectedSlot={selectedSlot} handleSubmitForm={handleSubmitForm} />
+                </CCol>
+              </CRow>
 
             </CTabPane>
 
             <CTabPane className="p-3" visible={activeKey === 2}>
               <CCol md={12}>
-                <TitleBar title={"LIQUIDS"} />
                 <Liquids />
               </CCol>
 

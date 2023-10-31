@@ -52,7 +52,10 @@ const AluminiumBlockSelection = ({ name }) => {
     ds.subscribe('DS:end', (callback_object) => {
       if (callback_object.items) {
         // do something with the items
-        setSelectedItems(callback_object.items)
+        const strAscending = [...callback_object.items].sort((a, b) =>
+          a.id > b.id ? 1 : -1,
+        );
+        setSelectedItems(strAscending)
       }
     })
 

@@ -1,12 +1,15 @@
-import { CCol, CRow } from "@coreui/react-pro";
+import { CButton, CCol, CRow } from "@coreui/react-pro";
 import DragSelect from "dragselect";
 import React, { useRef, useState, useEffect, createRef } from "react";
 import { GetLetter } from "src/_common/helpers";
 
 import "./styles.css";
 import { well_plates } from "../data";
+import CIcon from "@coreui/icons-react";
+import { cilSave } from "@coreui/icons";
 
 const WellPlateSelection = ({ name }) => {
+
   const [boxes, setBoxes] = useState([]);
 
   const [selectedItems, setSelectedItems] = useState([]);
@@ -17,6 +20,15 @@ const WellPlateSelection = ({ name }) => {
   const [cols, setCols] = useState(well_plates[0].cols);
 
   const [squared, setSquared] = useState(false);
+
+  // Set Selected Labware
+  useEffect(() => {
+    const item = well_plates.filter(item => item.label === name);
+    setSelectedLabware(item[0])
+    setRows(item[0].rows);
+    setCols(item[0].cols);
+    setSquared(item[0].squared);
+  }, [name])
 
   // Set Up GRID
   useEffect(() => {
@@ -37,40 +49,56 @@ const WellPlateSelection = ({ name }) => {
     setBoxes(elems);
   }, [rows, cols]);
 
+
   // Configure Drag Select
   useEffect(() => {
     const ds = new DragSelect({
       draggability: false,
       immediateDrag: false,
       selectables: document.getElementsByClassName("wp_selectables"),
-      multiSelectMode: false,
+      multiSelectMode: true,
       multiSelectToggling: true,
       refreshMemoryRate: 1000000000000000,
     });
 
+
     ds.subscribe('DS:end', (callback_object) => {
       if (callback_object.items) {
         // do something with the items
-        setSelectedItems(callback_object.items)
+        const strAscending = [...callback_object.items].sort((a, b) =>
+          a.id > b.id ? 1 : -1,
+        );
+        setSelectedItems(strAscending)
       }
     })
 
     return () => ds.unsubscribe('DS:end')
+
+
   }, [boxes]);
 
-  // Set Selected Labware
-  useEffect(() => {
-    const item = well_plates.filter(item => item.label === name);
-    setSelectedLabware(item[0])
-    setRows(item[0].rows);
-    setCols(item[0].cols);
-    setSquared(item[0].squared);
-  }, [name])
+
+  const handleSave = () => {
+    let items = (itemsRef.current);
+
+    items?.map((item, index) => {
+      try {
+        document.getElementById(item.current.id).style.background = '#EFEFEF';
+      } catch (e) {
+      }
+    })
+
+    selectedItems?.map((item, index) => {
+      document.getElementById(item.id).style.background = '#DE6711';
+    })
+  }
 
   return (
     <>
       <div style={{ display: selectedLabware.name != 'N/A' ? 'block' : 'none' }}>
         {/* <h2 style={{ userSelect: 'none' }}>{selected.name}</h2> */}
+
+
 
         <div className="wp_selection-frame"
         // onMouseUp={(e) => console.log(e)}
@@ -113,22 +141,31 @@ const WellPlateSelection = ({ name }) => {
 
         </div >
 
+
+
         <br />
 
         <h4>Selected: </h4>
         <table>
-          <tr>
-            {React.Children.toArray(
-              selectedItems?.map((selected, index) => {
-                return (
-                  <td>{selected.id},</td>
-                )
-              })
+          <tbody>
+            <tr>
+              {React.Children.toArray(
+                selectedItems?.map((selected, index) => {
+                  return (
+                    <td style={{ fontSize: 'xx-small' }}>{selected.id},</td>
+                  )
+                })
 
-            )}
-          </tr>
+              )}
+            </tr>
+          </tbody>
         </table>
 
+        <hr />
+
+        <CButton className='standard-btn float-end' color="primary" onClick={handleSave}>
+          <CIcon size="sm" icon={cilSave} /> SAVE
+        </CButton>
       </div>
 
     </>

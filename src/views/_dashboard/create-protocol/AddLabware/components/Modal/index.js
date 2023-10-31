@@ -11,8 +11,11 @@ const AddLabwareModal = ({ children, header = true, title = '', footerText = '',
 
       <CModal fullscreen backdrop={'static'} className="add-labware-modal" visible={visible} onClose={handleClose} >
         {header &&
-          <CModalHeader style={{ background: '#585858' }} closeButton={true}>
+          <CModalHeader style={{ background: '#585858' }} closeButton={false}>
             <CModalTitle id="StaticBackdropExampleLabel" style={{ color: 'white' }}><CIcon icon={getIcons(title)} /> {titleToUpper}</CModalTitle>
+            <CButton color="secondary" className="cancel-btn" onClick={handleClose}>
+              <CIcon size="sm" icon={cilX} /> CLOSE
+            </CButton>
           </CModalHeader>
         }
         <CModalBody>
@@ -21,16 +24,16 @@ const AddLabwareModal = ({ children, header = true, title = '', footerText = '',
 
         </CModalBody>
 
-        <CModalFooter>
+        {/* <CModalFooter>
           <h6 className="modal-step-h"> {footerText ? footerText : ''}</h6>
           <h6 className="modal-step-h"> {stepIndex ? 'Step ' + stepIndex + 1 : ''} <span style={{ fontSize: '14px', fontWeight: '400' }}>{stepID ? (stepID) : ''}</span></h6>
           <CButton color="secondary" className="cancel-btn" onClick={handleClose}>
             <CIcon size="sm" icon={cilX} /> CLOSE
           </CButton>
-          <CButton className='standard-btn' color="primary">
+          <CButton className='standard-btn' color="primary" onClick={handleSave}>
             <CIcon size="sm" icon={cilSave} /> SAVE
           </CButton>
-        </CModalFooter>
+        </CModalFooter> */}
 
       </CModal >
     </>

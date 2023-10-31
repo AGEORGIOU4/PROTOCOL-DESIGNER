@@ -4,7 +4,8 @@ import { CButton, CCol, CRow } from "@coreui/react-pro"
 import React, { useEffect, useState } from "react";
 import { PromptWithConfirm } from "src/_common/alerts/swal";
 import { truncateText } from "src/_common/helpers";
-const DECK_TOTAL_COLUMNS = 4;
+
+const DECK_TOTAL_COLUMNS = 3;
 
 const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
   const [isSelected, setIsSelected] = useState();
@@ -13,18 +14,24 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
 
   // Set up Slots and select the 1st
   useEffect(() => {
-    // let arr = [{ id: createButton, name: 'Create Slot' }];
-    let arr = [];
-    for (let i = 1; i <= 4; i++) {
-      arr.push({ id: i, name: 'Slot ' + i, tube_rack: "", well_plate: "", reservoir: "", aluminium_block: "" });
+    let preset = [];
+    for (let i = 1; i <= 9; i++) {
+      preset.push({ id: i, name: 'Slot ' + i, tube_rack: "", well_plate: "", reservoir: "", aluminium_block: "" });
     }
-    let preset = [arr];
 
-    setDeckSlots(preset)
-    setDeckGrid(preset)
+    let subarrayLength = DECK_TOTAL_COLUMNS;
 
-    let item = preset[0].filter((item => item.id == 1));
-    item = item[0]
+    let subarrays = [];
+    for (let i = 0; i < preset.length; i += subarrayLength) {
+      subarrays.push(preset.slice(i, i + subarrayLength));
+    }
+
+    setDeckSlots([preset])
+    setDeckGrid(subarrays)
+
+    let item = preset.filter((item => item.id == 1));
+    item = item[0];
+
     handleSelect(item)
   }, [])
 
@@ -88,7 +95,10 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
   };
 
   const handleDelete = (id, name) => {
-    PromptWithConfirm('Are you sure you want to delete ' + name + '?', 'warning', () => deleteSlot(id))
+    if (confirm('Are you sure you want to delete ' + name + '?')) {
+      deleteSlot(id)
+    }
+    // PromptWithConfirm('Are you sure you want to delete ' + name + '?', 'warning', () => deleteSlot(id))
   }
 
   const deleteSlot = (id) => {
@@ -124,6 +134,17 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
 
   return (
     <>
+      <div style={{ display: 'flex', alignItems: 'center', margin: '10px 0 20px' }}>
+        <CCol md={8}>
+          <strong>Please select an existing slot or create new one</strong>
+        </CCol>
+        <CCol md={4}>
+          <CButton className="standard-btn float-end" onClick={handleCreate}><CIcon size='sm' icon={cilPlus} /> CREATE SLOT</CButton>
+        </CCol>
+      </div>
+
+
+
       <table className="add-labware-table">
         <tbody>
           {React.Children.toArray(
@@ -142,11 +163,12 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
                             <CButton key={item.id}
                               onClick={() => handleSelect(item)} id={item.id}
                               className={isSelected === item.id ? 'add-labware-slot-btn btn-selected' : "add-labware-slot-btn"} >
+
                               <CRow>
-                                <small style={{ height: '80px', display: 'grid', alignItems: 'center' }}>{truncateText(item.name, 46)}</small>
+                                <small style={{ height: '102px', display: 'grid', alignItems: 'center' }}>{truncateText(item.name, 46)}</small>
                               </CRow>
                               <CRow className={"slot-label-row"}>
-                                <span style={{ fontSize: 'small' }}>{truncateText(labwareSelection, 30) || "Select labware..."}</span>
+                                <span style={{ fontSize: 'small' }}>{truncateText(labwareSelection, 28) || "Select labware"}</span>
                               </CRow>
                             </CButton>
 
@@ -157,7 +179,7 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
                               variant="ghost"
                               size="sm"
                               color="danger"
-                              style={{ visibility: item.id === 1 || item.id === -1 ? 'hidden' : 'initial', marginTop: '6px' }}
+                              style={{ marginTop: '30px' }}
                               onClick={() => handleDelete(item.id, item.name)}>
                               <CIcon icon={cilTrash} />
                             </CButton>
@@ -173,16 +195,6 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
         </tbody>
       </table>
 
-      <hr />
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <CCol md={8}>
-          <strong>Please select an existing slot or create new one</strong>
-        </CCol>
-        <CCol md={4}>
-          <CButton className="standard-btn float-end" onClick={handleCreate}><CIcon size='sm' icon={cilPlus} /> CREATE SLOT</CButton>
-        </CCol>
-      </div>
-      <hr />
     </>
   )
 }

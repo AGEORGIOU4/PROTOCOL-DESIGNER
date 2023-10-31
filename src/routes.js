@@ -8,8 +8,6 @@ const AddLabware = React.lazy(() => import('./views/_dashboard/create-protocol/A
 
 const ImportProtocol = React.lazy(() => import('./views/_dashboard/import-protocol/ImportProtocol'))
 
-const Labware = React.lazy(() => import('./views/_dashboard/create-protocol/AddLabware/components/Labware'))
-
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
 
@@ -78,7 +76,7 @@ const routes = [
   { path: '/create-protocol', name: 'Create Protocol', element: CreateProtocol },
   { path: '/add-labware', name: 'Add Labware', element: AddLabware },
 
-  { path: '/labware-collection', name: 'Labware Selection', element: Labware },
+
 
   { path: '/import-protocol', name: 'Import Protocol', element: ImportProtocol },
 

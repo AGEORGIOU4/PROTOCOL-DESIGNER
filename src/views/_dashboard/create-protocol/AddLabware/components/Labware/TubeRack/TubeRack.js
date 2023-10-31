@@ -49,7 +49,7 @@ function TubeRackSelection({ name }) {
         const row = Array.from({ length: cols2 }).map((item, col_index) => {
           const ref = createRef();
           itemsRef.current.push(ref);
-          let id = (GetLetter(row_index) + (parseInt(col_index) + 1))
+          let id = (GetLetter(row_index) + (parseInt(col_index) + 3))
 
           return <CCol key={id} id={id} className="tr_selectables" style={{ borderRadius: '100%' }} ref={ref}></CCol>
         })
@@ -75,7 +75,10 @@ function TubeRackSelection({ name }) {
     ds.subscribe('DS:end', (callback_object) => {
       if (callback_object.items) {
         // do something with the items
-        setSelectedItems(callback_object.items)
+        const strAscending = [...callback_object.items].sort((a, b) =>
+          a.id > b.id ? 1 : -1,
+        );
+        setSelectedItems(strAscending)
       }
     })
 
@@ -122,12 +125,12 @@ function TubeRackSelection({ name }) {
             {
               React.Children.toArray(
                 boxes2?.map((row, index) => {
-                  if (index === 0) { // LABEL HEADERS 
+                  if (index === 0) { // LABEL HEADERS 2
                     return (
                       row?.map((col, index) => {
                         return (
-                          <CCol style={{ display: rows2 ? 'block' : 'none' }} className="tr_label-col">
-                            <span  >{index + 1}</span>
+                          <CCol style={{ display: rows2 ? 'grid' : 'none' }} className="tr_label-col">
+                            <span  >{index + 3}</span>
                           </CCol>
                         )
                       })
@@ -139,7 +142,7 @@ function TubeRackSelection({ name }) {
           </CRow>
 
           <CRow className={rows && cols < 17 ? "tr_wells_grid" : ""}>
-            <CCol>
+            <CCol style={{ display: 'grid' }}>
               {
                 React.Children.toArray(
                   boxes?.map((row, index) => {
@@ -156,15 +159,15 @@ function TubeRackSelection({ name }) {
 
             </CCol>
 
-            <CCol style={{ display: rows2 ? 'block' : 'none' }}>
+            <CCol style={{ display: rows2 ? 'grid' : 'none', padding: '32px' }}>
               {
                 React.Children.toArray(
                   boxes2?.map((row, index) => {
                     return (
                       <>
                         <CRow className={"tr_rowGrid"}>
-                          <span style={{ userSelect: 'none', display: 'flex', alignItems: 'center', width: '40px' }}>{GetLetter(index)}</span>
                           {row}
+                          <span style={{ userSelect: 'none', display: 'flex', alignItems: 'center', width: '0px' }}>{GetLetter(index)}</span>
                         </CRow>
                       </>
                     )
