@@ -1,18 +1,19 @@
-import { CButton, CCol, CRow } from "@coreui/react-pro";
+import { CButton, CCol, CFormTextarea, CRow } from "@coreui/react-pro";
 import DragSelect from "dragselect";
 import React, { useRef, useState, useEffect, createRef } from "react";
 import { GetLetter } from "src/_common/helpers";
 
 import "./styles.css";
 import { well_plates } from "../data";
+
 import CIcon from "@coreui/icons-react";
 import { cilSave } from "@coreui/icons";
 
-const WellPlateSelection = ({ name }) => {
-
+const WellPlateSelection = ({ name, selectedLiquid, liquidVolume }) => {
   const [boxes, setBoxes] = useState([]);
 
   const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedItemsText, setSelectedItemsText] = useState('');
   const itemsRef = useRef([]);
 
   const [selectedLabware, setSelectedLabware] = useState(well_plates[0])
@@ -20,15 +21,6 @@ const WellPlateSelection = ({ name }) => {
   const [cols, setCols] = useState(well_plates[0].cols);
 
   const [squared, setSquared] = useState(false);
-
-  // Set Selected Labware
-  useEffect(() => {
-    const item = well_plates.filter(item => item.label === name);
-    setSelectedLabware(item[0])
-    setRows(item[0].rows);
-    setCols(item[0].cols);
-    setSquared(item[0].squared);
-  }, [name])
 
   // Set Up GRID
   useEffect(() => {
@@ -49,34 +41,42 @@ const WellPlateSelection = ({ name }) => {
     setBoxes(elems);
   }, [rows, cols]);
 
-
-  // Configure Drag Select
   useEffect(() => {
     const ds = new DragSelect({
       draggability: false,
       immediateDrag: false,
       selectables: document.getElementsByClassName("wp_selectables"),
       multiSelectMode: true,
-      multiSelectToggling: true,
-      refreshMemoryRate: 1000000000000000,
     });
 
-
-    ds.subscribe('DS:end', (callback_object) => {
+    ds.subscribe('callback', (callback_object) => {
       if (callback_object.items) {
         // do something with the items
         const strAscending = [...callback_object.items].sort((a, b) =>
           a.id > b.id ? 1 : -1,
         );
+
+        let tmp_arr = [];
+        strAscending?.map((item, index) => {
+          tmp_arr.push(item.id);
+        })
+
+        setSelectedItemsText(tmp_arr);
         setSelectedItems(strAscending)
       }
     })
 
-    return () => ds.unsubscribe('DS:end')
+    return () => ds.unsubscribe('callback')
+  }, []);
 
-
-  }, [boxes]);
-
+  // Set Selected Labware
+  useEffect(() => {
+    const item = well_plates.filter(item => item.label === name);
+    setSelectedLabware(item[0])
+    setRows(item[0].rows);
+    setCols(item[0].cols);
+    setSquared(item[0].squared);
+  }, [name])
 
   const handleSave = () => {
     let items = (itemsRef.current);
@@ -89,7 +89,7 @@ const WellPlateSelection = ({ name }) => {
     })
 
     selectedItems?.map((item, index) => {
-      document.getElementById(item.id).style.background = '#DE6711';
+      document.getElementById(item.id).style.background = selectedLiquid.color;
     })
   }
 
@@ -104,11 +104,12 @@ const WellPlateSelection = ({ name }) => {
         // onMouseUp={(e) => console.log(e)}
         >
 
+          {/*  LABEL HEADERS */}
           <CRow className="wp_label-row">
             {
               React.Children.toArray(
                 boxes?.map((row, index) => {
-                  if (index === 0) { // LABEL HEADERS 
+                  if (index === 0) {
                     return (
                       row?.map((col, index) => {
                         return (
@@ -123,6 +124,7 @@ const WellPlateSelection = ({ name }) => {
               )}
           </CRow>
 
+          {/*  SLOTS */}
           <div className={rows && cols < 17 ? "wp_wells_grid" : ""}>
             {
               React.Children.toArray(
@@ -141,35 +143,32 @@ const WellPlateSelection = ({ name }) => {
 
         </div >
 
-
-
         <br />
 
-        <h4>Selected: </h4>
-        <table>
-          <tbody>
-            <tr>
-              {React.Children.toArray(
-                selectedItems?.map((selected, index) => {
-                  return (
-                    <td style={{ fontSize: 'xx-small' }}>{selected.id},</td>
-                  )
-                })
+        <h6>Selected: </h6>
 
-              )}
-            </tr>
-          </tbody>
-        </table>
+        <CFormTextarea disabled defaultValue={selectedItemsText} rows={3}></CFormTextarea>
+
+        <hr />
+        <div >
+          <CButton className='standard-btn float-end' disabled={selectedLiquid ? false : true} color="primary" onClick={handleSave}>
+            <CIcon size="sm" icon={cilSave} /> SAVE
+          </CButton>
+          <CButton className='standard-btn' color="primary" >
+            <CIcon size="sm" icon={cilSave} /> CLEAR
+          </CButton>
+        </div>
 
         <hr />
 
-        <CButton className='standard-btn float-end' color="primary" onClick={handleSave}>
-          <CIcon size="sm" icon={cilSave} /> SAVE
-        </CButton>
+
+        <span style={{ fontSize: '24px', marginTop: '26px' }}><strong>{name}</strong></span>
+
       </div>
 
     </>
 
   )
 }
+
 export default WellPlateSelection

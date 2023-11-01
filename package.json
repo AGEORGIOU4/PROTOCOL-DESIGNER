@@ -23,6 +23,7 @@
     "test:debug": "react-scripts --inspect-brk test --runInBand"
   },
   "dependencies": {
+    "@air/react-drag-to-select": "5.0.5",
     "@coreui/chartjs": "^3.0.0",
     "@coreui/coreui-pro": "^4.3.2",
     "@coreui/icons": "^2.1.0",
@@ -41,13 +42,14 @@
     "chroma-js": "^2.4.2",
     "classnames": "^2.3.1",
     "core-js": "^3.23.5",
-    "dragselect": "^3.0.3",
+    "dragselect": "2.5.5",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-app-polyfill": "^3.0.0",
     "react-beautiful-dnd": "^13.1.1",
     "react-color": "^2.19.3",
     "react-dom": "^18.2.0",
+    "react-drag-select": "1.0.0",
     "react-lines-ellipsis": "^0.15.3",
     "react-redux": "^8.0.2",
     "react-router-dom": "^6.16.0",

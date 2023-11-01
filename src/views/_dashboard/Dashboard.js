@@ -8,13 +8,10 @@ import {
   CCol,
   CContainer,
   CForm,
-  CFormInput,
-  CInputGroup,
-  CInputGroupText,
   CRow,
 } from '@coreui/react-pro'
 import CIcon from '@coreui/icons-react'
-import { cilCloudUpload, cilList, cilLockLocked, cilPlus, cilUser } from '@coreui/icons'
+import { cilCloudUpload, cilList, cilPlus } from '@coreui/icons'
 
 const Dashboard = () => {
   return (

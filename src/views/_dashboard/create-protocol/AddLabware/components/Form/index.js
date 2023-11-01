@@ -3,93 +3,15 @@ import { CButton, CCol, CForm, CFormFeedback, CFormInput, CFormLabel, CFormSelec
 import { useState } from 'react'
 import CIcon from '@coreui/icons-react';
 import { cilReload, cilSave } from '@coreui/icons';
-import { aluminium_blocks, reservoirs, tube_racks, well_plates } from '../Labware/data';
+import { aluminium_blocks, reservoirs, tube_racks, well_plates } from './Labware/data';
 import { cidEyedropper } from '@coreui/icons-pro';
-import WellPlateSelection from '../Labware/WellPlate/WellPlate';
+import WellPlateSelection from './Labware/WellPlate/WellPlate';
 import AddLabwareModal from '../Modal';
-import TubeRackSelection from '../Labware/TubeRack/TubeRack';
-import ReservoirSelection from '../Labware/Reservoir/Reservoir';
-import AluminiumBlockSelection from '../Labware/AluminiumBlock/AluminiumBlock';
-import Select from 'react-select';
-import { colourStyles } from '../Liquids/data';
+import TubeRackSelection from './Labware/TubeRack/TubeRack';
+import ReservoirSelection from './Labware/Reservoir/Reservoir';
+import AluminiumBlockSelection from './Labware/AluminiumBlock/AluminiumBlock';
+import { AddLiquids, disableInputFieldsOnSelect } from './helpers';
 
-const disableInputFieldsOnSelect = (value, action) => {
-  if (value == '') {
-    document.getElementById("validationCustom02").disabled = false;
-    document.getElementById("validationCustom03").disabled = false;
-    document.getElementById("validationCustom04").disabled = false;
-    document.getElementById("validationCustom05").disabled = false;
-  } else {
-    switch (action) {
-      case 'tube_rack':
-        document.getElementById("validationCustom02").disabled = false;
-        document.getElementById("validationCustom03").disabled = true;
-        document.getElementById("validationCustom04").disabled = true;
-        document.getElementById("validationCustom05").disabled = true;
-        break;
-      case 'well_plate':
-        document.getElementById("validationCustom02").disabled = true;
-        document.getElementById("validationCustom03").disabled = false;
-        document.getElementById("validationCustom04").disabled = true;
-        document.getElementById("validationCustom05").disabled = true;
-        break;
-      case 'reservoir':
-        document.getElementById("validationCustom02").disabled = true;
-        document.getElementById("validationCustom03").disabled = true;
-        document.getElementById("validationCustom04").disabled = false;
-        document.getElementById("validationCustom05").disabled = true;
-        break;
-      case 'aluminium_block':
-        document.getElementById("validationCustom02").disabled = true;
-        document.getElementById("validationCustom03").disabled = true;
-        document.getElementById("validationCustom04").disabled = true;
-        document.getElementById("validationCustom05").disabled = false;
-        break;
-      default:
-        document.getElementById("validationCustom02").disabled = false;
-        document.getElementById("validationCustom03").disabled = false;
-        document.getElementById("validationCustom04").disabled = false;
-        document.getElementById("validationCustom05").disabled = false;
-        break;
-    }
-  }
-}
-
-const AddLiquids = ({ liquidVolume, setLiquidVolume }) => {
-
-  const [selectedLiquid, setSelectedLiquid] = useState('');
-
-  return (
-    <>
-      <CRow>
-        <CCol md={8}>
-          <CFormLabel htmlFor="validationCustom04">Select Liquid</CFormLabel>
-          <Select
-            isMulti={false}
-            closeMenuOnSelect={true}
-            options={JSON.parse(localStorage.getItem('liquids')) || []}
-            styles={colourStyles}
-            isSearchable={false}
-            onChange={(e) => setSelectedLiquid(e)}
-          />
-        </CCol>
-
-        <CCol md={2}>
-          <CFormLabel htmlFor="validationCustom02">Liquid Color</CFormLabel>
-          <CFormInput disabled value={selectedLiquid.color || ''} type='color' style={{ width: '100%', background: 'white' }} />
-        </CCol>
-
-        <CCol md={2}>
-          <CFormLabel htmlFor="validationCustom03">Volume (ml)</CFormLabel>
-          <CFormInput autoComplete={'off'} type="number" id="validationCustom03" placeholder="" required value={liquidVolume} onChange={(e) => { setLiquidVolume(e.target.value) }} />
-          <CFormFeedback valid>Looks good!</CFormFeedback>
-        </CCol>
-      </CRow>
-
-      <br />
-    </>
-  )
-}
 
 export const Form = ({ selectedSlot, handleSubmitForm }) => {
   const [loadingSave, setLoadingSave] = useState(false);
@@ -105,13 +27,8 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
 
   const [selectedLabwareName, setSelectedLabwareName] = useState('');
 
-  // LIQUIDS
-  const [liquidOptions, setLiquidOptions] = useState([])
-  const [selectedLiquid, setSelectedLiquid] = useState([])
-  const [liquidName, setLiquidName] = useState('')
+  const [selectedLiquid, setSelectedLiquid] = useState('')
   const [liquidVolume, setLiquidVolume] = useState('0')
-  const [liquidColor, setLiquidColor] = useState('#9900EF')
-
 
   useEffect(() => {
     setName(selectedSlot.name);
@@ -301,6 +218,14 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
     setVisible(true)
   }
 
+  const handleChangeSelectedLiquid = (e) => {
+    setSelectedLiquid(e);
+  }
+
+  const handleChangeLiquidVolume = (e) => {
+    setLiquidVolume(e.target.value);
+  }
+
   return (
     <>
       <CCol md={12}>
@@ -347,7 +272,6 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
 
           <br />
 
-
           <CRow>
             <CCol md={4} style={{ textAlign: 'start' }}>
               <CLoadingButton loading={loadingReset} className='standard-btn' onClick={handleReset}><CIcon size='sm' icon={cilReload} /> RESET</CLoadingButton>
@@ -370,28 +294,43 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
 
         {tubeRack && React.Children.toArray(
           <>
-            <AddLiquids options={liquidOptions} selectedLiquid={selectedLiquid} liquidVolume={liquidVolume} setLiquidVolume={setLiquidVolume} />
-            <TubeRackSelection name={selectedLabwareName} />
+            <AddLiquids
+              selectedLiquid={selectedLiquid}
+              liquidVolume={liquidVolume}
+              handleChangeSelectedLiquid={handleChangeSelectedLiquid}
+              handleChangeLiquidVolume={handleChangeLiquidVolume} />
+            <TubeRackSelection
+              name={selectedLabwareName}
+              selectedLiquid={selectedLiquid}
+              liquidVolume={liquidVolume} />
           </>
         )}
 
         {wellPlate && React.Children.toArray(
           <>
-            <AddLiquids options={liquidOptions} selectedLiquid={selectedLiquid} liquidVolume={liquidVolume} setLiquidVolume={setLiquidVolume} />
-            <WellPlateSelection name={selectedLabwareName} />
+            <AddLiquids
+              selectedLiquid={selectedLiquid}
+              liquidVolume={liquidVolume}
+              handleChangeSelectedLiquid={handleChangeSelectedLiquid}
+              handleChangeLiquidVolume={handleChangeLiquidVolume} />
+            <WellPlateSelection
+              name={selectedLabwareName}
+              selectedLiquid={selectedLiquid}
+              liquidVolume={liquidVolume}
+            />
           </>
         )}
 
         {reservoir && React.Children.toArray(
           <>
-            <AddLiquids options={liquidOptions} selectedLiquid={selectedLiquid} liquidVolume={liquidVolume} setLiquidVolume={setLiquidVolume} />
+            <AddLiquids selectedLiquid={selectedLiquid} liquidVolume={liquidVolume} setLiquidVolume={setLiquidVolume} />
             <ReservoirSelection name={selectedLabwareName} />
           </>
         )}
 
         {aluminiumBlock && React.Children.toArray(
           <>
-            <AddLiquids options={liquidOptions} selectedLiquid={selectedLiquid} liquidVolume={liquidVolume} setLiquidVolume={setLiquidVolume} />
+            <AddLiquids selectedLiquid={selectedLiquid} liquidVolume={liquidVolume} setLiquidVolume={setLiquidVolume} />
             <AluminiumBlockSelection name={selectedLabwareName} />
           </>
         )}

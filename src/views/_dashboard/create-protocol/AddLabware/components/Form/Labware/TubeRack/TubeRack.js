@@ -1,4 +1,4 @@
-import { CCol, CRow } from "@coreui/react-pro";
+import { CButton, CCol, CFormTextarea, CRow } from "@coreui/react-pro";
 import DragSelect from "dragselect";
 import React, { useRef, useState, useEffect, createRef } from "react";
 import { GetLetter } from "src/_common/helpers";
@@ -6,11 +6,15 @@ import { GetLetter } from "src/_common/helpers";
 import "./styles.css";
 import { tube_racks } from "../data";
 
-function TubeRackSelection({ name }) {
+import CIcon from "@coreui/icons-react";
+import { cilSave } from "@coreui/icons";
+
+const TubeRackSelection = ({ name, selectedLiquid }) => {
   const [boxes, setBoxes] = useState([]);
   const [boxes2, setBoxes2] = useState([]);
 
   const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedItemsText, setSelectedItemsText] = useState('');
   const itemsRef = useRef([]);
 
   const [selectedLabware, setSelectedLabware] = useState(tube_racks[0])
@@ -66,24 +70,29 @@ function TubeRackSelection({ name }) {
     const ds = new DragSelect({
       draggability: false,
       immediateDrag: false,
-      selectables: document.getElementsByClassName("tr_selectables"),
-      multiSelectMode: false,
-      multiSelectToggling: true,
-      refreshMemoryRate: 1000000000000000,
+      selectables: document.getElementsByClassName("wp_selectables"),
+      multiSelectMode: true,
     });
 
-    ds.subscribe('DS:end', (callback_object) => {
+    ds.subscribe('callback', (callback_object) => {
       if (callback_object.items) {
         // do something with the items
         const strAscending = [...callback_object.items].sort((a, b) =>
           a.id > b.id ? 1 : -1,
         );
+
+        let tmp_arr = [];
+        strAscending?.map((item, index) => {
+          tmp_arr.push(item.id);
+        })
+
+        setSelectedItemsText(tmp_arr);
         setSelectedItems(strAscending)
       }
     })
 
-    return () => ds.unsubscribe('DS:end')
-  }, [boxes]);
+    return () => ds.unsubscribe('callback')
+  }, []);
 
   // Set Selected Labware
   useEffect(() => {
@@ -95,6 +104,27 @@ function TubeRackSelection({ name }) {
     setCols2(item[0].cols2);
   }, [name])
 
+
+  // const handleClear = () => {
+  //   setSelectedItems([]);
+  //   ds.clearSelection()
+  // }
+
+  const handleSave = () => {
+    let items = (itemsRef.current);
+
+    items?.map((item, index) => {
+      try {
+        document.getElementById(item.current.id).style.background = '#EFEFEF';
+      } catch (e) {
+      }
+    })
+
+    selectedItems?.map((item, index) => {
+      document.getElementById(item.id).style.background = selectedLiquid.color;
+    })
+  }
+
   return (
     <>
       <div style={{ display: selectedLabware.name != 'N/A' ? 'block' : 'none' }}>
@@ -104,11 +134,12 @@ function TubeRackSelection({ name }) {
         // onMouseUp={(e) => console.log(e)}
         >
 
+          {/*  LABEL HEADERS */}
           <CRow className="tr_label-row">
             {
               React.Children.toArray(
                 boxes?.map((row, index) => {
-                  if (index === 0) { // LABEL HEADERS 
+                  if (index === 0) {
                     return (
                       row?.map((col, index) => {
                         return (
@@ -141,6 +172,7 @@ function TubeRackSelection({ name }) {
 
           </CRow>
 
+          {/*  SLOTS */}
           <CRow className={rows && cols < 17 ? "tr_wells_grid" : ""}>
             <CCol style={{ display: 'grid' }}>
               {
@@ -149,7 +181,7 @@ function TubeRackSelection({ name }) {
                     return (
                       <>
                         <CRow className={"tr_rowGrid"}>
-                          <span style={{ userSelect: 'none', display: 'flex', alignItems: 'center', width: '40px' }}>{GetLetter(index)}</span>
+                          <span style={{ userSelect: 'none', display: 'flex', alignItems: 'center', width: '50px' }}>{GetLetter(index)}</span>
                           {row}
                         </CRow>
                       </>
@@ -159,7 +191,7 @@ function TubeRackSelection({ name }) {
 
             </CCol>
 
-            <CCol style={{ display: rows2 ? 'grid' : 'none', padding: '32px' }}>
+            <CCol style={{ display: rows2 ? 'grid' : 'none', padding: '26px' }}>
               {
                 React.Children.toArray(
                   boxes2?.map((row, index) => {
@@ -176,24 +208,28 @@ function TubeRackSelection({ name }) {
             </CCol>
           </CRow>
 
-
         </div >
 
         <br />
 
-        <h4>Selected: </h4>
-        <table>
-          <tr>
-            {React.Children.toArray(
-              selectedItems?.map((selected, index) => {
-                return (
-                  <td>{selected.id},</td>
-                )
-              })
+        <h6>Selected: </h6>
 
-            )}
-          </tr>
-        </table>
+        <CFormTextarea disabled defaultValue={selectedItemsText} rows={3}></CFormTextarea>
+
+        <hr />
+        <div >
+          <CButton className='standard-btn float-end' color="primary" onClick={handleSave}>
+            <CIcon size="sm" icon={cilSave} /> SAVE
+          </CButton>
+          <CButton className='standard-btn' color="primary" >
+            <CIcon size="sm" icon={cilSave} /> CLEAR
+          </CButton>
+        </div>
+
+        <hr />
+
+
+        <span style={{ fontSize: '24px', marginTop: '26px' }}><strong>{name}</strong></span>
 
       </div>
 
@@ -201,4 +237,5 @@ function TubeRackSelection({ name }) {
 
   )
 }
+
 export default TubeRackSelection

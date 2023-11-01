@@ -2,7 +2,6 @@ import { cilPlus, cilTrash } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 import { CButton, CCol, CRow } from "@coreui/react-pro"
 import React, { useEffect, useState } from "react";
-import { PromptWithConfirm } from "src/_common/alerts/swal";
 import { truncateText } from "src/_common/helpers";
 
 const DECK_TOTAL_COLUMNS = 3;
