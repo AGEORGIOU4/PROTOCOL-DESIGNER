@@ -1,85 +1,89 @@
-import { CButton, CCol, CFormTextarea, CRow } from "@coreui/react-pro";
+import "./styles.css";
 import DragSelect from "dragselect";
 import React, { useRef, useState, useEffect, createRef } from "react";
+import { CButton, CCol, CFormTextarea, CRow } from "@coreui/react-pro";
 import { GetLetter } from "src/_common/helpers";
-
-import "./styles.css";
 import { well_plates } from "../data";
-
 import CIcon from "@coreui/icons-react";
 import { cilSave } from "@coreui/icons";
 
-const WellPlateSelection = ({ name, selectedLiquid, liquidVolume }) => {
-  const [boxes, setBoxes] = useState([]);
+export default function WellPlateSelection({ selectedLabware, selectedLiquid, liquidVolume }) {
+  const wellPlatesRef = useRef([]);
 
-  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedWellPlates, setSelectedWellPlates] = useState([]);
   const [selectedItemsText, setSelectedItemsText] = useState('');
-  const itemsRef = useRef([]);
+  const [ds, setDS] = useState(new DragSelect({ draggability: false }));
 
-  const [selectedLabware, setSelectedLabware] = useState(well_plates[0])
-  const [rows, setRows] = useState(well_plates[0].rows);
-  const [cols, setCols] = useState(well_plates[0].cols);
-
-  const [squared, setSquared] = useState(false);
-
-  // Set Up GRID
-  useEffect(() => {
-    const elems = [];
-    let row_index = 0;
-
-    while (row_index < rows) {
-      const row = Array.from({ length: cols }).map((item, col_index) => {
-        const ref = createRef();
-        itemsRef.current.push(ref);
-        let id = (GetLetter(row_index) + (parseInt(col_index) + 1))
-
-        return <CCol key={id} id={id} className="wp_selectables" style={{ borderRadius: squared ? '0' : '100%' }} ref={ref}></CCol>
-      })
-      elems.push(row)
-      row_index++;
-    }
-    setBoxes(elems);
-  }, [rows, cols]);
+  const settings = {
+    draggability: false,
+    multiSelectMode: true,
+    selectables: document.getElementsByClassName("wp_selectables"),
+  };
 
   useEffect(() => {
-    const ds = new DragSelect({
-      draggability: false,
-      immediateDrag: false,
-      selectables: document.getElementsByClassName("wp_selectables"),
-      multiSelectMode: true,
-    });
+    ds?.setSettings(settings);
 
-    ds.subscribe('callback', (callback_object) => {
+    ds.subscribe('DS:end', (callback_object) => {
       if (callback_object.items) {
-        // do something with the items
+        // Sort selected ASC
         const strAscending = [...callback_object.items].sort((a, b) =>
           a.id > b.id ? 1 : -1,
         );
-
         let tmp_arr = [];
         strAscending?.map((item, index) => {
           tmp_arr.push(item.id);
         })
-
         setSelectedItemsText(tmp_arr);
-        setSelectedItems(strAscending)
+        setSelectedWellPlates(strAscending)
+
       }
     })
 
-    return () => ds.unsubscribe('callback')
-  }, []);
+    return () => ds.unsubscribe('DS:end')
+
+  }, [ds])
+
+
+  var rows = well_plates[0].rows;
+  var cols = well_plates[0].cols;
+  var squared = false;
+
 
   // Set Selected Labware
-  useEffect(() => {
-    const item = well_plates.filter(item => item.label === name);
-    setSelectedLabware(item[0])
-    setRows(item[0].rows);
-    setCols(item[0].cols);
-    setSquared(item[0].squared);
-  }, [name])
+  const item = well_plates.filter(item => item.label === selectedLabware);
+
+  rows = (item[0].rows);
+  cols = (item[0].cols);
+  squared = (item[0].squared);
+
+  // Set Up GRID
+  const elems = [];
+  let row_index = 0;
+
+  while (row_index < rows) {
+    const row = Array.from({ length: cols }).map((item, col_index) => {
+      const wp_ref = createRef();
+      wellPlatesRef.current.push(wp_ref);
+      let id = (GetLetter(row_index) + (parseInt(col_index) + 1))
+      return <CCol key={id} id={id} className="wp_selectables" style={{ borderRadius: squared ? '0' : '100%' }} ref={wp_ref}></CCol>
+    })
+    elems.push(row)
+    row_index++;
+  }
+
 
   const handleSave = () => {
-    let items = (itemsRef.current);
+    selectedWellPlates?.map((item, index) => {
+      document.getElementById(item.id).style.background = selectedLiquid.color;
+    })
+  }
+
+  const clearAll = () => {
+    setSelectedWellPlates([]);
+    setSelectedItemsText('');
+
+    ds.clearSelection();
+    let items = (wellPlatesRef.current);
 
     items?.map((item, index) => {
       try {
@@ -87,20 +91,18 @@ const WellPlateSelection = ({ name, selectedLiquid, liquidVolume }) => {
       } catch (e) {
       }
     })
-
-    selectedItems?.map((item, index) => {
-      document.getElementById(item.id).style.background = selectedLiquid.color;
-    })
-  }
+  };
 
   return (
     <>
-      <div style={{ display: selectedLabware.name != 'N/A' ? 'block' : 'none' }}>
+      <div
+      // style={{ display: selectedLabware.name != 'N/A' ? 'block' : 'none' }}
+      >
         {/* <h2 style={{ userSelect: 'none' }}>{selected.name}</h2> */}
 
 
 
-        <div className="wp_selection-frame"
+        <div className="wp_selection-frame" id="area"
         // onMouseUp={(e) => console.log(e)}
         >
 
@@ -108,7 +110,7 @@ const WellPlateSelection = ({ name, selectedLiquid, liquidVolume }) => {
           <CRow className="wp_label-row">
             {
               React.Children.toArray(
-                boxes?.map((row, index) => {
+                elems?.map((row, index) => {
                   if (index === 0) {
                     return (
                       row?.map((col, index) => {
@@ -128,7 +130,7 @@ const WellPlateSelection = ({ name, selectedLiquid, liquidVolume }) => {
           <div className={rows && cols < 17 ? "wp_wells_grid" : ""}>
             {
               React.Children.toArray(
-                boxes?.map((row, index) => {
+                elems?.map((row, index) => {
                   return (
                     <>
                       <CRow className={"wp_rowGrid"}>
@@ -147,22 +149,19 @@ const WellPlateSelection = ({ name, selectedLiquid, liquidVolume }) => {
 
         <h6>Selected: </h6>
 
-        <CFormTextarea disabled defaultValue={selectedItemsText} rows={3}></CFormTextarea>
+        <CFormTextarea disabled defaultValue={selectedItemsText} rows={1}></CFormTextarea>
 
         <hr />
         <div >
           <CButton className='standard-btn float-end' disabled={selectedLiquid ? false : true} color="primary" onClick={handleSave}>
             <CIcon size="sm" icon={cilSave} /> SAVE
           </CButton>
-          <CButton className='standard-btn' color="primary" >
+          <CButton className='standard-btn float-end' color="primary" style={{ marginRight: '10px' }} onClick={clearAll}>
             <CIcon size="sm" icon={cilSave} /> CLEAR
           </CButton>
         </div>
 
-        <hr />
-
-
-        <span style={{ fontSize: '24px', marginTop: '26px' }}><strong>{name}</strong></span>
+        <span style={{ fontSize: '24px', marginTop: '26px' }}><strong>{selectedLabware}</strong></span>
 
       </div>
 
@@ -171,4 +170,3 @@ const WellPlateSelection = ({ name, selectedLiquid, liquidVolume }) => {
   )
 }
 
-export default WellPlateSelection

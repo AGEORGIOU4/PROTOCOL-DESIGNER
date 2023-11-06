@@ -1,5 +1,20 @@
 import chroma from 'chroma-js';
 
+const dot = (color = 'transparent') => ({
+  alignItems: 'center',
+  display: 'flex',
+
+  ':before': {
+    backgroundColor: color,
+    borderRadius: 10,
+    content: '" "',
+    display: 'block',
+    marginRight: 8,
+    height: 10,
+    width: 10,
+  },
+});
+
 export const colourStyles = {
   control: (styles) => ({ ...styles, backgroundColor: 'white' }),
   option: (styles, { data, isDisabled, isFocused, isSelected }) => {
@@ -32,26 +47,11 @@ export const colourStyles = {
       },
     };
   },
-  multiValue: (styles, { data }) => {
-    const color = chroma(data.color);
-    return {
-      ...styles,
-      backgroundColor: color.alpha(0.1).css(),
-    };
-  },
-  multiValueLabel: (styles, { data }) => ({
-    ...styles,
-    color: data.color,
-  }),
-  multiValueRemove: (styles, { data }) => ({
-    ...styles,
-    color: data.color,
-    ':hover': {
-      backgroundColor: data.color,
-      color: 'white',
-    },
-  }),
+  input: (styles) => ({ ...styles, ...dot() }),
+  placeholder: (styles) => ({ ...styles, ...dot('#ccc') }),
+  singleValue: (styles, { data }) => ({ ...styles, ...dot(data.color) }),
 };
+
 
 
 

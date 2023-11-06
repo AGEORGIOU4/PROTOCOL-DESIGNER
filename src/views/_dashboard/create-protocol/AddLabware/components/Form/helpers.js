@@ -5,11 +5,13 @@ import { colourStyles } from '../Liquids/data';
 
 export const disableInputFieldsOnSelect = (value, action) => {
   if (value == '') {
-    document.getElementById("validationCustom02").disabled = false;
-    document.getElementById("validationCustom03").disabled = false;
-    document.getElementById("validationCustom04").disabled = false;
-    document.getElementById("validationCustom05").disabled = false;
+    document.getElementById("validationCustom01").disabled = true;
+    document.getElementById("validationCustom02").disabled = true;
+    document.getElementById("validationCustom03").disabled = true;
+    document.getElementById("validationCustom04").disabled = true;
+    document.getElementById("validationCustom05").disabled = true;
   } else {
+    document.getElementById("validationCustom01").disabled = false;
     switch (action) {
       case 'tube_rack':
         document.getElementById("validationCustom02").disabled = false;
@@ -46,6 +48,8 @@ export const disableInputFieldsOnSelect = (value, action) => {
 }
 
 export const AddLiquids = ({ selectedLiquid, handleChangeSelectedLiquid, liquidVolume, handleChangeLiquidVolume }) => {
+
+  console.log(selectedLiquid.color)
   return (
     <>
       <CRow>
@@ -70,7 +74,7 @@ export const AddLiquids = ({ selectedLiquid, handleChangeSelectedLiquid, liquidV
 
         <CCol md={2}>
           <CFormLabel htmlFor="validationCustom02">Liquid Color</CFormLabel>
-          <CFormInput disabled value={selectedLiquid.color || ''} type='color' style={{ width: '100%', background: 'white' }} />
+          <CFormInput disabled value={selectedLiquid.color || '#EFEFEF'} type='color' style={{ width: '100%', background: 'white' }} />
         </CCol>
 
       </CRow>

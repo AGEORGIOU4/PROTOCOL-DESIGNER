@@ -274,55 +274,46 @@ pre {
 }
 
 .add-labware-slot-btn {
-  background-color: #585858;
-  border: 1px solid #f0f0f0;
-  border-radius: 0px;
+  background-color: white;
+  border: 6px solid #f1f1f1;
+  border-radius: 20px;
   width: 100%;
-  height: 7rem;
+  height: 8rem;
   text-align: center;
   font-size: 20px;
-  color: #ffffff;
+  color: #585858;
   font-weight: 900;
 }
 
 .add-labware-slot-btn:active {
   background-color: #01aab1 !important;
-  border: none !important;
-  border-radius: 0px;
+  border: 6px solid #f1f1f1;
+  border-radius: 20px;
   box-shadow: none !important;
   color: #ffffff !important;
 }
 
 .add-labware-slot-btn:hover {
-  border: none;
+  border: 6px solid #f1f1f1;
+  border-radius: 20px;
   background-color: #01aab1;
   color: #ffffff;
 }
 
-.add-labware-slot-create-btn {
-  color: white !important;
-  font-size: x-large !important;
-  background: #585858 !important;
-}
-
-.add-labware-slot-create-btn:hover {
-  background: black !important;
-}
-
 .slot-label-row {
-  background: #ebedef !important;
   color: black;
   padding: 4px;
-  border-radius: 0 0px 0px 0px;
+  border-radius: 20px;
   font-weight: 100;
-  border: 2px solid #585858;
+  margin-top: 5px;
   position: relative;
   z-index: -1;
 }
 
-
 .btn-selected {
   background: #01aab1 !important;
+  color: #fff !important;
+  border: 6px solid #f1f1f1;
 }
 
 .dot-div {
@@ -401,6 +392,7 @@ pre {
 
 .sketch-picker {
   width: 30px;
+  box-shadow: none !important;
 }
 
 .add-labware-modal {

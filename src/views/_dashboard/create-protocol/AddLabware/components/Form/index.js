@@ -13,6 +13,7 @@ import AluminiumBlockSelection from './Labware/AluminiumBlock/AluminiumBlock';
 import { AddLiquids, disableInputFieldsOnSelect } from './helpers';
 
 
+
 export const Form = ({ selectedSlot, handleSubmitForm }) => {
   const [loadingSave, setLoadingSave] = useState(false);
   const [loadingReset, setLoadingReset] = useState(false);
@@ -58,7 +59,9 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
       action = 'aluminium_block';
     }
 
-    disableInputFieldsOnSelect(value, action);
+
+    disableInputFieldsOnSelect(selectedSlot, action);
+
 
   }, [selectedSlot])
 
@@ -171,7 +174,10 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
   }
 
   const handleClose = () => {
+    setSelectedLiquid('');
+    setLiquidVolume(0);
     setVisible(false)
+
   }
 
   const handleSubmit = () => {
@@ -314,7 +320,7 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
               handleChangeSelectedLiquid={handleChangeSelectedLiquid}
               handleChangeLiquidVolume={handleChangeLiquidVolume} />
             <WellPlateSelection
-              name={selectedLabwareName}
+              selectedLabware={selectedLabwareName}
               selectedLiquid={selectedLiquid}
               liquidVolume={liquidVolume}
             />

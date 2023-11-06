@@ -4,7 +4,7 @@ export const reservoirs = [
     id: 0,
     label: 'Select...',
     value: '',
-    disabled: true,
+    disabled: false,
 
     name: '',
     max_volume: '',
@@ -82,7 +82,7 @@ export const well_plates = [
     id: 0,
     label: 'Select...',
     value: '',
-    disabled: true,
+    disabled: false,
     squared: false,
 
     name: '',
@@ -309,7 +309,7 @@ export const aluminium_blocks = [
     id: 0,
     label: 'Select...',
     value: '',
-    disabled: true,
+    disabled: false,
     squared: false,
 
     name: '',
@@ -509,7 +509,7 @@ export const tube_racks = [
     id: 0,
     label: 'Select...',
     value: '',
-    disabled: true,
+    disabled: false,
 
     name: '',
     max_volume: '',

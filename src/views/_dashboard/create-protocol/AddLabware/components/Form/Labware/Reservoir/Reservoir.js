@@ -46,8 +46,11 @@ const ReservoirSelection = ({ name }) => {
       refreshMemoryRate: 1000000000000000,
     });
 
-    ds.subscribe('DS:end', (callback_object) => {
+    ds.subscribe('callback', (callback_object) => {
       if (callback_object.items) {
+
+        console.log(callback_object.items);
+
         // do something with the items
         const strAscending = [...callback_object.items].sort((a, b) =>
           a.id > b.id ? 1 : -1,
@@ -57,7 +60,7 @@ const ReservoirSelection = ({ name }) => {
     })
 
     return () => ds.unsubscribe('DS:end')
-  }, [boxes]);
+  }, []);
 
   // Set Selected Labware
   useEffect(() => {

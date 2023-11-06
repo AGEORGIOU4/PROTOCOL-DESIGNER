@@ -1,0 +1,21 @@
+.MyApp1 {
+  font-family: sans-serif;
+  display: flex;
+  flex-wrap: wrap;
+  place-content: center;
+  padding: 50px;
+}
+
+.box {
+  border: 1px solid black;
+  height: 100px;
+  width: 100px;
+  margin: 10px;
+}
+
+.ts-selected {
+  outline: 3px solid black;
+  outline-offset: 3px;
+  color: black;
+  font-weight: bold;
+}
