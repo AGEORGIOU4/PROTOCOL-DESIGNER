@@ -1,117 +1,96 @@
-import { CButton, CCol, CFormTextarea, CRow } from "@coreui/react-pro";
+import "./styles.css";
 import DragSelect from "dragselect";
 import React, { useRef, useState, useEffect, createRef } from "react";
+import { CButton, CCol, CFormTextarea, CRow } from "@coreui/react-pro";
 import { GetLetter } from "src/_common/helpers";
-
-import "./styles.css";
 import { tube_racks } from "../data";
-
 import CIcon from "@coreui/icons-react";
 import { cilSave } from "@coreui/icons";
 
-const TubeRackSelection = ({ name, selectedLiquid }) => {
-  const [boxes, setBoxes] = useState([]);
-  const [boxes2, setBoxes2] = useState([]);
+export default function TubeRackSelection({ selectedLabware, selectedLiquid, liquidVolume }) {
+  const tubeRacksRef = useRef([]);
 
-  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedTubeRacks, setSelectedTubeRacks] = useState([]);
   const [selectedItemsText, setSelectedItemsText] = useState('');
-  const itemsRef = useRef([]);
+  const [ds, setDS] = useState(new DragSelect({ draggability: false }));
 
-  const [selectedLabware, setSelectedLabware] = useState(tube_racks[0])
-  const [rows, setRows] = useState(tube_racks[0].rows);
-  const [cols, setCols] = useState(tube_racks[0].cols);
+  const settings = {
+    draggability: false,
+    multiSelectMode: true,
+    selectables: document.getElementsByClassName("tr_selectables"),
+  };
 
-  const [rows2, setRows2] = useState(tube_racks[0].rows2 || '');
-  const [cols2, setCols2] = useState(tube_racks[0].cols2 || '');
-
-  // Set Up GRID
   useEffect(() => {
-    const elems = [];
-    let row_index = 0;
+    ds?.setSettings(settings);
 
-    while (row_index < rows) {
-      const row = Array.from({ length: cols }).map((item, col_index) => {
-        const ref = createRef();
-        itemsRef.current.push(ref);
-        let id = (GetLetter(row_index) + (parseInt(col_index) + 1))
-
-        return <CCol key={id} id={id} className="tr_selectables" style={{ borderRadius: '100%' }} ref={ref}></CCol>
-      })
-      elems.push(row)
-      row_index++;
-    }
-    setBoxes(elems);
-  }, [rows, cols]);
-
-  // Set Up GRID 2
-  useEffect(() => {
-    const elems = [];
-    let row_index = 0;
-
-    if (rows2) {
-      while (row_index < rows2) {
-        const row = Array.from({ length: cols2 }).map((item, col_index) => {
-          const ref = createRef();
-          itemsRef.current.push(ref);
-          let id = (GetLetter(row_index) + (parseInt(col_index) + 3))
-
-          return <CCol key={id} id={id} className="tr_selectables" style={{ borderRadius: '100%' }} ref={ref}></CCol>
-        })
-        elems.push(row)
-        row_index++;
-      }
-      setBoxes2(elems);
-    }
-
-  }, [rows2, cols2]);
-
-  // Configure Drag Select
-  useEffect(() => {
-    const ds = new DragSelect({
-      draggability: false,
-      immediateDrag: false,
-      selectables: document.getElementsByClassName("wp_selectables"),
-      multiSelectMode: true,
-    });
-
-    ds.subscribe('callback', (callback_object) => {
+    ds.subscribe('DS:end', (callback_object) => {
       if (callback_object.items) {
-        // do something with the items
+        // Sort selected ASC
         const strAscending = [...callback_object.items].sort((a, b) =>
           a.id > b.id ? 1 : -1,
         );
-
         let tmp_arr = [];
         strAscending?.map((item, index) => {
           tmp_arr.push(item.id);
         })
-
         setSelectedItemsText(tmp_arr);
-        setSelectedItems(strAscending)
+        setSelectedTubeRacks(strAscending)
+
       }
     })
 
-    return () => ds.unsubscribe('callback')
-  }, []);
+    return () => ds.unsubscribe('DS:end')
+
+  }, [ds])
+
+
+  var rows = tube_racks[0].rows;
+  var rows2 = tube_racks[0].rows2;
+  var cols = tube_racks[0].cols;
+  var cols2 = tube_racks[0].cols2;
+  var squared = false;
 
   // Set Selected Labware
-  useEffect(() => {
-    const item = tube_racks.filter(item => item.label === name);
-    setSelectedLabware(item[0])
-    setRows(item[0].rows);
-    setCols(item[0].cols);
-    setRows2(item[0].rows2);
-    setCols2(item[0].cols2);
-  }, [name])
+  const item = tube_racks.filter(item => item.label === selectedLabware);
 
+  rows = (item[0].rows);
+  rows2 = (item[0].rows2);
+  cols = (item[0].cols);
+  cols2 = (item[0].cols2);
+  squared = (item[0].squared);
 
-  // const handleClear = () => {
-  //   setSelectedItems([]);
-  //   ds.clearSelection()
-  // }
+  // Set Up GRID
+  const elems = [];
+  let row_index = 0;
+
+  while (row_index < rows) {
+    const row = Array.from({ length: cols }).map((item, col_index) => {
+      const tr_ref = createRef();
+      tubeRacksRef.current.push(tr_ref);
+      let id = (GetLetter(row_index) + (parseInt(col_index) + 3))
+      return <CCol key={id} id={id} className="tr_selectables" style={{ borderRadius: squared ? '0' : '100%' }} ref={tr_ref}></CCol>
+    })
+    elems.push(row)
+    row_index++;
+  }
+
+  // Set Up GRID 2
+  const elems2 = [];
+  let row_index2 = 0;
+
+  while (row_index2 < rows2) {
+    const row = Array.from({ length: cols2 }).map((item, col_index2) => {
+      const tr_ref2 = createRef();
+      tubeRacksRef.current.push(tr_ref2);
+      let id = (GetLetter(row_index2) + (parseInt(col_index2) + 1))
+      return <CCol key={id} id={id} className="tr_selectables" style={{ borderRadius: squared ? '0' : '100%' }} ref={tr_ref2}></CCol>
+    })
+    elems2.push(row)
+    row_index2++;
+  }
 
   const handleSave = () => {
-    let items = (itemsRef.current);
+    let items = (tubeRacksRef.current);
 
     items?.map((item, index) => {
       try {
@@ -120,16 +99,30 @@ const TubeRackSelection = ({ name, selectedLiquid }) => {
       }
     })
 
-    selectedItems?.map((item, index) => {
+    selectedTubeRacks?.map((item, index) => {
       document.getElementById(item.id).style.background = selectedLiquid.color;
     })
   }
 
+  const clearAll = () => {
+    setSelectedTubeRacks([]);
+    setSelectedItemsText('');
+
+    ds.clearSelection();
+    let items = (tubeRacksRef.current);
+
+    items?.map((item, index) => {
+      try {
+        document.getElementById(item.current.id).style.background = '#EFEFEF';
+      } catch (e) {
+      }
+    })
+  };
+
+
   return (
     <>
       <div style={{ display: selectedLabware.name != 'N/A' ? 'block' : 'none' }}>
-        {/* <h2 style={{ userSelect: 'none' }}>{selected.name}</h2> */}
-
         <div className="tr_selection-frame"
         // onMouseUp={(e) => console.log(e)}
         >
@@ -138,7 +131,7 @@ const TubeRackSelection = ({ name, selectedLiquid }) => {
           <CRow className="tr_label-row">
             {
               React.Children.toArray(
-                boxes?.map((row, index) => {
+                elems?.map((row, index) => {
                   if (index === 0) {
                     return (
                       row?.map((col, index) => {
@@ -153,10 +146,11 @@ const TubeRackSelection = ({ name, selectedLiquid }) => {
                 })
               )}
 
+            {/*  LABEL HEADERS 2 */}
             {
               React.Children.toArray(
-                boxes2?.map((row, index) => {
-                  if (index === 0) { // LABEL HEADERS 2
+                elems2?.map((row, index) => {
+                  if (index === 0) {
                     return (
                       row?.map((col, index) => {
                         return (
@@ -177,7 +171,7 @@ const TubeRackSelection = ({ name, selectedLiquid }) => {
             <CCol style={{ display: 'grid' }}>
               {
                 React.Children.toArray(
-                  boxes?.map((row, index) => {
+                  elems?.map((row, index) => {
                     return (
                       <>
                         <CRow className={"tr_rowGrid"}>
@@ -194,7 +188,7 @@ const TubeRackSelection = ({ name, selectedLiquid }) => {
             <CCol style={{ display: rows2 ? 'grid' : 'none', padding: '26px' }}>
               {
                 React.Children.toArray(
-                  boxes2?.map((row, index) => {
+                  elems2?.map((row, index) => {
                     return (
                       <>
                         <CRow className={"tr_rowGrid"}>
@@ -214,22 +208,19 @@ const TubeRackSelection = ({ name, selectedLiquid }) => {
 
         <h6>Selected: </h6>
 
-        <CFormTextarea disabled defaultValue={selectedItemsText} rows={3}></CFormTextarea>
+        <CFormTextarea disabled defaultValue={selectedItemsText} rows={1}></CFormTextarea>
 
         <hr />
         <div >
-          <CButton className='standard-btn float-end' color="primary" onClick={handleSave}>
+          <CButton className='standard-btn float-end' disabled={selectedLiquid ? false : true} color="primary" onClick={handleSave}>
             <CIcon size="sm" icon={cilSave} /> SAVE
           </CButton>
-          <CButton className='standard-btn' color="primary" >
+          <CButton className='standard-btn float-end' color="primary" style={{ marginRight: '10px' }} onClick={clearAll}>
             <CIcon size="sm" icon={cilSave} /> CLEAR
           </CButton>
         </div>
 
-        <hr />
-
-
-        <span style={{ fontSize: '24px', marginTop: '26px' }}><strong>{name}</strong></span>
+        <span style={{ fontSize: '24px', marginTop: '26px' }}><strong>{selectedLabware}</strong></span>
 
       </div>
 
@@ -237,5 +228,3 @@ const TubeRackSelection = ({ name, selectedLiquid }) => {
 
   )
 }
-
-export default TubeRackSelection

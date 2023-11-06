@@ -48,7 +48,6 @@ export default function WellPlateSelection({ selectedLabware, selectedLiquid, li
   var cols = well_plates[0].cols;
   var squared = false;
 
-
   // Set Selected Labware
   const item = well_plates.filter(item => item.label === selectedLabware);
 
@@ -71,8 +70,16 @@ export default function WellPlateSelection({ selectedLabware, selectedLiquid, li
     row_index++;
   }
 
-
   const handleSave = () => {
+    let items = (wellPlatesRef.current);
+
+    items?.map((item, index) => {
+      try {
+        document.getElementById(item.current.id).style.background = '#EFEFEF';
+      } catch (e) {
+      }
+    })
+
     selectedWellPlates?.map((item, index) => {
       document.getElementById(item.id).style.background = selectedLiquid.color;
     })
@@ -95,13 +102,7 @@ export default function WellPlateSelection({ selectedLabware, selectedLiquid, li
 
   return (
     <>
-      <div
-      // style={{ display: selectedLabware.name != 'N/A' ? 'block' : 'none' }}
-      >
-        {/* <h2 style={{ userSelect: 'none' }}>{selected.name}</h2> */}
-
-
-
+      <div>
         <div className="wp_selection-frame" id="area"
         // onMouseUp={(e) => console.log(e)}
         >

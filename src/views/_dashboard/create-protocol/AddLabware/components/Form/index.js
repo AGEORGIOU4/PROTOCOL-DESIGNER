@@ -243,50 +243,39 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
             <CFormInput type='text' id="validationCustom01" value={name || ''} onChange={handleChangeName} />
             <CFormFeedback valid>Looks good!</CFormFeedback>
           </CCol>
-
           <br />
-
           <CCol md={12}>
             <CFormLabel htmlFor="validationCustom02">Tube Rack</CFormLabel>
             <CFormSelect options={tube_racks} id="validationCustom02" value={tubeRack || ''} onChange={(e) => handleChangeTubeRack(e)} />
             <CFormFeedback valid>Looks good!</CFormFeedback>
           </CCol>
-
           <br />
-
           <CCol md={12}>
             <CFormLabel htmlFor="validationCustom03">Well Plate</CFormLabel>
             <CFormSelect options={well_plates} id="validationCustom03" value={wellPlate || ''} onChange={(e) => handleChangeWellPlate(e)} />
             <CFormFeedback valid>Looks good!</CFormFeedback>
           </CCol>
-
           <br />
-
           <CCol md4={12}>
             <CFormLabel htmlFor="validationCustom04">Reservoir</CFormLabel>
             <CFormSelect options={reservoirs} id="validationCustom04" value={reservoir || ''} onChange={(e) => handleChangeReservoir(e)} />
             <CFormFeedback valid>Looks good!</CFormFeedback>
           </CCol>
-
           <br />
-
           <CCol md={12}>
             <CFormLabel htmlFor="validationCustom05">Aluminium Block</CFormLabel>
             <CFormSelect options={aluminium_blocks} id="validationCustom05" value={aluminiumBlock || ''} onChange={(e) => handleChangeAluminiumBlock(e)} />
             <CFormFeedback valid>Looks good!</CFormFeedback>
           </CCol>
-
           <br />
-
           <CRow>
             <CCol md={4} style={{ textAlign: 'start' }}>
-              <CLoadingButton loading={loadingReset} className='standard-btn' onClick={handleReset}><CIcon size='sm' icon={cilReload} /> RESET</CLoadingButton>
+              <CLoadingButton disabled={selectedSlot ? false : true} selectedLabware loading={loadingReset} className='standard-btn' onClick={handleReset}><CIcon size='sm' icon={cilReload} /> RESET</CLoadingButton>
             </CCol>
 
             <CCol md={8} style={{ textAlign: 'end' }}>
 
               <CButton className='standard-btn' style={{ marginRight: '10px' }} disabled={tubeRack || wellPlate || reservoir || aluminiumBlock ? false : true} onClick={handleAddLiquids}><CIcon size='sm' icon={cidEyedropper} /> ADD LIQUIDS</CButton>
-              {/* <CLoadingButton loading={loadingSave} className='standard-btn' onClick={handleSubmit}><CIcon size='sm' icon={cilSave} /> SAVE</CLoadingButton> */}
             </CCol>
 
           </CRow>
@@ -306,7 +295,7 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
               handleChangeSelectedLiquid={handleChangeSelectedLiquid}
               handleChangeLiquidVolume={handleChangeLiquidVolume} />
             <TubeRackSelection
-              name={selectedLabwareName}
+              selectedLabware={selectedLabwareName}
               selectedLiquid={selectedLiquid}
               liquidVolume={liquidVolume} />
           </>
@@ -329,15 +318,29 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
 
         {reservoir && React.Children.toArray(
           <>
-            <AddLiquids selectedLiquid={selectedLiquid} liquidVolume={liquidVolume} setLiquidVolume={setLiquidVolume} />
-            <ReservoirSelection name={selectedLabwareName} />
+            <AddLiquids
+              selectedLiquid={selectedLiquid}
+              liquidVolume={liquidVolume}
+              handleChangeSelectedLiquid={handleChangeSelectedLiquid}
+              handleChangeLiquidVolume={handleChangeLiquidVolume} />
+            <ReservoirSelection
+              selectedLabware={selectedLabwareName}
+              selectedLiquid={selectedLiquid}
+              liquidVolume={liquidVolume} />
           </>
         )}
 
         {aluminiumBlock && React.Children.toArray(
           <>
-            <AddLiquids selectedLiquid={selectedLiquid} liquidVolume={liquidVolume} setLiquidVolume={setLiquidVolume} />
-            <AluminiumBlockSelection name={selectedLabwareName} />
+            <AddLiquids
+              selectedLiquid={selectedLiquid}
+              liquidVolume={liquidVolume}
+              handleChangeSelectedLiquid={handleChangeSelectedLiquid}
+              handleChangeLiquidVolume={handleChangeLiquidVolume} />
+            <AluminiumBlockSelection
+              selectedLabware={selectedLabwareName}
+              selectedLiquid={selectedLiquid}
+              liquidVolume={liquidVolume} />
           </>
         )}
 

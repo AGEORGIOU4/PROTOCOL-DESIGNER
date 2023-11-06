@@ -1,4 +1,4 @@
-import { cilSave, cilX } from "@coreui/icons";
+import { cilX } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from "@coreui/react-pro";
 import { getIcons } from "../Steps/helpers";
@@ -23,17 +23,6 @@ const AddLabwareModal = ({ children, header = true, title = '', footerText = '',
           {children}
 
         </CModalBody>
-
-        {/* <CModalFooter>
-          <h6 className="modal-step-h"> {footerText ? footerText : ''}</h6>
-          <h6 className="modal-step-h"> {stepIndex ? 'Step ' + stepIndex + 1 : ''} <span style={{ fontSize: '14px', fontWeight: '400' }}>{stepID ? (stepID) : ''}</span></h6>
-          <CButton color="secondary" className="cancel-btn" onClick={handleClose}>
-            <CIcon size="sm" icon={cilX} /> CLOSE
-          </CButton>
-          <CButton className='standard-btn' color="primary" onClick={handleSave}>
-            <CIcon size="sm" icon={cilSave} /> SAVE
-          </CButton>
-        </CModalFooter> */}
 
       </CModal >
     </>

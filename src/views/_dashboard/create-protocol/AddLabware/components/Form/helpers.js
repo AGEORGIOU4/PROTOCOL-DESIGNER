@@ -48,8 +48,6 @@ export const disableInputFieldsOnSelect = (value, action) => {
 }
 
 export const AddLiquids = ({ selectedLiquid, handleChangeSelectedLiquid, liquidVolume, handleChangeLiquidVolume }) => {
-
-  console.log(selectedLiquid.color)
   return (
     <>
       <CRow>

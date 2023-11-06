@@ -40,7 +40,6 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
   }, [newLabwareSelection])
 
   const handleSelect = (item) => {
-    console.log(deckSlots[0].length)
     if (item.id == 0) {
       handleCreate()
     } else {

@@ -5,11 +5,19 @@
   width: fit-content;
   padding: 20px 58px 48px 20px;
   margin: auto;
+  position: relative;
+  z-index: 0;
 }
 
 .r_labelRow {
   padding-left: 40px;
   height: 30px;
+  user-select: none;
+}
+
+.r_label-col {
+  padding-right: 0 !important;
+  padding-left: 0 !important;
   user-select: none;
 }
 
@@ -32,6 +40,7 @@
   border: 2px solid #01aab1;
   outline: 3px solid #01aab1;
   outline-offset: -1px;
+  z-index: 1;
 }
 
 .ds-selector {
