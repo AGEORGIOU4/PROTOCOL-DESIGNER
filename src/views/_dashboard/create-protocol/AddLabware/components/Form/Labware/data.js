@@ -431,10 +431,10 @@ export const reservoirs = [
   },
   {
     id: 1,
-    label: 'Agilent 1 Well Reservoir 290 ml',
-    value: 'Agilent 1 Well Reservoir 290 ml',
+    label: 'Agilent 1 Well Reservoir 290 mL',
+    value: 'Agilent 1 Well Reservoir 290 mL',
 
-    name: 'Agilent 1 Well Reservoir 290 ml',
+    name: 'Agilent 1 Well Reservoir 290 mL',
     max_volume: '290 ml',
     well_count: 1,
     well_shape: 'V-bottom',
@@ -443,10 +443,10 @@ export const reservoirs = [
   },
   {
     id: 2,
-    label: 'Axygen 1 Well Reservoir 90 ml',
-    value: 'Axygen 1 Well Reservoir 90 ml',
+    label: 'Axygen 1 Well Reservoir 90 mL',
+    value: 'Axygen 1 Well Reservoir 90 mL',
 
-    name: 'Axygen 1 Well Reservoir 90 ml',
+    name: 'Axygen 1 Well Reservoir 90 mL',
     max_volume: '90 ml',
     well_count: 1,
     well_shape: 'Flat-bottom',
@@ -456,10 +456,10 @@ export const reservoirs = [
   },
   {
     id: 3,
-    label: 'NEST 12 Well Reservoir 15 ml',
-    value: 'NEST 12 Well Reservoir 15 ml',
+    label: 'NEST 12 Well Reservoir 15 mL',
+    value: 'NEST 12 Well Reservoir 15 mL',
 
-    name: 'NEST 12 Well Reservoir 15 ml',
+    name: 'NEST 12 Well Reservoir 15 mL',
     max_volume: '15 ml',
     well_count: 12,
     well_shape: 'V-bottom',
@@ -468,11 +468,11 @@ export const reservoirs = [
 
   },
   {
-    id: 3,
-    label: 'NEST 1 Well Reservoir 195 ml',
-    value: 'NEST 1 Well Reservoir 195 ml',
+    id: 4,
+    label: 'NEST 1 Well Reservoir 195 mL',
+    value: 'NEST 1 Well Reservoir 195 mL',
 
-    name: 'NEST 1 Well Reservoir 195 ml',
+    name: 'NEST 1 Well Reservoir 195 mL',
     max_volume: '195 ml',
     well_count: 1,
     well_shape: 'V-bottom',
@@ -480,7 +480,19 @@ export const reservoirs = [
     cols: 1,
   },
   {
-    id: 4,
+    id: 5,
+    label: 'NEST 1 Well Reservoir 290 mL',
+    value: 'NEST 1 Well Reservoir 290 mL',
+
+    name: 'NEST 1 Well Reservoir 290 mL',
+    max_volume: '290 ml',
+    well_count: 1,
+    well_shape: 'V-bottom',
+    rows: 1,
+    cols: 1,
+  },
+  {
+    id: 6,
     label: 'USA Scientific 12 Well Reservoir 22 mL',
     value: 'USA Scientific 12 Well Reservoir 22 mL',
 
@@ -628,11 +640,11 @@ export const aluminium_blocks = [
   },
   {
     id: 10,
-    label: 'Opentrons 96 Deep Well Adapter with NEST Deep Well Plate 2 mL',
-    value: 'Opentrons 96 Deep Well Adapter with NEST Deep Well Plate 2 mL',
+    label: 'Opentrons 96 Deep Well Heater-Shaker Adapter with NEST Deep Well Plate 2 mL',
+    value: 'Opentrons 96 Deep Well Heater-Shaker Adapter with NEST Deep Well Plate 2 mL',
     squared: true,
 
-    name: 'Opentrons 96 Deep Well Adapter with NEST Deep Well Plate 2 mL',
+    name: 'Opentrons 96 Deep Well Heater-Shaker Adapter with NEST Deep Well Plate 2 mL',
     max_volume: '2 mL',
     well_count: 96,
     well_shape: 'V-bottom',
@@ -641,11 +653,11 @@ export const aluminium_blocks = [
   },
   {
     id: 11,
-    label: 'Opentrons 96 Flat Bottom Adapter with NEST 96 Well Plate 200 µL Flat',
-    value: 'Opentrons 96 Flat Bottom Adapter with NEST 96 Well Plate 200 µL Flat',
+    label: 'Opentrons 96 Flat Bottom Heater-Shaker Adapter with NEST 96 Well Plate 200 µL Flat',
+    value: 'Opentrons 96 Flat Bottom Heater-Shaker Adapter with NEST 96 Well Plate 200 µL Flat',
     squared: false,
 
-    name: 'Opentrons 96 Flat Bottom Adapter with NEST 96 Well Plate 200 µL Flat',
+    name: 'Opentrons 96 Flat Bottom Heater-Shaker Adapter with NEST 96 Well Plate 200 µL Flat',
     max_volume: '200 μL',
     well_count: 96,
     well_shape: 'Flat-bottom',
@@ -654,11 +666,11 @@ export const aluminium_blocks = [
   },
   {
     id: 12,
-    label: 'Opentrons 96 PCR Adapter with Armadillo Well Plate 200 µl',
-    value: 'Opentrons 96 PCR Adapter with Armadillo Well Plate 200 µl',
+    label: 'Opentrons 96 PCR Heater-Shaker Adapter with NEST Well Plate 100 µl',
+    value: 'Opentrons 96 PCR Heater-Shaker Adapter with NEST Well Plate 100 µl',
     squared: false,
 
-    name: 'Opentrons 96 PCR Adapter with Armadillo Well Plate 200 µl',
+    name: 'Opentrons 96 PCR Heater-Shaker Adapter with NEST Well Plate 100 µl',
     max_volume: '200 μL',
     well_count: 96,
     well_shape: 'V-bottom',
@@ -667,24 +679,11 @@ export const aluminium_blocks = [
   },
   {
     id: 13,
-    label: 'Opentrons 96 PCR Adapter with NEST Well Plate 100 µl',
-    value: 'Opentrons 96 PCR Adapter with NEST Well Plate 100 µl',
-    squared: false,
-
-    name: 'Opentrons 96 PCR Adapter with NEST Well Plate 100 µl',
-    max_volume: '100 μL',
-    well_count: 96,
-    well_shape: 'V-bottom',
-    rows: 8,
-    cols: 12,
-  },
-  {
-    id: 14,
-    label: 'Opentrons Universal Flat Adapter with Corning 384 Well Plate 112 µl Flat',
-    value: 'Opentrons Universal Flat Adapter with Corning 384 Well Plate 112 µl Flat',
+    label: 'Opentrons Universal Flat Heater-Shaker Adapter with Corning 384 Well Plate 112 µl Flat',
+    value: 'Opentrons Universal Flat Heater-Shaker Adapter with Corning 384 Well Plate 112 µl Flat',
     squared: true,
 
-    name: 'Opentrons Universal Flat Adapter with Corning 384 Well Plate 112 µl Flat',
+    name: 'Opentrons Universal Flat Heater-Shaker Adapter with Corning 384 Well Plate 112 µl Flat',
     max_volume: '112 μL',
     well_count: 384,
     well_shape: 'Flat-bottom',

@@ -16,12 +16,12 @@ export const getSlotLabwareImage = (selectedLabware) => {
     // TUBE RACK 1
     case "Opentrons 10 Tube Rack with Falcon 4x50 mL, 6x15 mL Conical":
     case "Opentrons 10 Tube Rack with NEST 4x50 mL, 6x15 mL Conical":
-      return '/tube-rack_1.png';
+      return '/tube-rack(10)_1.png';
 
     // TUBE RACK 2
     case "Opentrons 15 Tube Rack with Falcon 15 mL Conical":
     case "Opentrons 15 Tube Rack with NEST 15 mL Conical":
-      return '/tube-rack_2.png';
+      return '/tube-rack(15)_1.png';
 
     // TUBE RACK 3
     case "Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap":
@@ -30,17 +30,17 @@ export const getSlotLabwareImage = (selectedLabware) => {
     case "Opentrons 24 Tube Rack with NEST 0.5 mL Screwcap":
     case "Opentrons 24 Tube Rack with NEST 1.5 mL Screwcap":
     case "Opentrons 24 Tube Rack with NEST 2 mL Screwcap":
-      return '/tube-rack_3.png';
+      return '/tube-rack(24)_1.png';
 
     // TUBE RACK 4
     case "Opentrons 24 Tube Rack with NEST 1.5 mL Snapcap":
     case "Opentrons 24 Tube Rack with NEST 2 mL Snapcap":
-      return '/tube-rack_4.png';
+      return '/tube-rack(24)_2.png';
 
     // TUBE RACK 5
     case "Opentrons 6 Tube Rack with Falcon 50 mL Conical":
     case "Opentrons 6 Tube Rack with NEST 50 mL Conical":
-      return '/tube-rack_5.png';
+      return '/tube-rack(6)_1.png';
 
 
 
@@ -90,7 +90,48 @@ export const getSlotLabwareImage = (selectedLabware) => {
     case "Corning 384 Well Plate 112 µL Flat":
       return '/well-plate(384)_2.png';
 
+    // RESERVOIR 1
+    case "Agilent 1 Well Reservoir 290 mL":
+    case "Axygen 1 Well Reservoir 90 mL":
+    case "NEST 1 Well Reservoir 195 mL":
+    case "NEST 1 Well Reservoir 290 mL":
+      return '/reservoir(1)_1.png';
 
+    // RESERVOIR 2
+    case "NEST 12 Well Reservoir 15 mL":
+    case "USA Scientific 12 Well Reservoir 22 mL":
+      return '/reservoir(12)_1.png';
+
+    // ALUMINIUM BLOCK 24 1
+    case "Opentrons 24 Well Aluminum Block with Generic 2 mL Screwcap":
+    case "Opentrons 24 Well Aluminum Block with NEST 0.5 mL Screwcap":
+    case "Opentrons 24 Well Aluminum Block with NEST 1.5 mL Screwcap":
+    case "Opentrons 24 Well Aluminum Block with NEST 2 mL Screwcap":
+      return '/aluminium_block(24)_1.png';
+
+    // ALUMINIUM BLOCK 24 2
+    case "Opentrons 24 Well Aluminum Block with NEST 1.5 mL Snapcap":
+    case "Opentrons 24 Well Aluminum Block with NEST 2 mL Snapcap":
+      return '/aluminium_block(24)_2.png';
+
+    // ALUMINIUM BLOCK 96 1
+    case "Opentrons 96 Well Aluminum Block with Bio-Rad Well Plate 200 µL":
+    case "Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 µL":
+    case "Opentrons 96 Well Aluminum Block with NEST Well Plate 100 µL":
+    case "Opentrons 96 PCR Heater-Shaker Adapter with NEST Well Plate 100 µl":
+      return '/aluminium_block(96)_1.png';
+
+    // ALUMINIUM BLOCK 96 2
+    case "Opentrons 96 Deep Well Heater-Shaker Adapter with NEST Deep Well Plate 2 mL":
+      return '/aluminium_block(96)_2.png';
+
+    // ALUMINIUM BLOCK 96 3
+    case "Opentrons 96 Flat Bottom Heater-Shaker Adapter with NEST 96 Well Plate 200 µL Flat":
+      return '/aluminium_block(96)_3.png';
+
+    // ALUMINIUM BLOCK 384 1
+    case "Opentrons Universal Flat Heater-Shaker Adapter with Corning 384 Well Plate 112 µl Flat":
+      return '/aluminium-block(384)_1.png';
 
     case "create":
       return '/add-plate.png';
