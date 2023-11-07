@@ -29,48 +29,25 @@ const Dashboard = () => {
                         Create a new protocol. Use the graphical interface to define your protocol's steps.
                       </p>
                       <Link to="/create-protocol">
-                        <CButton color="primary" className="mt-3 basic-btn float-end" active tabIndex={-1}>
-                          <CIcon icon={cilPlus} /> Create New
-                        </CButton>
+                        <CButton className='standard-btn' style={{ width: '100%' }} ><CIcon size='sm' icon={cilPlus} /> CREATE NEW</CButton>
                       </Link>
                     </CForm>
                   </CCardBody>
                 </CCard>
-                <CCard className=" p-4 text-white" style={{ background: '#585858' }}>
+                <CCard className="p-4 text-white" style={{ border: '10px solid white', borderRight: 'none', boxShadow: 'none', background: '#6c757d' }}>
                   <CCardBody>
-                    <div>
-                      <h1 className='text-white'>Import</h1>
-                      <p>
-                        Import an existing protocol. Use the graphical interface to import a predefined protocol.
-                      </p>
-                      <Link to="/">
-                        <CButton color="primary" className="mt-3 basic-btn " active tabIndex={-1}>
-                          <CIcon icon={cilCloudUpload} /> Import
-                        </CButton>
-                      </Link>
-                    </div>
-                  </CCardBody>
-                </CCard>
-                <CCard className="p-4 text-white" style={{ border: '10px solid white', borderLeft: 'none', boxShadow: 'none', background: '#6c757d' }}>
-                  <CCardBody>
-                    <CForm>
-                      <h1 className='text-white'>Labware</h1>
-                      <p>
-                        Check out existing labware and learn the definitions, capacity, usages
-                      </p>
-                      <Link to="/labware-collection">
-                        <CButton color="primary" className="mt-3 basic-btn float-end" active tabIndex={-1}>
-                          <CIcon icon={cilList} /> Collection
-                        </CButton>
-                      </Link>
-                    </CForm>
+                    <h1 className='text-white'>Import</h1>
+                    <p>
+                      Import an existing protocol. Use the graphical interface to import a predefined protocol.
+                    </p>
+                    <CButton className='standard-btn' style={{ width: '100%' }} ><CIcon size='sm' icon={cilCloudUpload} /> IMPORT</CButton>
                   </CCardBody>
                 </CCard>
               </CCardGroup>
             </CCol>
           </CRow>
         </CContainer>
-      </div>
+      </div >
 
     </>
   )

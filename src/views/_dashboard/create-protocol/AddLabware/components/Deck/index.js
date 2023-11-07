@@ -1,8 +1,9 @@
 import { cilOptions, cilPlus, cilTrash } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
-import { CButton, CCol, CDropdown, CDropdownItem, CDropdownMenu, CDropdownToggle, CRow } from "@coreui/react-pro"
+import { CButton, CCol, CDropdown, CDropdownItem, CDropdownMenu, CDropdownToggle, CImage, CRow } from "@coreui/react-pro"
 import React, { useEffect, useState } from "react";
 import { truncateText } from "src/_common/helpers";
+import { getSlotBtnClassName, getSlotLabwareImage } from "./helpers";
 
 const DECK_TOTAL_COLUMNS = 3;
 
@@ -35,8 +36,9 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
         handleSelect(item) */
   }, [])
 
-  useEffect(() => {
+  useEffect(() => { // On Select New Labware Event
     handleEdit()
+
   }, [newLabwareSelection])
 
   const handleSelect = (item) => {
@@ -88,8 +90,6 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
 
       splitBoard();
     }
-
-
   };
 
   const handleDelete = (id, name) => {
@@ -150,37 +150,41 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
                   return (
                     <>
                       {/* Slot */}
-                      <CCol md={4} key={index} >
+                      <CCol key={index} md={4}>
                         <CButton key={item.id}
+                          style={{}}
                           onClick={() => handleSelect(item)} id={item.id}
-                          className={isSelected === item.id ? 'add-labware-slot-btn btn-selected' : "add-labware-slot-btn"} >
+                          className={getSlotBtnClassName(item.id, isSelected)} >
 
-                          <CRow>
-                            <small style={{ height: '102px', display: 'grid', alignItems: 'center', fontSize: item.id == 0 ? 'xx-large' : 'initial' }}>{truncateText(item.name, 46)}</small>
+                          <CImage src={'/labware/' + getSlotLabwareImage(item.id === 0 ? 'create' : labwareSelection)} className="add-labware-slot-btn-img">
+                          </CImage>
+
+                          {/* {item.id == 0 && <CRow>
+                            <small style={{ padding: '20px', alignItems: 'center' }}>{truncateText(item.name, 46)}</small>
                           </CRow>
+                          } */}
 
                         </CButton>
 
-                        {item.id != 0 &&
-                          <>
-                            <CRow className={"slot-label-row"}>
-                              <span style={{ fontSize: 'small' }}>{truncateText(labwareSelection, 28) || "Select labware..."}</span>
-                            </CRow>
+                        <>
+                          <CRow className={"slot-label-row"} style={{ fontSize: 'small', display: item.id == 0 ? 'none' : 'block' }}>
+                            <span style={{ fontSize: 'small', display: item.id == 0 ? 'none' : 'block' }}>{truncateText(labwareSelection, 28) || "Select Labware..."}</span>
+                          </CRow>
 
 
-                            <CButton
-                              key={item.name}
-                              id={item.name}
-                              className='modal-action-btn'
-                              variant="ghost"
-                              size="sm"
-                              color="danger"
-                              style={{ marginTop: '5px' }}
-                              onClick={() => handleDelete(item.id, item.name)}>
-                              <CIcon icon={cilTrash} />
-                            </CButton>
-                          </>
-                        }
+                          <CButton
+                            key={item.name}
+                            id={item.name}
+                            className='modal-action-btn'
+                            variant="ghost"
+                            size="sm"
+                            color="danger"
+                            style={{ marginTop: '5px', visibility: item.id == 0 ? 'hidden' : 'visible' }}
+                            onClick={() => handleDelete(item.id, item.name)}>
+                            <CIcon icon={cilTrash} />
+                          </CButton>
+                        </>
+
 
                       </CCol >
                     </>

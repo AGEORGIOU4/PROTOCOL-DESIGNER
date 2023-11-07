@@ -4,12 +4,18 @@ import Select from 'react-select';
 import { colourStyles } from '../Liquids/data';
 
 export const disableInputFieldsOnSelect = (value, action) => {
-  if (value == '') {
+  if (value == '' && action == '') {
     document.getElementById("validationCustom01").disabled = true;
     document.getElementById("validationCustom02").disabled = true;
     document.getElementById("validationCustom03").disabled = true;
     document.getElementById("validationCustom04").disabled = true;
     document.getElementById("validationCustom05").disabled = true;
+  } else if (value == '') { // When 'select' is selected open fields again
+    document.getElementById("validationCustom01").disabled = false;
+    document.getElementById("validationCustom02").disabled = false;
+    document.getElementById("validationCustom03").disabled = false;
+    document.getElementById("validationCustom04").disabled = false;
+    document.getElementById("validationCustom05").disabled = false;
   } else {
     document.getElementById("validationCustom01").disabled = false;
     switch (action) {

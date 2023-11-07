@@ -21,11 +21,12 @@ const AddLabware = () => {
 
   const handleSubmitForm = (newData) => {
     setNewLabwareSelection(newData);
+
   }
 
   return (
     <>
-      <LabwareSteps />
+      <LabwareSteps active={(newLabwareSelection.tube_rack || newLabwareSelection.well_plate || newLabwareSelection.aluminium_block || newLabwareSelection.reservoir) ? true : false} />
 
       <div className="wrapper flex-column ">
         <CRow>

@@ -1,10 +1,8 @@
 import React from 'react'
 import { AppContent, AppHeader, AppSidebar } from '../components/index'
-import LabwareSteps from 'src/views/_dashboard/create-protocol/AddLabware/components/Steps';
 
 
 const DefaultLayout = () => {
-  const currentHash = window.location.hash;
 
   return (
     <>

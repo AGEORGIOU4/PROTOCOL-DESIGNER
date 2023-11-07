@@ -26,7 +26,7 @@ const RenderStepForm = (modalTitle) => {
   }
 }
 
-const LabwareSteps = () => {
+const LabwareSteps = ({ active }) => {
   const [resetFlag, setResetFlag] = useState(true)
 
   const [stepsList, setStepsList] = useState(["Transfer", "Mix", "Delay", "Heater Shaker", "Centrifuge", "Magnet", "Thermoblock", "PCR", "Trash"]);
@@ -138,12 +138,11 @@ const LabwareSteps = () => {
     let title = e.target.value;
 
     if (confirm('Are you sure you want to delete ' + title + ' Step ' + id + '?')) {
-      deleteSlot(id)
+      deleteStep(id)
     }
-    // PromptWithConfirm('Are you sure you want to delete ' + title + ' Step ' + id + '?', 'warning', () => deleteSlot(id))
   }
 
-  const deleteSlot = (id) => {
+  const deleteStep = (id) => {
     const tmp_delete = selectedSteps;
 
     tmp_delete?.map((item, index) => {
@@ -177,14 +176,14 @@ const LabwareSteps = () => {
 
         <TitleBar title={"TIMELINE"} />
 
-        <CButton style={{ background: '#fff', border: '1px solid #585858', color: '#585858', borderRadius: '0', padding: '20px', fontSize: 'small', fontWeight: '700', margin: '0 0 0px 0' }}>
-          STARTING DECK STATE
+        <CButton style={{ background: '#fff', border: '1px solid #585858', color: '#585858', borderRadius: '0', padding: '20px', fontSize: 'small', fontWeight: '700', margin: '0' }}>
+          STARTING STATE
         </CButton>
 
         {/* ADD STEP */}
-        <div style={{ padding: '6px 0' }}>
+        <div style={{ padding: '4px 0' }}>
           <CDropdown style={{ width: '100%', userSelect: 'none' }}>
-            <CDropdownToggle className='standard-btn'><CIcon size='sm' icon={cilPlus} /> ADD STEP</CDropdownToggle>
+            <CDropdownToggle disabled={active ? false : true} className='standard-btn'><CIcon size='sm' icon={cilPlus} /> ADD STEP</CDropdownToggle>
             <CDropdownMenu className='dropdownMenu'>
               {React.Children.toArray(
                 stepsList?.map((item, index) => {
@@ -228,9 +227,9 @@ const LabwareSteps = () => {
           </div>
         </CListGroup>
 
-        <CButton style={{ background: '#fff', border: '1px solid #585858', color: '#585858', borderRadius: '0', padding: '20px', fontSize: 'small', fontWeight: '700', margin: '0' }}>
+        {/* <CButton style={{ background: '#fff', border: '1px solid #585858', color: '#585858', borderRadius: '0', padding: '20px', fontSize: 'small', fontWeight: '700', margin: '0' }}>
           FINAL DECK STATE
-        </CButton>
+        </CButton> */}
 
       </CSidebar >
 

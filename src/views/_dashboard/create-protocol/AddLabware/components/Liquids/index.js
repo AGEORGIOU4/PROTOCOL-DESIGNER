@@ -12,7 +12,7 @@ import { cidDrop, cisCircle } from '@coreui/icons-pro';
 const colorCodes = [
   "#D0021B", "#F5A623", "#F8E71C", "#8B572A",
   "#7ED321", "#417505", "#BD10E0", "#9013FE",
-  "#4A90E2", "#50E3C2", "#B8E986", "#000000"
+  "#4A90E2",
 ];
 
 const items = JSON.parse(localStorage.getItem('liquids'))
@@ -84,7 +84,7 @@ export const Liquids = () => {
           <CForm className="row g-3 needs-validation" noValidate validated={validated} onSubmit={handleSubmit}>
 
 
-            <CCol md={8}>
+            <CCol md={10}>
 
               <CRow>
 
@@ -134,14 +134,7 @@ export const Liquids = () => {
                 />
               </CCol>
 
-              <CRow>
-                <CCol md={4} style={{ display: 'flex', alignItems: 'center' }}>
-                  <CIcon icon={cilTrash}></CIcon> <strong> Click to delete a liquid </strong>
-                </CCol>
-                <CCol md={8}>
-                  <CButton className='standard-btn float-end' style={{ margin: '20px 0' }} onClick={handleClearLiquids}><CIcon size='sm' icon={cilTrash} /> CLEAR LIST</CButton>
-                </CCol>
-              </CRow>
+              <br />
 
               <CCol md={12}>
                 <div style={{ width: '100%', padding: '20px', textAlign: 'center', border: '5px dashed #f1f1f1' }}>
@@ -152,7 +145,7 @@ export const Liquids = () => {
                       liquidOptions?.map((liquid, index) => {
                         return (
                           <>
-                            <CButton id={liquid.id} key={index} style={{ background: 'white', border: '3px solid #585858', borderRadius: '50px', fontSize: 'small', fontWeight: '400', width: '18%', padding: '20px', margin: '10px 6px' }} onClick={handleDeleteLiquid}>
+                            <CButton id={liquid.id} key={index} style={{ background: 'white', border: '3px solid #585858', borderRadius: '50px', fontSize: 'small', fontWeight: '400', width: '15%', padding: '20px', margin: '10px 6px' }} onClick={handleDeleteLiquid}>
                               <CIcon icon={cisCircle} style={{ color: liquid.color }} /> {liquid.value}
                             </CButton>
                           </>
@@ -164,9 +157,18 @@ export const Liquids = () => {
                 </div >
               </CCol>
 
+              <CRow>
+                <CCol md={4} style={{ display: 'flex', alignItems: 'center' }}>
+                  <CIcon icon={cilTrash}></CIcon> <strong> Click to delete a liquid </strong>
+                </CCol>
+                <CCol md={8}>
+                  <CButton className='standard-btn float-end' style={{ margin: '20px 0' }} onClick={handleClearLiquids}><CIcon size='sm' icon={cilTrash} /> CLEAR LIST</CButton>
+                </CCol>
+              </CRow>
+
             </CCol>
 
-            <CCol md={4}>
+            <CCol md={2}>
 
               <CCol md={12}>
                 <CFormLabel htmlFor="validationCustom04">Choose Color</CFormLabel>
