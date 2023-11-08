@@ -12,8 +12,6 @@ import ReservoirSelection from './Labware/Reservoir/Reservoir';
 import AluminiumBlockSelection from './Labware/AluminiumBlock/AluminiumBlock';
 import { AddLiquids, disableInputFieldsOnSelect } from './helpers';
 
-
-
 export const Form = ({ selectedSlot, handleSubmitForm }) => {
   const [loadingSave, setLoadingSave] = useState(false);
   const [loadingReset, setLoadingReset] = useState(false);
@@ -31,13 +29,13 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
   const [selectedLiquid, setSelectedLiquid] = useState('')
   const [liquidVolume, setLiquidVolume] = useState('0')
 
+
   useEffect(() => {
     setName(selectedSlot.name);
     setTubeRack(selectedSlot.tube_rack);
     setWellPlate(selectedSlot.well_plate);
     setReservoir(selectedSlot.reservoir);
     setAluminiumBlock(selectedSlot.aluminium_block);
-
 
     let value = '';
     let action = '';
@@ -216,7 +214,6 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
     if (selectedLabwareName == 'N/A') {
       setSelectedLabwareName('');
     }
-
   }
 
   const handleAddLiquids = () => {
@@ -270,7 +267,7 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
           <br />
           <CRow>
             <CCol md={4} style={{ textAlign: 'start' }}>
-              <CLoadingButton disabled={selectedSlot ? false : true} selectedLabware loading={loadingReset} className='standard-btn' onClick={handleReset}><CIcon size='sm' icon={cilReload} /> RESET</CLoadingButton>
+              <CLoadingButton disabled={selectedSlot ? false : true} loading={loadingReset} className='standard-btn' onClick={handleReset}><CIcon size='sm' icon={cilReload} /> RESET</CLoadingButton>
             </CCol>
 
             <CCol md={8} style={{ textAlign: 'end' }}>

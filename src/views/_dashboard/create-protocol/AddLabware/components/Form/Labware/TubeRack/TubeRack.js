@@ -67,7 +67,7 @@ export default function TubeRackSelection({ selectedLabware, selectedLiquid, liq
     const row = Array.from({ length: cols }).map((item, col_index) => {
       const tr_ref = createRef();
       tubeRacksRef.current.push(tr_ref);
-      let id = (GetLetter(row_index) + (parseInt(col_index) + 3))
+      let id = (GetLetter(row_index) + (parseInt(col_index) + 1))
       return <CCol key={id} id={id} className="tr_selectables" style={{ borderRadius: squared ? '0' : '100%' }} ref={tr_ref}></CCol>
     })
     elems.push(row)
@@ -82,7 +82,7 @@ export default function TubeRackSelection({ selectedLabware, selectedLiquid, liq
     const row = Array.from({ length: cols2 }).map((item, col_index2) => {
       const tr_ref2 = createRef();
       tubeRacksRef.current.push(tr_ref2);
-      let id = (GetLetter(row_index2) + (parseInt(col_index2) + 1))
+      let id = (GetLetter(row_index2) + (parseInt(col_index2) + 3))
       return <CCol key={id} id={id} className="tr_selectables" style={{ borderRadius: squared ? '0' : '100%' }} ref={tr_ref2}></CCol>
     })
     elems2.push(row)

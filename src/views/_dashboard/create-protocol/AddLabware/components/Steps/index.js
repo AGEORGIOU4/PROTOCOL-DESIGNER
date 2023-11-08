@@ -183,7 +183,9 @@ const LabwareSteps = ({ active }) => {
         {/* ADD STEP */}
         <div style={{ padding: '4px 0' }}>
           <CDropdown style={{ width: '100%', userSelect: 'none' }}>
-            <CDropdownToggle disabled={active ? false : true} className='standard-btn'><CIcon size='sm' icon={cilPlus} /> ADD STEP</CDropdownToggle>
+            <CDropdownToggle
+              // disabled={active ? false : true}
+              className='standard-btn'><CIcon size='sm' icon={cilPlus} /> ADD STEP</CDropdownToggle>
             <CDropdownMenu className='dropdownMenu'>
               {React.Children.toArray(
                 stepsList?.map((item, index) => {

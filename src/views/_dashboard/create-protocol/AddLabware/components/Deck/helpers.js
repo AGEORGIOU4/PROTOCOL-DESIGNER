@@ -1,5 +1,4 @@
 export const getSlotBtnClassName = (id, isSelected) => {
-  console.log(isSelected)
 
   if (id == 0) {
     return "add-labware-slot-btn-create"

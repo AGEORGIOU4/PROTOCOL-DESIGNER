@@ -24,6 +24,8 @@ const AddLabware = () => {
 
   }
 
+  console.log(JSON.parse(localStorage.getItem('slots')));
+
   return (
     <>
       <LabwareSteps active={(newLabwareSelection.tube_rack || newLabwareSelection.well_plate || newLabwareSelection.aluminium_block || newLabwareSelection.reservoir) ? true : false} />
