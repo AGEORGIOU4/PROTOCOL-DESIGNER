@@ -29,7 +29,6 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
   const [selectedLiquid, setSelectedLiquid] = useState('')
   const [liquidVolume, setLiquidVolume] = useState('0')
 
-
   useEffect(() => {
     setName(selectedSlot.name);
     setTubeRack(selectedSlot.tube_rack);
@@ -221,7 +220,7 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
     setVisible(true)
   }
 
-  const handleChangeSelectedLiquid = (e) => {
+  const handleChangeSelectedLiquid = (e, color) => {
     setSelectedLiquid(e);
   }
 
@@ -290,7 +289,8 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
               selectedLiquid={selectedLiquid}
               liquidVolume={liquidVolume}
               handleChangeSelectedLiquid={handleChangeSelectedLiquid}
-              handleChangeLiquidVolume={handleChangeLiquidVolume} />
+              handleChangeLiquidVolume={handleChangeLiquidVolume}
+            />
             <TubeRackSelection
               selectedLabware={selectedLabwareName}
               selectedLiquid={selectedLiquid}

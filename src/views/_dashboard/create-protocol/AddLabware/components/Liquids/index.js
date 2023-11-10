@@ -5,9 +5,8 @@ import Select from 'react-select';
 import { colourStyles } from '../Liquids/data'
 import { SketchPicker } from 'react-color';
 import CIcon from '@coreui/icons-react';
-import { cilDrop, cilEyedropper, cilPlus, cilTrash } from '@coreui/icons';
-import { TitleBar } from 'src/_common/helpers';
-import { cidDrop, cisCircle } from '@coreui/icons-pro';
+import { cilPlus, cilTrash } from '@coreui/icons';
+import { cisCircle } from '@coreui/icons-pro';
 
 const colorCodes = [
   "#D0021B", "#F5A623", "#F8E71C", "#8B572A",
@@ -15,18 +14,29 @@ const colorCodes = [
   "#4A90E2",
 ];
 
-const items = JSON.parse(localStorage.getItem('liquids'))
 let id_iterator = Math.floor(Math.random() * 999999);
 
 export const Liquids = () => {
+
+
   const [validated, setValidated] = useState(false)
 
-  const [liquidOptions, setLiquidOptions] = useState(items || [])
   const [liquidName, setLiquidName] = useState()
   const [liquidColor, setLiquidColor] = useState('#9900EF')
 
   const [mixtureDisabled, setMixtureDisabled] = useState(false)
   const [selectedLiquids, setSelectedLiquids] = useState([])
+
+  const [liquidOptions, setLiquidOptions] = useState([])
+
+  let items = JSON.parse(localStorage.getItem('liquids'))
+
+  useEffect(() => {
+
+    if (items) {
+      setLiquidOptions(items);
+    }
+  }, []);
 
 
   useEffect(() => {

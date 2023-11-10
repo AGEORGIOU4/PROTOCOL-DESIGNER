@@ -35,7 +35,6 @@ export default function TubeRackSelection({ selectedLabware, selectedLiquid, liq
         })
         setSelectedItemsText(tmp_arr);
         setSelectedTubeRacks(strAscending)
-
       }
     })
 
@@ -91,7 +90,7 @@ export default function TubeRackSelection({ selectedLabware, selectedLiquid, liq
 
   const handleSave = () => {
     let items = (tubeRacksRef.current);
-
+    console.log(selectedLiquid)
     items?.map((item, index) => {
       try {
         document.getElementById(item.current.id).style.background = '#EFEFEF';

@@ -39,8 +39,12 @@ const setup =
   steps:
     [
       {
+        step_number: 1,
         name: "Transfer",
+        volume: 50,
 
+        source: ["A1", "B1,", "C1"],
+        destination: ["A2", "B2,", "C2"]
       }
     ],
 

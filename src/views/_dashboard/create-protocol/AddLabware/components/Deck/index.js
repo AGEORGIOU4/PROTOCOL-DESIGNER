@@ -17,8 +17,14 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
 
   // Set up Slots and select the 1st
   useEffect(() => {
-    const items = JSON.parse(localStorage.getItem('slots')); // Check memory
-    if (items.length > 1) {
+    let items = []
+    try {
+      items = JSON.parse(localStorage.getItem('slots')); // Check memory
+    } catch (e) {
+      console.log(e)
+    }
+
+    if (items) {
       preset = items;
     } else {
       for (let i = 0; i <= 0; i++) {
@@ -193,12 +199,22 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
                     <>
                       {/* Slot */}
                       <CCol key={index} md={4}>
-                        <CButton key={item.id}
+                        <div key={item.id}
                           style={{}}
-                          onClick={() => handleSelect(item)} id={item.id}
+                          onClick={(e) => handleSelect(item)} id={item.id}
                           className={getSlotBtnClassName(item.id, isSelected)} >
 
-                          <CIcon icon={cidDrop} className="float-end" size="xxl" style={{ background: 'rgba(0,0,0,0.7)', position: 'relative', color: '#9013FE', borderRadius: '0px 12px 0 12px', margin: '2px 2px -35px 0' }} />
+                          <CIcon icon={cidDrop}
+                            className="float-end" size="xxl"
+                            style={{
+                              visibility: item.id == 0 ? 'hidden' : 'visible',
+                              background: 'rgba(0,0,0,0.7)',
+                              position: 'relative', color: '#9013FE',
+                              borderRadius: '0px 12px 0 12px',
+                              margin: '2px 2px -35px 0',
+                            }}
+
+                          />
 
                           <CImage src={'/labware/' + getSlotLabwareImage(item.id === 0 ? 'create' : labwareSelection)} className="add-labware-slot-btn-img">
                           </CImage>
@@ -236,7 +252,7 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
                           </CRow>
                           } */}
 
-                        </CButton>
+                        </div>
 
                         {/* <>
                           <CRow className={"slot-label-row"} style={{ fontSize: 'small', display: item.id == 0 ? 'none' : 'block' }}>
