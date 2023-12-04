@@ -27,16 +27,14 @@ export const Liquids = () => {
   const [mixtureDisabled, setMixtureDisabled] = useState(false)
   const [selectedLiquids, setSelectedLiquids] = useState([])
 
-  const [liquidOptions, setLiquidOptions] = useState([])
 
   let items = JSON.parse(localStorage.getItem('liquids'))
 
   useEffect(() => {
-
     if (items) {
-      setLiquidOptions(items);
+      // setLiquidOptions(items);
     }
-  }, []);
+  }, [items]);
 
 
   useEffect(() => {
@@ -46,11 +44,10 @@ export const Liquids = () => {
   const handleAddLiquid = (e) => {
     id_iterator = Math.floor(Math.random() * 999999);
 
-    let options = liquidOptions;
+    let options = items;
     let liquid = { id: id_iterator, value: liquidName, label: liquidName, text: liquidName, color: liquidColor }
 
     options.push(liquid)
-    setLiquidOptions(options)
     localStorage.setItem('liquids', JSON.stringify(options));
 
     setLiquidName("Liquid " + id_iterator)
@@ -59,18 +56,17 @@ export const Liquids = () => {
   const handleDeleteLiquid = (e) => {
     if (confirm("Do you want to delete this liquid?")) {
       let id = e.target.id;
-      setLiquidOptions(current => current.filter(option => { return option.id != id }));
 
       let items = JSON.parse(localStorage.getItem('liquids')) || [];
       let new_arr = items.filter(option => { return option.id != id });
       localStorage.setItem('liquids', JSON.stringify(new_arr));
+      setLiquidName("Liquid " + Math.floor(Math.random() * 999999))
     }
 
   }
 
   const handleClearLiquids = () => {
     if (confirm("Are you sure you want to delete all liquids?")) {
-      setLiquidOptions([]);
       localStorage.clear()
     }
 
@@ -139,7 +135,7 @@ export const Liquids = () => {
                   closeMenuOnSelect={false}
                   defaultValue={selectedLiquids}
                   isMulti
-                  options={liquidOptions}
+                  options={items}
                   styles={colourStyles}
                 />
               </CCol>
@@ -152,10 +148,10 @@ export const Liquids = () => {
 
                   {
                     React.Children.toArray(
-                      liquidOptions?.map((liquid, index) => {
+                      items?.map((liquid, index) => {
                         return (
                           <>
-                            <CButton id={liquid.id} key={index} style={{ background: 'white', border: '3px solid #585858', borderRadius: '50px', fontSize: 'small', fontWeight: '400', width: '15%', padding: '20px', margin: '10px 6px' }} onClick={handleDeleteLiquid}>
+                            <CButton id={liquid.id} key={index} style={{ background: 'white', border: '3px solid #585858', borderRadius: '50px', fontSize: 'small', fontWeight: '400', width: '22%', padding: '20px', margin: '10px 6px' }} onClick={handleDeleteLiquid}>
                               <CIcon icon={cisCircle} style={{ color: liquid.color }} /> {liquid.value}
                             </CButton>
                           </>

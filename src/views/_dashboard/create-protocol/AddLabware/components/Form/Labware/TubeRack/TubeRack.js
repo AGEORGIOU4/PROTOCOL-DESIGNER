@@ -7,7 +7,7 @@ import { tube_racks } from "../data";
 import CIcon from "@coreui/icons-react";
 import { cilSave } from "@coreui/icons";
 
-export default function TubeRackSelection({ selectedLabware, selectedLiquid, liquidVolume }) {
+export default function TubeRackSelection({ selectedSlot, selectedLabware, selectedLiquid, liquidVolume, handleClose },) {
   const tubeRacksRef = useRef([]);
 
   const [selectedTubeRacks, setSelectedTubeRacks] = useState([]);
@@ -82,15 +82,28 @@ export default function TubeRackSelection({ selectedLabware, selectedLiquid, liq
       const tr_ref2 = createRef();
       tubeRacksRef.current.push(tr_ref2);
       let id = (GetLetter(row_index2) + (parseInt(col_index2) + 3))
-      return <CCol key={id} id={id} className="tr_selectables" style={{ borderRadius: squared ? '0' : '100%' }} ref={tr_ref2}></CCol>
+      return <CCol key={id} id={id} className="tr_selectables tr_selectables2" style={{ borderRadius: squared ? '0' : '100%' }} ref={tr_ref2}></CCol>
     })
     elems2.push(row)
     row_index2++;
   }
 
+  useEffect(() => {
+    let items = JSON.parse(localStorage.getItem('slots')); // Check memory
+    const foundItem = items?.find(item => item.id === selectedSlot.id);
+    if (foundItem) {
+      const foundColor = foundItem.liquids.liquid;
+      foundItem?.liquids?.selected?.map((selection, index) => {
+        try {
+          document.getElementById(selection).style.background = foundColor;
+        } catch (e) {
+        }
+      })
+    }
+  }, [])
+
   const handleSave = () => {
     let items = (tubeRacksRef.current);
-    console.log(selectedLiquid)
     items?.map((item, index) => {
       try {
         document.getElementById(item.current.id).style.background = '#EFEFEF';
@@ -101,6 +114,26 @@ export default function TubeRackSelection({ selectedLabware, selectedLiquid, liq
     selectedTubeRacks?.map((item, index) => {
       document.getElementById(item.id).style.background = selectedLiquid.color;
     })
+
+    items = JSON.parse(localStorage.getItem('slots')); // Check memory
+
+
+    const foundItem = items?.find(item => item.id === selectedSlot.id);
+    foundItem.liquids = { selected: selectedItemsText, liquid: selectedLiquid.color };
+
+    const foundIndex = items?.findIndex(item => item.id === selectedSlot.id);
+
+    if (foundIndex !== -1) {
+      items[foundIndex] = foundItem
+      localStorage.setItem('slots', JSON.stringify(items));
+    }
+
+    if (selectedTubeRacks.length > 0 && (!selectedLiquid || liquidVolume <= 0)) {
+      alert("Please select a liquid from the list and add volume");
+    } else {
+      handleClose();
+    }
+
   }
 
   const clearAll = () => {
@@ -184,7 +217,7 @@ export default function TubeRackSelection({ selectedLabware, selectedLiquid, liq
 
             </CCol>
 
-            <CCol style={{ display: rows2 ? 'grid' : 'none', padding: '26px' }}>
+            <CCol style={{ display: rows2 ? 'grid' : 'none', padding: '4px', marginLeft: '22px' }}>
               {
                 React.Children.toArray(
                   elems2?.map((row, index) => {
@@ -211,7 +244,7 @@ export default function TubeRackSelection({ selectedLabware, selectedLiquid, liq
 
         <hr />
         <div >
-          <CButton className='standard-btn float-end' disabled={selectedLiquid ? false : true} color="primary" onClick={handleSave}>
+          <CButton className='standard-btn float-end' color="primary" onClick={handleSave}>
             <CIcon size="sm" icon={cilSave} /> SAVE
           </CButton>
           <CButton className='standard-btn float-end' color="primary" style={{ marginRight: '10px' }} onClick={clearAll}>

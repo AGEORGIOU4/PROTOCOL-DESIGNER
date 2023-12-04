@@ -62,6 +62,7 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
 
   }, [selectedSlot])
 
+
   const handleChangeName = (e) => {
     let text = e.target.value;
     setName(text);
@@ -73,7 +74,9 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
       tube_rack: selectedSlot.tube_rack,
       well_plate: selectedSlot.well_plate,
       reservoir: selectedSlot.reservoir,
-      aluminium_block: selectedSlot.aluminium_block
+      aluminium_block: selectedSlot.aluminium_block,
+      labware_type: selectedSlot.labware_type,
+      liquids: selectedSlot.liquids,
     }
 
     if (text.length > 0) {
@@ -92,7 +95,9 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
       tube_rack: e.target.value,
       well_plate: "",
       reservoir: "",
-      aluminium_block: ""
+      aluminium_block: "",
+      labware_type: e.target.value,
+      liquids: selectedSlot.liquids,
     }
     handleSubmitForm(item);
   }
@@ -107,7 +112,9 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
       tube_rack: "",
       well_plate: e.target.value,
       reservoir: "",
-      aluminium_block: ""
+      aluminium_block: "",
+      labware_type: e.target.value,
+      liquids: selectedSlot.liquids,
     }
 
     handleSubmitForm(item);
@@ -123,7 +130,9 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
       tube_rack: "",
       well_plate: "",
       reservoir: e.target.value,
-      aluminium_block: ""
+      aluminium_block: "",
+      labware_type: e.target.value,
+      liquids: selectedSlot.liquids,
     }
 
     handleSubmitForm(item);
@@ -139,7 +148,9 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
       tube_rack: "",
       well_plate: "",
       reservoir: "",
-      aluminium_block: e.target.value
+      aluminium_block: e.target.value,
+      labware_type: e.target.value,
+      liquids: selectedSlot.liquids,
     }
 
     handleSubmitForm(item);
@@ -155,7 +166,9 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
       tube_rack: '',
       well_plate: '',
       reservoir: '',
-      aluminium_block: ''
+      aluminium_block: '',
+      labware_type: '',
+      liquids: {},
     }
 
     setTubeRack('');
@@ -177,24 +190,24 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
 
   }
 
-  const handleSubmit = () => {
-    setLoadingSave(true);
+  // const handleSubmit = () => {
+  //   setLoadingSave(true);
 
-    let item = {
-      id: selectedSlot.id,
-      name: name,
-      tube_rack: tubeRack,
-      well_plate: wellPlate,
-      reservoir: reservoir,
-      aluminium_block: aluminiumBlock
-    }
+  //   let item = {
+  //     id: selectedSlot.id,
+  //     name: name,
+  //     tube_rack: tubeRack,
+  //     well_plate: wellPlate,
+  //     reservoir: reservoir,
+  //     aluminium_block: aluminiumBlock
+  //   }
 
-    setTimeout(() => {
-      handleSubmitForm(item);
-      setLoadingSave(false)
-    }, 800)
+  //   setTimeout(() => {
+  //     handleSubmitForm(item);
+  //     setLoadingSave(false)
+  //   }, 800)
 
-  }
+  // }
 
   const getSelectedLabware = () => {
     if (tubeRack) {
@@ -281,7 +294,8 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
 
       <br />
 
-      <AddLabwareModal visible={visible} setVisible={setVisible} handleClose={handleClose} title={name} footerText={selectedLabwareName}>
+
+      <AddLabwareModal visible={visible} handleClose={handleClose} title={name} footerText={selectedLabwareName}>
 
         {tubeRack && React.Children.toArray(
           <>
@@ -292,9 +306,12 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
               handleChangeLiquidVolume={handleChangeLiquidVolume}
             />
             <TubeRackSelection
+              selectedSlot={selectedSlot}
               selectedLabware={selectedLabwareName}
               selectedLiquid={selectedLiquid}
-              liquidVolume={liquidVolume} />
+              liquidVolume={liquidVolume}
+              handleClose={handleClose}
+            />
           </>
         )}
 

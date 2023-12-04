@@ -17,28 +17,39 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
 
   // Set up Slots and select the 1st
   useEffect(() => {
-    let items = []
-    try {
-      items = JSON.parse(localStorage.getItem('slots')); // Check memory
-    } catch (e) {
-      console.log(e)
-    }
-
-    if (items) {
-      preset = items;
-    } else {
-      for (let i = 0; i <= 0; i++) {
-        preset.push({ id: 0, name: '+', tube_rack: "", well_plate: "", reservoir: "", aluminium_block: "" });
+    const interval = setInterval(() => {
+      let items = []
+      try {
+        items = JSON.parse(localStorage.getItem('slots')); // Check memory
+      } catch (e) {
+        console.log(e)
       }
-    }
 
-    let subarrayLength = DECK_TOTAL_COLUMNS;
-    let subarrays = [];
-    for (let i = 0; i < preset.length; i += subarrayLength) {
-      subarrays.push(preset.slice(i, i + subarrayLength));
-    }
-    setDeckSlots([preset])
-    setDeckGrid(subarrays)
+      if (items) {
+        preset = items;
+      } else {
+        for (let i = 0; i <= 0; i++) {
+          preset.push(
+            { id: 0, name: '+', tube_rack: "", well_plate: "", reservoir: "", aluminium_block: "", labware_type: "" }, { liquids: {} }
+          );
+        }
+      }
+
+      let subarrayLength = DECK_TOTAL_COLUMNS;
+      let subarrays = [];
+      for (let i = 0; i < preset.length; i += subarrayLength) {
+        subarrays.push(preset.slice(i, i + subarrayLength));
+      }
+      setDeckSlots([preset])
+      setDeckGrid(subarrays)
+
+
+    }, 500); // Change the interval time as needed (in milliseconds)
+
+    // Cleanup function to clear the interval when component unmounts or on dependency change
+    return () => {
+      clearInterval(interval);
+    };
   }, [])
 
   useEffect(() => { // On Select New Labware Event
@@ -62,6 +73,8 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
     let well_plate = '';
     let reservoir = '';
     let aluminium_block = '';
+    let labware_type = "";
+    let liquids = {};
 
     deckSlots?.map((row, index_row) => {
       if (index_row === (deckSlots.length - 1)) {
@@ -73,13 +86,23 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
             well_plate = '';
             reservoir = '';
             aluminium_block = '';
-            deckSlots[index_row].push({ id, name, tube_rack, well_plate, reservoir, aluminium_block })
+
+            labware_type = '';
+            liquids = {}
+            deckSlots[index_row].push(
+              {
+                id, name, tube_rack, well_plate, reservoir, aluminium_block, labware_type, liquids: {}
+              },
+
+            )
           }
         })
       }
     })
 
-    let item = { id: id, name: name, tube_rack: tube_rack, well_plate: well_plate, reservoir: reservoir, aluminium_block: aluminium_block };
+    let item = {
+      id: id, name: name, tube_rack: tube_rack, well_plate: well_plate, reservoir: reservoir, aluminium_block: aluminium_block, labware_type: labware_type, liquids: {}
+    };
 
     splitBoard();
 
@@ -93,12 +116,16 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
     let well_plate = '';
     let reservoir = '';
     let aluminium_block = '';
+    let labware_type = "";
+    let liquids = {};
+
 
     tube_rack = item.tube_rack;
     well_plate = item.well_plate;
     reservoir = item.reservoir;
     aluminium_block = item.aluminium_block;
-
+    labware_type = item.labware_type;
+    liquids = {};
 
     deckSlots?.map((row, index_row) => {
       if (index_row === (deckSlots.length - 1)) {
@@ -110,7 +137,8 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
             well_plate = well_plate;
             reservoir = reservoir;
             aluminium_block = aluminium_block;
-            deckSlots[index_row].push({ id, name, tube_rack, well_plate, reservoir, aluminium_block })
+            labware_type = labware_type;
+            deckSlots[index_row].push({ id, name, tube_rack, well_plate, reservoir, aluminium_block, labware_type, liquids: {} })
           }
         })
       }
@@ -183,9 +211,6 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
         <CCol md={8}>
           <strong>Please create a slot and add a labware</strong>
         </CCol>
-        {/* <CCol md={4}>
-          <CButton className="standard-btn float-end" onClick={handleCreate}><CIcon size='sm' icon={cilPlus} /> CREATE SLOT</CButton>
-        </CCol> */}
       </div>
 
       {React.Children.toArray(
@@ -195,6 +220,8 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
               {React.Children.toArray(
                 rows?.map((item, index) => {
                   let labwareSelection = item.tube_rack || item.well_plate || item.reservoir || item.aluminium_block;
+                  let obj = item.liquids || {};
+
                   return (
                     <>
                       {/* Slot */}
@@ -204,17 +231,23 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
                           onClick={(e) => handleSelect(item)} id={item.id}
                           className={getSlotBtnClassName(item.id, isSelected)} >
 
-                          <CIcon icon={cidDrop}
-                            className="float-end" size="xxl"
-                            style={{
-                              visibility: item.id == 0 ? 'hidden' : 'visible',
-                              background: 'rgba(0,0,0,0.7)',
-                              position: 'relative', color: '#9013FE',
-                              borderRadius: '0px 12px 0 12px',
-                              margin: '2px 2px -35px 0',
-                            }}
 
-                          />
+                          {Object.keys(obj).length > 0 && obj.selected.length > 0
+                            &&
+
+                            <CIcon icon={cidDrop}
+                              className="float-end" size="xxl"
+                              style={{
+                                visibility: item.id == 0 ? 'hidden' : 'visible',
+                                background: 'rgba(0,0,0,0.7)',
+                                position: 'relative', color: '#9013FE',
+                                borderRadius: '0px 12px 0 12px',
+                                margin: '2px 2px -35px 0',
+                              }}
+
+                            />
+
+                          }
 
                           <CImage src={'/labware/' + getSlotLabwareImage(item.id === 0 ? 'create' : labwareSelection)} className="add-labware-slot-btn-img">
                           </CImage>
