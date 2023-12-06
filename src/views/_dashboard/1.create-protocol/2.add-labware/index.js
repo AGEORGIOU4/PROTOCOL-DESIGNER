@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import { CCol, CNav, CNavItem, CNavLink, CRow, CTabContent, CTabPane } from '@coreui/react-pro';
 
-import { Form } from './components/Form';
-import Deck from './components/Deck';
-import { Liquids } from './components/Liquids';
+import { Form } from './2.1.components/3.Form';
+import Deck from './2.1.components/2.Deck';
+import { Liquids } from './2.1.components/4.Liquids';
 import CIcon from '@coreui/icons-react';
 import { cilBeaker, cilDrop } from '@coreui/icons';
-import LabwareSteps from './components/Steps';
-import { TitleBar } from 'src/_common/helpers';
+import LabwareSteps from './2.1.components/1.Steps';
 
 const AddLabware = () => {
   const [activeKey, setActiveKey] = useState(1)

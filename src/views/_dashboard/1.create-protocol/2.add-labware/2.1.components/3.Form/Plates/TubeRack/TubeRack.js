@@ -10,13 +10,13 @@ import { cilSave } from "@coreui/icons";
 export default function TubeRackSelection({ selectedSlot, selectedLabware, selectedLiquid, liquidVolume, handleClose },) {
   const tubeRacksRef = useRef([]);
 
-  const [selectedTubeRacks, setSelectedTubeRacks] = useState([]);
-  const [selectedItemsText, setSelectedItemsText] = useState('');
-  const [ds, setDS] = useState(new DragSelect({ draggability: false }));
+  const [selectedWells, setSelectedWells] = useState('');
+  const [selectedWellsElement, setSelectedWellsElement] = useState([]);
+  const [ds, setDS] = useState(new DragSelect({ draggability: false, }));
 
   const settings = {
     draggability: false,
-    multiSelectMode: true,
+    // multiSelectMode: true,
     selectables: document.getElementsByClassName("tr_selectables"),
   };
 
@@ -33,11 +33,13 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
         strAscending?.map((item, index) => {
           tmp_arr.push(item.id);
         })
-        setSelectedItemsText(tmp_arr);
-        setSelectedTubeRacks(strAscending)
+        setSelectedWells(tmp_arr);
+        setSelectedWellsElement(strAscending)
       }
     })
 
+    handleSave();
+    console.log('test')
     return () => ds.unsubscribe('DS:end')
 
   }, [ds])
@@ -92,58 +94,92 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
     let items = JSON.parse(localStorage.getItem('slots')); // Check memory
     const foundItem = items?.find(item => item.id === selectedSlot.id);
     if (foundItem) {
-      const foundColor = foundItem.liquids.liquid;
-      foundItem?.liquids?.selected?.map((selection, index) => {
-        try {
-          document.getElementById(selection).style.background = foundColor;
-        } catch (e) {
+      foundItem.liquids.selected?.map((selections, index) => {
+        let tmp_arr = selections.wells;
+        let tmp_color = selections.color;
+        for (let i = 0; i < tmp_arr.length; i++) {
+          try {
+            document.getElementById(tmp_arr[i]).style.background = tmp_color;
+          } catch (e) {
+          }
+
         }
+
       })
     }
   }, [])
 
   const handleSave = () => {
-    let items = (tubeRacksRef.current);
-    items?.map((item, index) => {
-      try {
-        document.getElementById(item.current.id).style.background = '#EFEFEF';
-      } catch (e) {
-      }
-    })
-
-    selectedTubeRacks?.map((item, index) => {
-      document.getElementById(item.id).style.background = selectedLiquid.color;
-    })
-
-    items = JSON.parse(localStorage.getItem('slots')); // Check memory
-
-
-    const foundItem = items?.find(item => item.id === selectedSlot.id);
-    foundItem.liquids = { selected: selectedItemsText, liquid: selectedLiquid.color };
-
-    const foundIndex = items?.findIndex(item => item.id === selectedSlot.id);
-
-    if (foundIndex !== -1) {
-      items[foundIndex] = foundItem
-      localStorage.setItem('slots', JSON.stringify(items));
-    }
-
-    if (selectedTubeRacks.length > 0 && (!selectedLiquid || liquidVolume <= 0)) {
+    if (selectedWellsElement.length > 0 && (!selectedLiquid || liquidVolume <= 0)) {
       alert("Please select a liquid from the list and add volume");
     } else {
-      handleClose();
+      selectedWellsElement?.map((item, index) => {
+        document.getElementById(item.id).style.background = selectedLiquid.color;
+      })
+
+      let items = JSON.parse(localStorage.getItem('slots')); // Check memory
+
+
+      // 1. Find specific slot
+      const tmp_selectedSlot = items?.find(item => item.id === selectedSlot.id);
+
+      if (tmp_selectedSlot?.liquids.selected.length > 0) {
+        // Check 1. (Check if any selection belongs to exising array)
+        let selected = tmp_selectedSlot.liquids.selected;
+        tmp_selectedSlot?.liquids.selected.push({ wells: selectedWells, liquid: selectedLiquid.text, color: selectedLiquid.color, volume: liquidVolume });
+      } else { // First Entry
+        tmp_selectedSlot?.liquids.selected.push({ wells: selectedWells, liquid: selectedLiquid.text, color: selectedLiquid.color, volume: liquidVolume });
+      }
+
+
+      console.log(tmp_selectedSlot)
+      // 2. Set liquids
+
+      // CHECKS TODO
+
+      // 1. check if liquid exists and update selected
+      // 2. check if selected exists and update positions
+      // 2.1 Check if new selected slots are currently listed and update the array
+
+
+
+
+
+
+      // 3. Find slot's index
+      const foundIndex = items?.findIndex(item => item.id === selectedSlot.id);
+      if (foundIndex !== -1) {
+        items[foundIndex] = tmp_selectedSlot
+        localStorage.setItem('slots', JSON.stringify(items));
+      }
+
+      // console.log(items);
+
+
+      // handleClose();
     }
 
   }
 
   const clearAll = () => {
-    setSelectedTubeRacks([]);
-    setSelectedItemsText('');
+    let items = JSON.parse(localStorage.getItem('slots')); // Check memory
+    let foundItem = items?.find(item => item.id === selectedSlot.id);
+    foundItem.liquids = { selected: [] };
+
+    const foundIndex = items?.findIndex(item => item.id === selectedSlot.id);
+    if (foundIndex !== -1) {
+      items[foundIndex] = foundItem
+      localStorage.setItem('slots', JSON.stringify(items));
+    }
+
+    setSelectedWellsElement([]);
+    setSelectedWells('');
 
     ds.clearSelection();
-    let items = (tubeRacksRef.current);
 
-    items?.map((item, index) => {
+    let items2 = (tubeRacksRef.current);
+
+    items2?.map((item, index) => {
       try {
         document.getElementById(item.current.id).style.background = '#EFEFEF';
       } catch (e) {
@@ -217,7 +253,7 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
 
             </CCol>
 
-            <CCol style={{ display: rows2 ? 'grid' : 'none', padding: '4px', marginLeft: '22px' }}>
+            <CCol style={{ display: rows2 ? 'grid' : 'none', marginLeft: '22px' }}>
               {
                 React.Children.toArray(
                   elems2?.map((row, index) => {
@@ -240,7 +276,7 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
 
         <h6>Selected: </h6>
 
-        <CFormTextarea disabled defaultValue={selectedItemsText} rows={1}></CFormTextarea>
+        <CFormTextarea disabled defaultValue={selectedWells} rows={1}></CFormTextarea>
 
         <hr />
         <div >

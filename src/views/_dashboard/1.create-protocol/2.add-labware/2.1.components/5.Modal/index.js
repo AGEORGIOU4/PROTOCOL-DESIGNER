@@ -1,7 +1,7 @@
 import { cilX } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from "@coreui/react-pro";
-import { getIcons } from "../Steps/helpers";
+import { getIcons } from "../1.Steps/helpers";
 
 const AddLabwareModal = ({ children, header = true, title = '', footerText = '', stepID = '', stepIndex = '', visible, handleClose }) => {
   // let titleToUpper = stepTitle.toUpperCase();

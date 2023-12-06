@@ -3,10 +3,10 @@ import React from 'react'
 const Dashboard = React.lazy(() => import('./views/_dashboard/Dashboard'))
 
 
-const CreateProtocol = React.lazy(() => import('./views/_dashboard/create-protocol/CreateProtocol'))
-const AddLabware = React.lazy(() => import('./views/_dashboard/create-protocol/AddLabware/AddLabware'))
+const CreateProtocol = React.lazy(() => import('./views/_dashboard/1.create-protocol'))
+const AddLabware = React.lazy(() => import('./views/_dashboard/1.create-protocol/2.add-labware'))
 
-const ImportProtocol = React.lazy(() => import('./views/_dashboard/import-protocol/ImportProtocol'))
+const ImportProtocol = React.lazy(() => import('./views/_dashboard/2.import-protocol/ImportProtocol'))
 
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'))

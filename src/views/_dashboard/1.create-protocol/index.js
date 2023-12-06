@@ -57,7 +57,7 @@ const CreateProtocol = () => {
             </CCol>
             <CCol md={12}>
               <CFormLabel htmlFor="validationCustom02">Category</CFormLabel>
-              <CFormSelect options={categories} required />
+              <CFormSelect options={categories} />
               <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
             <CCol md={12}>

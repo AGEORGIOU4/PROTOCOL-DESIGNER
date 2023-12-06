@@ -4,10 +4,14 @@ export const GetLetter = (num) => {
 }
 
 export const truncateText = (text, maxLength) => {
-  if (text.length <= maxLength) {
-    return text;
-  } else {
-    return text.slice(0, maxLength) + '...';
+  try {
+    if (text.length <= maxLength) {
+      return text;
+    } else {
+      return text.slice(0, maxLength) + '...';
+    }
+  } catch (e) {
+    console.log(e)
   }
 }
 

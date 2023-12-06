@@ -3,13 +3,13 @@ import { CButton, CCol, CForm, CFormFeedback, CFormInput, CFormLabel, CFormSelec
 import { useState } from 'react'
 import CIcon from '@coreui/icons-react';
 import { cilReload, cilSave } from '@coreui/icons';
-import { aluminium_blocks, reservoirs, tube_racks, well_plates } from './Labware/data';
+import { aluminium_blocks, reservoirs, tube_racks, well_plates } from './Plates/data';
 import { cidEyedropper } from '@coreui/icons-pro';
-import WellPlateSelection from './Labware/WellPlate/WellPlate';
-import AddLabwareModal from '../Modal';
-import TubeRackSelection from './Labware/TubeRack/TubeRack';
-import ReservoirSelection from './Labware/Reservoir/Reservoir';
-import AluminiumBlockSelection from './Labware/AluminiumBlock/AluminiumBlock';
+import WellPlateSelection from './Plates/WellPlate/WellPlate';
+import AddLabwareModal from '../5.Modal';
+import TubeRackSelection from './Plates/TubeRack/TubeRack';
+import ReservoirSelection from './Plates/Reservoir/Reservoir';
+import AluminiumBlockSelection from './Plates/AluminiumBlock/AluminiumBlock';
 import { AddLiquids, disableInputFieldsOnSelect } from './helpers';
 
 export const Form = ({ selectedSlot, handleSubmitForm }) => {
@@ -27,7 +27,7 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
   const [selectedLabwareName, setSelectedLabwareName] = useState('');
 
   const [selectedLiquid, setSelectedLiquid] = useState('')
-  const [liquidVolume, setLiquidVolume] = useState('0')
+  const [liquidVolume, setLiquidVolume] = useState('')
 
   useEffect(() => {
     setName(selectedSlot.name);
@@ -168,7 +168,7 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
       reservoir: '',
       aluminium_block: '',
       labware_type: '',
-      liquids: {},
+      liquids: { selected: [] },
     }
 
     setTubeRack('');
@@ -185,7 +185,7 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
 
   const handleClose = () => {
     setSelectedLiquid('');
-    setLiquidVolume(0);
+    setLiquidVolume('');
     setVisible(false)
 
   }
@@ -293,7 +293,6 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
       </CCol>
 
       <br />
-
 
       <AddLabwareModal visible={visible} handleClose={handleClose} title={name} footerText={selectedLabwareName}>
 

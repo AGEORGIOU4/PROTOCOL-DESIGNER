@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { CButton, CCol, CForm, CFormCheck, CFormFeedback, CFormInput, CFormLabel, CRow } from '@coreui/react-pro'
 import { useState } from 'react'
 import Select from 'react-select';
-import { colourStyles } from '../Liquids/data'
+import { colourStyles } from './data'
 import { SketchPicker } from 'react-color';
 import CIcon from '@coreui/icons-react';
 import { cilPlus, cilTrash } from '@coreui/icons';

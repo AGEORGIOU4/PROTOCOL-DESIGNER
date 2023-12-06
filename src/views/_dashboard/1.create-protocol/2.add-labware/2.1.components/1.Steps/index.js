@@ -3,12 +3,12 @@ import { CListGroup, CDropdown, CDropdownToggle, CDropdownMenu, CDropdownItem, C
 import CIcon from '@coreui/icons-react'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import './styles.css'
-import AddLabwareModal from '../Modal'
+import AddLabwareModal from '../5.Modal'
 import { generateStepID, getIcons } from './helpers'
 import { PromptWithConfirm } from 'src/_common/alerts/swal'
 import { DraggableStep } from './DraggableStep'
 import { cilPlus } from '@coreui/icons'
-import { TransferForm } from '../Modal/Actions/Transfer/Transfer'
+import { TransferForm } from '../5.Modal/Actions/Transfer/Transfer'
 import { TitleBar } from 'src/_common/helpers'
 
 

@@ -1,6 +1,6 @@
-import { cilCopy, cilDrop, cilOptions, cilPlus, cilTrash } from "@coreui/icons";
+import { cilCopy, cilTrash } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
-import { CButton, CCol, CDropdown, CDropdownItem, CDropdownMenu, CDropdownToggle, CImage, CRow } from "@coreui/react-pro"
+import { CButton, CCol, CImage, CRow } from "@coreui/react-pro"
 import React, { useEffect, useState } from "react";
 import { truncateText } from "src/_common/helpers";
 import { getSlotBtnClassName, getSlotLabwareImage } from "./helpers";
@@ -10,14 +10,16 @@ const DECK_TOTAL_COLUMNS = 3;
 
 const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
   const [isSelected, setIsSelected] = useState();
-  const [deckSlots, setDeckSlots] = useState([]);
-  const [deckGrid, setDeckGrid] = useState([]);
+
+  const [deckSlots1D, setDeckSlots1D] = useState([]);
+  const [deckSlots2D, setDeckSlots2D] = useState([]);
 
   let preset = [];
 
   // Set up Slots and select the 1st
   useEffect(() => {
     const interval = setInterval(() => {
+
       let items = []
       try {
         items = JSON.parse(localStorage.getItem('slots')); // Check memory
@@ -27,12 +29,11 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
 
       if (items) {
         preset = items;
-      } else {
-        for (let i = 0; i <= 0; i++) {
-          preset.push(
-            { id: 0, name: '+', tube_rack: "", well_plate: "", reservoir: "", aluminium_block: "", labware_type: "" }, { liquids: {} }
-          );
-        }
+      } else { // Default Preset
+        preset.push(
+          { id: 0, name: '+', tube_rack: "", well_plate: "", reservoir: "", aluminium_block: "", labware_type: "", liquids: { selected: [] } }
+        );
+
       }
 
       let subarrayLength = DECK_TOTAL_COLUMNS;
@@ -40,9 +41,8 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
       for (let i = 0; i < preset.length; i += subarrayLength) {
         subarrays.push(preset.slice(i, i + subarrayLength));
       }
-      setDeckSlots([preset])
-      setDeckGrid(subarrays)
-
+      setDeckSlots1D([preset])
+      setDeckSlots2D(subarrays)
 
     }, 500); // Change the interval time as needed (in milliseconds)
 
@@ -74,10 +74,10 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
     let reservoir = '';
     let aluminium_block = '';
     let labware_type = "";
-    let liquids = {};
+    let liquids = { selected: [] };
 
-    deckSlots?.map((row, index_row) => {
-      if (index_row === (deckSlots.length - 1)) {
+    deckSlots1D?.map((row, index_row) => {
+      if (index_row === (deckSlots1D.length - 1)) {
         row?.map((col, index_col) => {
           if (index_col === (row.length - 1)) {
             id = col.id + 1;
@@ -88,10 +88,10 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
             aluminium_block = '';
 
             labware_type = '';
-            liquids = {}
-            deckSlots[index_row].push(
+            liquids = { selected: [] }
+            deckSlots1D[index_row].push(
               {
-                id, name, tube_rack, well_plate, reservoir, aluminium_block, labware_type, liquids: {}
+                id, name, tube_rack, well_plate, reservoir, aluminium_block, labware_type, liquids: liquids
               },
 
             )
@@ -101,7 +101,7 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
     })
 
     let item = {
-      id: id, name: name, tube_rack: tube_rack, well_plate: well_plate, reservoir: reservoir, aluminium_block: aluminium_block, labware_type: labware_type, liquids: {}
+      id: id, name: name, tube_rack: tube_rack, well_plate: well_plate, reservoir: reservoir, aluminium_block: aluminium_block, labware_type: labware_type, liquids: { selected: [] }
     };
 
     splitBoard();
@@ -117,7 +117,7 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
     let reservoir = '';
     let aluminium_block = '';
     let labware_type = "";
-    let liquids = {};
+    let liquids = { selected: [] };
 
 
     tube_rack = item.tube_rack;
@@ -125,10 +125,10 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
     reservoir = item.reservoir;
     aluminium_block = item.aluminium_block;
     labware_type = item.labware_type;
-    liquids = {};
+    liquids = item.liquids;
 
-    deckSlots?.map((row, index_row) => {
-      if (index_row === (deckSlots.length - 1)) {
+    deckSlots1D?.map((row, index_row) => {
+      if (index_row === (deckSlots1D.length - 1)) {
         row?.map((col, index_col) => {
           if (index_col === (row.length - 1)) {
             id = col.id + 1;
@@ -138,7 +138,9 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
             reservoir = reservoir;
             aluminium_block = aluminium_block;
             labware_type = labware_type;
-            deckSlots[index_row].push({ id, name, tube_rack, well_plate, reservoir, aluminium_block, labware_type, liquids: {} })
+            liquids = liquids;
+
+            deckSlots1D[index_row].push({ id, name, tube_rack, well_plate, reservoir, aluminium_block, labware_type, liquids: liquids })
           }
         })
       }
@@ -147,11 +149,11 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
   };
 
   const handleEdit = () => {
-    if (deckSlots.length > 0) {
-      let tmp_arr = deckSlots;
+    if (deckSlots1D.length > 0) {
+      let tmp_arr = deckSlots1D;
       let index = tmp_arr[0].findIndex(item => item.id == newLabwareSelection.id);
       tmp_arr[0][index] = newLabwareSelection;
-      setDeckSlots(tmp_arr)
+      setDeckSlots1D(tmp_arr)
 
       splitBoard();
     }
@@ -165,12 +167,12 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
   }
 
   const deleteSlot = (id) => {
-    const tmp_delete = [...deckSlots];
+    const tmp_delete = [...deckSlots1D];
     tmp_delete?.map((array, index_1) => {
       array?.map((item, index_2) => {
         if (item.id === id) {
           tmp_delete[index_1].splice([index_2], 1)
-          setDeckSlots(tmp_delete)
+          setDeckSlots1D(tmp_delete)
         }
       })
     })
@@ -182,7 +184,7 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
   }
 
   const splitBoard = () => {
-    let array = deckSlots[0];
+    let array = deckSlots1D[0];
 
     let subarrayLength = DECK_TOTAL_COLUMNS;
 
@@ -191,19 +193,19 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
       subarrays.push(array.slice(i, i + subarrayLength));
     }
 
-    setDeckGrid(subarrays)
+    setDeckSlots2D(subarrays)
   }
 
-  //  LOCAL STORAGE MANAGEMENT
+  //  LOCAL STORAGE MANAGEMENT - Update Storage 
   useEffect(() => {
     try {
-      if (deckSlots[0]) {
-        localStorage.setItem('slots', JSON.stringify(deckSlots[0]));
+      if (deckSlots1D[0]) {
+        localStorage.setItem('slots', JSON.stringify(deckSlots1D[0]));
       }
     } catch (e) {
       console.log(e);
     }
-  }, [deckGrid])
+  }, [deckSlots2D])
 
   return (
     <>
@@ -214,13 +216,22 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
       </div>
 
       {React.Children.toArray(
-        deckGrid?.map((rows, index) => { //iterate through row array
+        deckSlots2D?.map((rows, index) => { //iterate through row array
           return (
             <CRow key={index} style={{ margin: '20px' }}>
               {React.Children.toArray(
                 rows?.map((item, index) => {
                   let labwareSelection = item.tube_rack || item.well_plate || item.reservoir || item.aluminium_block;
-                  let obj = item.liquids || {};
+                  let flag = false;
+
+                  try {
+
+                    if (item.liquids.selected.length > 0) {
+                      flag = true
+                    }
+                  } catch (error) {
+                    console.log("Error accessing 'address' attribute:", error.message);
+                  }
 
                   return (
                     <>
@@ -232,9 +243,8 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
                           className={getSlotBtnClassName(item.id, isSelected)} >
 
 
-                          {Object.keys(obj).length > 0 && obj.selected.length > 0
+                          {flag
                             &&
-
                             <CIcon icon={cidDrop}
                               className="float-end" size="xxl"
                               style={{
@@ -280,19 +290,7 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
                             </div>
                           }
 
-                          {/* {item.id == 0 && <CRow>
-                            <small style={{ padding: '20px', alignItems: 'center' }}>{truncateText(item.name, 46)}</small>
-                          </CRow>
-                          } */}
-
                         </div>
-
-                        {/* <>
-                          <CRow className={"slot-label-row"} style={{ fontSize: 'small', display: item.id == 0 ? 'none' : 'block' }}>
-                            <span style={{ fontSize: 'small', display: item.id == 0 ? 'none' : 'block' }}>{truncateText(item.name, 28)}</span>
-                          </CRow>
-                        </> */}
-
 
                         <br />
                         <br />

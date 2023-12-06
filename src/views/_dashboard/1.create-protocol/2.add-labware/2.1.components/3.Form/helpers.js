@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { CCol, CFormFeedback, CFormInput, CFormLabel, CRow } from '@coreui/react-pro'
-import { colourStyles } from '../Liquids/data';
+import { colourStyles } from '../4.Liquids/data';
 import CreatableSelect from 'react-select/creatable'
 import { GetRandomColor } from 'src/_common/helpers';
 
@@ -79,7 +79,7 @@ export const AddLiquids = ({ selectedLiquid, handleChangeSelectedLiquid, liquidV
     setSelectedColor(GetRandomColor())
   }
 
-
+  const volumeRef = useRef(null);
   return (
     <>
       <CRow>
@@ -94,8 +94,9 @@ export const AddLiquids = ({ selectedLiquid, handleChangeSelectedLiquid, liquidV
           <CreatableSelect
             onChange={(e) => {
               let item = e;
-              setSelectedColor(item.color)
-              handleChangeSelectedLiquid(e, selectedColor)
+              setSelectedColor(item.color);
+              handleChangeSelectedLiquid(e, selectedColor);
+              volumeRef.current.focus();
             }
             }
             onCreateOption={(e) => { handleCreateLiquid(e) }}
@@ -108,7 +109,7 @@ export const AddLiquids = ({ selectedLiquid, handleChangeSelectedLiquid, liquidV
 
         <CCol md={2}>
           <CFormLabel htmlFor="validationCustom03">Volume (ml)</CFormLabel>
-          <CFormInput autoComplete={'off'} type="number" id="validationCustom03" placeholder="" required value={liquidVolume} onChange={handleChangeLiquidVolume} />
+          <CFormInput ref={volumeRef} autoComplete={'off'} type="number" id="validationCustom03" placeholder="" required value={liquidVolume} onChange={handleChangeLiquidVolume} />
           <CFormFeedback valid>Looks good!</CFormFeedback>
         </CCol>
 
