@@ -1,7 +1,7 @@
 import "./styles.css";
 import DragSelect from "dragselect";
-import React, { useRef, useState, useEffect, createRef } from "react";
-import { CButton, CCol, CFormTextarea, CRow } from "@coreui/react-pro";
+import React, { useRef, useState, useEffect, createRef, useReducer } from "react";
+import { CButton, CCol, CFormTextarea, CRow, CTooltip } from "@coreui/react-pro";
 import { GetLetter } from "src/_common/helpers";
 import { tube_racks } from "../data";
 import CIcon from "@coreui/icons-react";
@@ -16,7 +16,7 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
 
   const settings = {
     draggability: false,
-    // multiSelectMode: true,
+    multiSelectMode: true,
     selectables: document.getElementsByClassName("tr_selectables"),
   };
 
@@ -37,9 +37,6 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
         setSelectedWellsElement(strAscending)
       }
     })
-
-    handleSave();
-    console.log('test')
     return () => ds.unsubscribe('DS:end')
 
   }, [ds])
@@ -69,7 +66,40 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
       const tr_ref = createRef();
       tubeRacksRef.current.push(tr_ref);
       let id = (GetLetter(row_index) + (parseInt(col_index) + 1))
-      return <CCol key={id} id={id} className="tr_selectables" style={{ borderRadius: squared ? '0' : '100%' }} ref={tr_ref}></CCol>
+
+      let liquid = '';
+      let volume = '';
+
+      let tmp_selected = selectedSlot.liquids.selected;
+      tmp_selected?.map((selected, index) => {
+        selected.wells?.map((well, index) => {
+          if (well == id) {
+            liquid = selected.liquid;
+            volume = selected.volume;
+          }
+        })
+      })
+
+      return (
+        <>
+
+          <CTooltip
+            key={id}
+            content={
+              <>
+                <div style={{ textAlign: 'left' }}>
+                  <p>Liquid: {liquid}</p>
+                  <p>Volume: {volume}ul</p>
+                </div>
+              </>
+            }
+            placement="bottom"
+          >
+            <CCol key={id} id={id} className="tr_selectables" style={{ borderRadius: squared ? '0' : '100%' }} ref={tr_ref}></CCol>
+          </CTooltip>
+
+        </>
+      )
     })
     elems.push(row)
     row_index++;
@@ -84,10 +114,46 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
       const tr_ref2 = createRef();
       tubeRacksRef.current.push(tr_ref2);
       let id = (GetLetter(row_index2) + (parseInt(col_index2) + 3))
-      return <CCol key={id} id={id} className="tr_selectables tr_selectables2" style={{ borderRadius: squared ? '0' : '100%' }} ref={tr_ref2}></CCol>
+
+      let liquid = '';
+      let volume = '';
+
+      let tmp_selected = selectedSlot.liquids.selected;
+      tmp_selected?.map((selected, index) => {
+        selected.wells?.map((well, index) => {
+          if (well == id) {
+            liquid = selected.liquid;
+            volume = selected.volume;
+          }
+        })
+      })
+
+      return (
+        <>
+
+          <CTooltip
+            key={id}
+            content={
+              <>
+                <div style={{ textAlign: 'left' }}>
+                  <p>Liquid: {liquid}</p>
+                  <p>Volume: {volume}ul</p>
+                </div>
+              </>
+            }
+            placement="bottom"
+          >
+            <CCol key={id} id={id} className="tr_selectables tr_selectables2" style={{ borderRadius: squared ? '0' : '100%' }} ref={tr_ref2}></CCol>
+          </CTooltip>
+
+        </>
+      )
     })
+
     elems2.push(row)
     row_index2++;
+
+
   }
 
   useEffect(() => {
@@ -117,46 +183,31 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
         document.getElementById(item.id).style.background = selectedLiquid.color;
       })
 
+      // 1. Get items and find specific slot
       let items = JSON.parse(localStorage.getItem('slots')); // Check memory
+      let tmp_selectedSlot = items?.find(item => item.id === selectedSlot.id);
 
+      if (tmp_selectedSlot?.liquids.selected.length > 0) { // Check 2. (Check if any selection well belongs to exisτing array)
 
-      // 1. Find specific slot
-      const tmp_selectedSlot = items?.find(item => item.id === selectedSlot.id);
+        let selected_wells_array = tmp_selectedSlot.liquids.selected;
 
-      if (tmp_selectedSlot?.liquids.selected.length > 0) {
-        // Check 1. (Check if any selection belongs to exising array)
-        let selected = tmp_selectedSlot.liquids.selected;
+        selected_wells_array?.map((item, index) => {
+          const filteredArray = item.wells.filter(item => !selectedWells.includes(item));
+          tmp_selectedSlot.liquids.selected[index].wells = filteredArray;
+        })
         tmp_selectedSlot?.liquids.selected.push({ wells: selectedWells, liquid: selectedLiquid.text, color: selectedLiquid.color, volume: liquidVolume });
       } else { // First Entry
         tmp_selectedSlot?.liquids.selected.push({ wells: selectedWells, liquid: selectedLiquid.text, color: selectedLiquid.color, volume: liquidVolume });
       }
 
-
-      console.log(tmp_selectedSlot)
-      // 2. Set liquids
-
-      // CHECKS TODO
-
-      // 1. check if liquid exists and update selected
-      // 2. check if selected exists and update positions
-      // 2.1 Check if new selected slots are currently listed and update the array
-
-
-
-
-
-
-      // 3. Find slot's index
+      // 3. Find slot's index and update it on memory
       const foundIndex = items?.findIndex(item => item.id === selectedSlot.id);
       if (foundIndex !== -1) {
         items[foundIndex] = tmp_selectedSlot
         localStorage.setItem('slots', JSON.stringify(items));
       }
 
-      // console.log(items);
-
-
-      // handleClose();
+      handleClose();
     }
 
   }
@@ -179,12 +230,15 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
 
     let items2 = (tubeRacksRef.current);
 
+    console.log(items2)
     items2?.map((item, index) => {
       try {
         document.getElementById(item.current.id).style.background = '#EFEFEF';
       } catch (e) {
       }
     })
+
+    handleClose();
   };
 
 
@@ -240,6 +294,7 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
               {
                 React.Children.toArray(
                   elems?.map((row, index) => {
+
                     return (
                       <>
                         <CRow className={"tr_rowGrid"}>

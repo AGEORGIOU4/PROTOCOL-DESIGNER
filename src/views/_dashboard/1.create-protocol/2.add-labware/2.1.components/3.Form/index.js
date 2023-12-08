@@ -187,7 +187,7 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
     setSelectedLiquid('');
     setLiquidVolume('');
     setVisible(false)
-
+    window.location.reload(true)
   }
 
   // const handleSubmit = () => {

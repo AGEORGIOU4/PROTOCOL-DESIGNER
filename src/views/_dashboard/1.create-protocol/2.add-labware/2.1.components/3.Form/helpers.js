@@ -108,7 +108,7 @@ export const AddLiquids = ({ selectedLiquid, handleChangeSelectedLiquid, liquidV
         </CCol>
 
         <CCol md={2}>
-          <CFormLabel htmlFor="validationCustom03">Volume (ml)</CFormLabel>
+          <CFormLabel htmlFor="validationCustom03">Volume (ul)</CFormLabel>
           <CFormInput ref={volumeRef} autoComplete={'off'} type="number" id="validationCustom03" placeholder="" required value={liquidVolume} onChange={handleChangeLiquidVolume} />
           <CFormFeedback valid>Looks good!</CFormFeedback>
         </CCol>
