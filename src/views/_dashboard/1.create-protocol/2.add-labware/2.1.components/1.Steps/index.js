@@ -8,8 +8,9 @@ import { generateStepID, getIcons } from './helpers'
 import { PromptWithConfirm } from 'src/_common/alerts/swal'
 import { DraggableStep } from './DraggableStep'
 import { cilPlus } from '@coreui/icons'
-import { TransferForm } from '../5.Modal/Actions/Transfer/Transfer'
+import { TransferForm } from './Actions/Transfer/Transfer'
 import { TitleBar } from 'src/_common/helpers'
+import { MixForm } from './Actions/Mix/Mix'
 
 
 var STEP_ID = -1
@@ -20,6 +21,8 @@ const RenderStepForm = (modalTitle) => {
   switch (modalTitle) {
     case 'Transfer':
       return <TransferForm />
+    case 'Mix':
+    // return <MixForm />
 
     default:
       break;

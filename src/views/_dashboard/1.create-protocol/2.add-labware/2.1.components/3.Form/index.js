@@ -187,27 +187,7 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
     setSelectedLiquid('');
     setLiquidVolume('');
     setVisible(false)
-    window.location.reload(true)
   }
-
-  // const handleSubmit = () => {
-  //   setLoadingSave(true);
-
-  //   let item = {
-  //     id: selectedSlot.id,
-  //     name: name,
-  //     tube_rack: tubeRack,
-  //     well_plate: wellPlate,
-  //     reservoir: reservoir,
-  //     aluminium_block: aluminiumBlock
-  //   }
-
-  //   setTimeout(() => {
-  //     handleSubmitForm(item);
-  //     setLoadingSave(false)
-  //   }, 800)
-
-  // }
 
   const getSelectedLabware = () => {
     if (tubeRack) {
@@ -322,9 +302,11 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
               handleChangeSelectedLiquid={handleChangeSelectedLiquid}
               handleChangeLiquidVolume={handleChangeLiquidVolume} />
             <WellPlateSelection
+              selectedSlot={selectedSlot}
               selectedLabware={selectedLabwareName}
               selectedLiquid={selectedLiquid}
               liquidVolume={liquidVolume}
+              handleClose={handleClose}
             />
           </>
         )}
