@@ -82,8 +82,8 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
 
       return (
         <>
-
           <CTooltip
+            style={{ display: liquid ? 'block' : 'none' }}
             key={id}
             content={
               <>
@@ -97,7 +97,6 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
           >
             <CCol key={id} id={id} className="tr_selectables" style={{ borderRadius: squared ? '0' : '100%' }} ref={tr_ref}></CCol>
           </CTooltip>
-
         </>
       )
     })
@@ -132,6 +131,7 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
         <>
 
           <CTooltip
+            id={id}
             key={id}
             content={
               <>
@@ -207,9 +207,8 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
         localStorage.setItem('slots', JSON.stringify(items));
       }
 
-      handleClose();
+      //handleClose();
     }
-
   }
 
   const clearAll = () => {
@@ -228,17 +227,15 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
 
     ds.clearSelection();
 
-    let items2 = (tubeRacksRef.current);
+    elems?.map((items, index) => {
 
-    console.log(items2)
-    items2?.map((item, index) => {
       try {
-        document.getElementById(item.current.id).style.background = '#EFEFEF';
+        items?.map((item, index) => {
+          document.getElementById(item.key).style.background = '#EFEFEF';
+        })
       } catch (e) {
       }
     })
-
-    handleClose();
   };
 
 
@@ -327,11 +324,12 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
 
         </div >
 
-        <br />
+        <br style={{ userSelect: 'none' }} />
 
-        <h6>Selected: </h6>
+        <h6 style={{ userSelect: 'none' }}>Selected: </h6>
 
-        <CFormTextarea disabled defaultValue={selectedWells} rows={1}></CFormTextarea>
+        <CFormTextarea disabled defaultValue={selectedWells} rows={1}
+        ></CFormTextarea>
 
         <hr />
         <div >
@@ -343,7 +341,7 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
           </CButton>
         </div>
 
-        <span style={{ fontSize: '24px', marginTop: '26px' }}><strong>{selectedLabware}</strong></span>
+        <span style={{ fontSize: '24px', marginTop: '26px', userSelect: 'none' }}><strong>{selectedLabware}</strong></span>
 
       </div>
 

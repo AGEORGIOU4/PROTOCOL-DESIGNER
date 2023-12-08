@@ -54,32 +54,52 @@ export const disableInputFieldsOnSelect = (value, action) => {
   }
 }
 
-export const AddLiquids = ({ selectedLiquid, handleChangeSelectedLiquid, liquidVolume, handleChangeLiquidVolume }) => {
-  const [selectedColor, setSelectedColor] = useState('#ffffff');
-  const [liquidOptions, setLiquidOptions] = useState([])
 
+const createOption = (id, value, color) => ({
+  id: id,
+  value: value,
+  label: value,
+  text: value,
+  color: color
+});
+
+
+export const AddLiquids = ({ selectedLiquid, handleChangeSelectedLiquid, liquidVolume, handleChangeLiquidVolume }) => {
+  const [selectedColor, setSelectedColor] = useState(GetRandomColor());
   let items = JSON.parse(localStorage.getItem('liquids'))
 
-  useEffect(() => {
-    if (items) {
-      setLiquidOptions(items);
-    }
-  }, []);
+  const [isLoading, setIsLoading] = useState(false);
+  const [options, setOptions] = useState(items);
+  const [value, setValue] = useState(null);
+  const volumeRef = useRef(null);
 
-  const handleCreateLiquid = (e) => {
+  const handleCreate = (e) => {
+    setIsLoading(true);
     let initialLiquids = JSON.parse(localStorage.getItem('liquids')) || [];
-    let value = e;
-    let id_iterator = Math.floor(Math.random() * 999999);
-    let liquid = { id: id_iterator, value: value, label: value, text: value, color: selectedColor }
-
+    let id = Math.floor(Math.random() * 999999);
+    let liquid = { id: id, value: e, label: e, text: e, color: selectedColor }
     initialLiquids.push(liquid)
     localStorage.setItem('liquids', JSON.stringify(initialLiquids));
 
-    setLiquidOptions(initialLiquids);
-    setSelectedColor(GetRandomColor())
+    setTimeout(() => {
+      const newOption = createOption(id, e, selectedColor);
+      setIsLoading(false);
+      setOptions((prev) => [...prev, newOption]);
+      setValue(newOption);
+      setSelectedColor(newOption.color);
+      handleChangeSelectedLiquid(newOption, selectedColor);
+      volumeRef.current.focus();
+    }, 500);
+
   }
 
-  const volumeRef = useRef(null);
+  const handleSelect = (e) => {
+    setValue(e)
+    setSelectedColor(e.color);
+    handleChangeSelectedLiquid(e, selectedColor);
+    volumeRef.current.focus();
+  }
+
   return (
     <>
       <CRow>
@@ -92,23 +112,21 @@ export const AddLiquids = ({ selectedLiquid, handleChangeSelectedLiquid, liquidV
         <CCol md={8}>
           <CFormLabel htmlFor="validationCustom04">Select liquid or create new by typing and press ENTER</CFormLabel>
           <CreatableSelect
-            onChange={(e) => {
-              let item = e;
-              setSelectedColor(item.color);
-              handleChangeSelectedLiquid(e, selectedColor);
-              volumeRef.current.focus();
-            }
-            }
-            onCreateOption={(e) => { handleCreateLiquid(e) }}
-            styles={colourStyles}
-            options={liquidOptions}
+            isClearable
+            isDisabled={isLoading}
+            isLoading={isLoading}
+            onCreateOption={handleCreate}
+            onChange={handleSelect}
+            options={options}
+            value={value}
             className="form-multi-select-selection-tags"
+            styles={colourStyles}
           />
 
         </CCol>
 
         <CCol md={2}>
-          <CFormLabel htmlFor="validationCustom03">Volume (ul)</CFormLabel>
+          <CFormLabel htmlFor="validationCustom03">Volume (ml)</CFormLabel>
           <CFormInput ref={volumeRef} autoComplete={'off'} type="number" id="validationCustom03" placeholder="" required value={liquidVolume} onChange={handleChangeLiquidVolume} />
           <CFormFeedback valid>Looks good!</CFormFeedback>
         </CCol>
