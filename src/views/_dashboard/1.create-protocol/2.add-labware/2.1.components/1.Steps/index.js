@@ -22,7 +22,7 @@ const RenderStepForm = (modalTitle) => {
     case 'Transfer':
       return <TransferForm />
     case 'Mix':
-    // return <MixForm />
+    return <MixForm />
 
     default:
       break;
