@@ -14,3 +14,16 @@ export const options_ChangeTip = [
   { id: 3, label: 'Per destination well', value: 'Per destination well', disabled: true },
   { id: 4, label: 'Never', value: 'Never' }
 ]
+
+export const options_LabWares = [
+  { id: 0, label: 'Trash', value: 'Trash' }
+]
+
+export const options_Columns = [
+  { id: 0, label: 'Column 1', value: 'Column 1' }
+]
+
+export const options_Blowout = [
+  { id: 0, label: 'Trash', value: 'Trash' },
+  { id: 1, label: 'Destination Well', value: 'Destination Well' }
+]
