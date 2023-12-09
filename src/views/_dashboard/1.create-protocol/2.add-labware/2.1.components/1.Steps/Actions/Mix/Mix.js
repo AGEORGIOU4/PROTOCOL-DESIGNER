@@ -97,12 +97,12 @@ export const MixForm = () => {
               </CCol>
               <CCol md={2}>
                 <CFormLabel htmlFor="mixVolumeInput">Mix Volume (μL)</CFormLabel>
-                <CFormInput type='number' id="mixVolumeInput" required />
+                <CFormInput type='number' id="mixVolumeInput" required placeholder='Add Volume' />
                 <CFormFeedback valid>Looks good!</CFormFeedback>
               </CCol>
               <CCol md={2}>
                 <CFormLabel htmlFor="repetitionsInput">Repetitions</CFormLabel>
-                <CFormInput type='number' id="repetitionsInput" required />
+                <CFormInput type='number' id="repetitionsInput" required placeholder='Add Repetitions' />
                 <CFormFeedback valid>Looks good!</CFormFeedback>
               </CCol>
             </CRow>

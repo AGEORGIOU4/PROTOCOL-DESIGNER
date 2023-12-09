@@ -1,5 +1,5 @@
 import React from 'react';
-import { CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter, CButton } from '@coreui/react-pro';
+import { CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter, CButton, CFormLabel, CFormTextarea, CFormInput } from '@coreui/react-pro';
 
 export const Notes = ({ isNotesOpen, onClose }) => {
     return (
@@ -8,7 +8,13 @@ export const Notes = ({ isNotesOpen, onClose }) => {
                 <CModalTitle>Step Notes</CModalTitle>
             </CModalHeader>
             <CModalBody>
-                {/* Content of the modal goes here, e.g., form fields for step name and notes */}
+                <CFormLabel htmlFor="stepName">Step Name</CFormLabel>
+                <CFormInput
+                    type="text"
+                    id="noteStepName"
+                    value="mix"
+                />
+                <CFormTextarea id="stepNotes" label="Step Notes:" />
             </CModalBody>
             <CModalFooter>
                 <CButton color="secondary" onClick={onClose}>Cancel</CButton>
