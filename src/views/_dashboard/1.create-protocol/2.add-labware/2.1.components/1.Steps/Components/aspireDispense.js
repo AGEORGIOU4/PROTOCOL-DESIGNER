@@ -23,6 +23,7 @@ export const AspireDispense = ({  flowRate,
   return (
     <>
     <CRow>
+      
       {/* Aspirate Section */}
      
         
@@ -65,7 +66,24 @@ export const AspireDispense = ({  flowRate,
         {/* If you have more form elements related to the Well Order, they would go here. */}
     </div>
       </CCol>
+
+      <CCol md={2} className='flow-rate-col'>
+        <CFormLabel htmlFor='flowRate'>Flow Rate</CFormLabel>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <CFormInput
+          type="text"
+          id="tipPosition"
+          placeholder="Default (μL/s)"
+        />
+        <CFormCheck id="flowRateDelayDispense" label="Delay"/>
+        <CFormCheck id="flowRateTouchTipDispense" label="Touch Tip"/>
+        <CFormCheck id="flowRateBlowoutDispense" label="Blowout"/>
+        </div>
+      </CCol>
+   
     </CRow>
+  
+
     </>
   );
 };

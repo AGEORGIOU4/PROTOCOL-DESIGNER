@@ -4,6 +4,7 @@ import CIcon from '@coreui/icons-react'
 import { cilPencil } from '@coreui/icons'
 import { options_ChangeTip, options_Pipettes, options_LabWares, options_Columns } from './data';
 import { AspireDispense } from '../../Components/aspireDispense';
+import { Notes } from '../../Components/notes'
 
 export const MixForm = () => {
   const [validated, setValidated] = useState(false);
@@ -12,22 +13,31 @@ export const MixForm = () => {
   const [selectedColumn, setSelectedColumn] = useState('')
   const [activeHeader, setActiveHeader] = useState('');
   const [showComponent, setShowComponent] = useState(false);
+  const [isNotesOpen, setIsNotesOpen] = useState(false);
+
+  const handleNotesClick = () => {
+    setIsNotesOpen(true)
+  }
+
+  const closeNotes = () => {
+    setIsNotesOpen(false)
+  }
 
   const handleIconClick = (header) => {
     // If the same header is clicked again, close the component and reset the state
     if (header === activeHeader) {
       setShowComponent(false);
       setActiveHeader('');
-    } else if(activeHeader ==="DISPENSE" || activeHeader==="ASPIRATE"){
+    } else if (activeHeader === "DISPENSE" || activeHeader === "ASPIRATE") {
       // If a different header is clicked, show the component with the new header
       setShowComponent(false);
       setActiveHeader('');
-    } else{
+    } else {
       setShowComponent(true);
       setActiveHeader(header);
     }
   };
-  
+
 
   const isActive = (header) => activeHeader === header;
 
@@ -72,15 +82,15 @@ export const MixForm = () => {
             <CRow>
               <CCol md={2}>
                 <CFormLabel htmlFor="pipetteSelect">Pipette</CFormLabel>
-                <CFormSelect 
-                  id="pipetteSelect" 
-                  required 
+                <CFormSelect
+                  id="pipetteSelect"
+                  required
                   onChange={handlePipetteChange}
                   value={selectedPipette}
                   options={
-                    selectedPipette === '' 
-                    ? [{ value: '', label: 'Select Pipette', disabled: true, hidden: true }, ...options_Pipettes] 
-                    : options_Pipettes
+                    selectedPipette === ''
+                      ? [{ value: '', label: 'Select Pipette', disabled: true, hidden: true }, ...options_Pipettes]
+                      : options_Pipettes
                   }
                 />
                 <CFormFeedback valid>Looks good!</CFormFeedback>
@@ -101,99 +111,117 @@ export const MixForm = () => {
             <CRow className="pt-3">
               <CCol md={2}>
                 <CFormLabel htmlFor="labwareSelect">Labware</CFormLabel>
-                <CFormSelect 
+                <CFormSelect
                   id="labwareSelect"
                   required
                   onChange={handleLabWareChange}
                   value={selectedLabWare}
                   options={
-                    selectedLabWare === '' 
-                    ? [{ value: '', label: 'Select Labware', disabled: true, hidden: true }, ...options_LabWares] 
-                    : options_LabWares
+                    selectedLabWare === ''
+                      ? [{ value: '', label: 'Select Labware', disabled: true, hidden: true }, ...options_LabWares]
+                      : options_LabWares
                   }
                 />
                 <CFormFeedback valid>Looks good!</CFormFeedback>
               </CCol>
-            
 
-            {/* Column Row */}
+
+              {/* Column Row */}
               <CCol md={2}>
                 <CFormLabel htmlFor="columnsSelect">Columns</CFormLabel>
-                <CFormSelect 
+                <CFormSelect
                   id="columnsSelect"
                   required
                   onChange={handleColumnChange}
                   value={selectedColumn}
                   options={
-                    selectedColumn === '' 
-                    ? [{ value: '', label: 'Select Column', disabled: true, hidden: true }, ...options_Columns] 
-                    : options_Columns
+                    selectedColumn === ''
+                      ? [{ value: '', label: 'Select Column', disabled: true, hidden: true }, ...options_Columns]
+                      : options_Columns
                   }
                 />
                 <CFormFeedback valid>Looks good!</CFormFeedback>
               </CCol>
             </CRow>
 
-            
-        {/* Aspirate, Dispense */}
-        <CRow>
-        <div className='modal-header-row'>
-          <CCol md={5}
-            style={{
-              padding: '0',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              borderBottom: `2px solid ${isActive('ASPIRATE') ? '#01AAB1' : 'black'}`,
-            }}
-          >
-            <h5
-              className='modal-subtitle'
-              style={{ color: isActive('ASPIRATE') ? '#01AAB1' : 'black' }}
-            >
-              ASPIRATE
-            </h5>
-            <CIcon
-              size='sm'
-              icon={cilPencil}
-              onClick={() => handleIconClick('ASPIRATE')}
-              style={{ color: isActive('ASPIRATE') ? '#01AAB1' : 'black' }}
-            />
-          </CCol>
-          <CCol md={5}
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              borderBottom: `2px solid ${isActive('DISPENSE') ? '#01AAB1' : 'black'}`,
-            }}
-          >
-            <h5
-              className='modal-subtitle'
-              style={{ color: isActive('DISPENSE') ? '#01AAB1' : 'black' }}
-            >
-              DISPENSE
-            </h5>
-            <CIcon
-              size='sm'
-              icon={cilPencil}
-              onClick={() => handleIconClick('DISPENSE')}
-              style={{ color: isActive('DISPENSE') ? '#01AAB1' : 'black' }}
-            />
-          </CCol>
-        </div>
-      </CRow>
-      {showComponent && <AspireDispense />}
 
+            {/* Aspirate, Dispense */}
+            <CRow>
+              <div className='modal-header-row'>
+                <CCol md={5}
+                  style={{
+                    padding: '0',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    borderBottom: `2px solid ${isActive('ASPIRATE') ? '#01AAB1' : 'black'}`,
+                  }}
+                >
+                  <h5
+                    className='modal-subtitle'
+                    style={{ color: isActive('ASPIRATE') ? '#01AAB1' : 'black' }}
+                  >
+                    ASPIRATE
+                  </h5>
+                  <CIcon
+                    size='sm'
+                    icon={cilPencil}
+                    onClick={() => handleIconClick('ASPIRATE')}
+                    style={{ color: isActive('ASPIRATE') ? '#01AAB1' : 'black', cursor: "pointer" }}
+                  />
+                </CCol>
+                <CCol md={5}
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    borderBottom: `2px solid ${isActive('DISPENSE') ? '#01AAB1' : 'black'}`,
+                  }}
+                >
+                  <h5
+                    className='modal-subtitle'
+                    style={{ color: isActive('DISPENSE') ? '#01AAB1' : 'black' }}
+                  >
+                    DISPENSE
+                  </h5>
+                  <CIcon
+                    size='sm'
+                    icon={cilPencil}
+                    onClick={() => handleIconClick('DISPENSE')}
+                    style={{ color: isActive('DISPENSE') ? '#01AAB1' : 'black', cursor: "pointer" }}
+                  />
+                </CCol>
+              </div>
+            </CRow>
+            {showComponent && <AspireDispense />}
 
+            {/* SPACER */}
+            <CCol md={5}></CCol>
+
+            <div className='modal-header-row' >
+              <CCol md={7} style={{ paddingTop: '12px' }}>
+                <h5 className='modal-subtitle'>STERILITY</h5>
+              </CCol>
+            </div>
+
+            <CCol md={4}>
+              <CFormLabel htmlFor="validationCustom05">Change Tip</CFormLabel>
+              <CFormSelect options={options_ChangeTip} id="validationCustom05" required />
+              <CFormFeedback valid>Looks good!</CFormFeedback>
+            </CCol>
 
             {/* Buttons */}
-            <CCol xs={12} className="d-flex justify-content-end">
-              <CButton color="secondary" className="me-2" onClick={() => {}}>Notes</CButton>
-              <CButton color="danger" className="me-2" onClick={handleDelete}>Delete</CButton>
-              <CButton color="secondary" className="me-2" onClick={() => {}}>Close</CButton>
-              <CButton color="primary" type="submit">Save</CButton>
-            </CCol>
+            <CRow className="mt-4">
+              <CCol xs={6} style={{ display: 'flex', justifyContent: 'flex-start', gap: '10px' }}>
+                <CButton color="danger" className="me-2" onClick={handleDelete}>Delete</CButton>
+                <CButton color="secondary" className="me-2" onClick={handleNotesClick}>Notes</CButton>
+              </CCol>
+              <CCol xs={6} style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+                <CButton color="secondary" className="me-2" onClick={() => { }}>Close</CButton>
+                <CButton color="primary" type="submit">Save</CButton>
+              </CCol>
+            </CRow>
+            <Notes isNotesOpen={isNotesOpen} onClose={closeNotes} />
           </CForm>
         </CCol>
       </CRow>
