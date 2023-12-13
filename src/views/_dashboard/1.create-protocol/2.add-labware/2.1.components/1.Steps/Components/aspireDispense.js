@@ -39,57 +39,6 @@ export const AspireDispense = ({ flowRate,
   return (
     <>
       <CRow>
-
-        {/* Aspirate Section */}
-
-
-        <CCol md={2}>
-          <CFormLabel htmlFor="flowRateAspirate">Flow Rate</CFormLabel>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <CFormInput
-              type="text"
-              id="flowRateAspirate"
-              placeholder="Default (μL/s)"
-              value={flowRate}
-              onChange={onFlowRateChange}
-            />
-            <CFormCheck
-              id="flowRateDelay"
-              label="Delay"
-              onChange={handleCheckboxChange}
-              checked={checkboxStates.flowRateDelay} />
-          </div>
-        </CCol>
-        <CCol md={2} >
-          <CFormLabel htmlFor='tipPosition'>Tip Position</CFormLabel>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <CFormInput
-              type="text"
-              id="tipPosition"
-              placeholder="Default (mm)"
-            />
-            {checkboxStates.flowRateDelay && (
-              <CFormInput
-                type='number'
-                id="tipPositionNumber"
-                placeholder='Number of (s)'
-              />
-            )}
-          </div>
-        </CCol>
-        <CCol md={2}>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <CFormLabel htmlFor='wellOrder'>Well Order</CFormLabel>
-            <img
-              src={currentSVG}
-              alt="Clickable icon"
-              onClick={handleSvgClick}
-              style={{ cursor: 'pointer', alignSelf: 'flex-start' }}  // Add alignSelf if you want to center the icon
-            />
-            {/* If you have more form elements related to the Well Order, they would go here. */}
-          </div>
-        </CCol>
-
         <CCol md={4} className='flow-rate-col'>
           <CFormLabel htmlFor='flowRate'>Flow Rate</CFormLabel>
           <CFormInput style={{ width: 'none' }} type="text" placeholder='Default (μL/s)'></CFormInput>

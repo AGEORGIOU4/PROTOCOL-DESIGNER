@@ -19,8 +19,8 @@ export const options_LabWares = [
   { id: 0, label: 'Trash', value: 'Trash' }
 ]
 
-export const options_Columns = [
-  { id: 0, label: 'Column 1', value: 'Column 1' }
+export const options_Wells = [
+  { id: 0, label: 'Well 1', value: 'Well 1' }
 ]
 
 export const options_Blowout = [

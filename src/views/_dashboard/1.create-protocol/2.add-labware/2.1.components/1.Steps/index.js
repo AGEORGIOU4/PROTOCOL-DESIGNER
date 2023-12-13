@@ -11,19 +11,21 @@ import { cilPlus } from '@coreui/icons'
 import { TransferForm } from './Actions/Transfer/Transfer'
 import { TitleBar } from 'src/_common/helpers'
 import { MixForm } from './Actions/Mix/Mix'
+import { DelayForm } from './Actions/Delay/Delay'
 
 
 var STEP_ID = -1
 var STEP_INDEX = -1;
 var STEP_TITLE = "";
 
-const RenderStepForm = (modalTitle) => {
+const RenderStepForm = (modalTitle, handleClose, handleDeleteStep, stepId, stepTitle) => {
   switch (modalTitle) {
     case 'Transfer':
       return <TransferForm />
     case 'Mix':
-    return <MixForm />
-
+      return <MixForm onClose={handleClose} onDelete={handleDeleteStep} stepId={stepId} stepTitle={stepTitle} />
+    case 'Delay':
+      return <DelayForm onClose={handleClose} onDelete={handleDeleteStep} stepId={stepId} stepTitle={stepTitle} />
     default:
       break;
   }
@@ -239,7 +241,7 @@ const LabwareSteps = ({ active }) => {
       </CSidebar >
 
       <AddLabwareModal visible={visible} setVisible={setVisible} title={stepTitle} stepID={stepID} stepIndex={stepIndex} handleClose={handleClose}>
-        {RenderStepForm(stepTitle)}
+        {RenderStepForm(stepTitle, handleClose, handleDeleteStep, stepID, stepTitle)}
       </AddLabwareModal>
 
     </>

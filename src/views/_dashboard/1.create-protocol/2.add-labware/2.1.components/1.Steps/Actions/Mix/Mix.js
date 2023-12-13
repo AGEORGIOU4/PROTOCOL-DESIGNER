@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { CCol, CForm, CFormCheck, CFormFeedback, CFormInput, CFormLabel, CFormSelect, CRow, CButton } from '@coreui/react-pro';
 import CIcon from '@coreui/icons-react'
-import { cilPencil } from '@coreui/icons'
-import { options_ChangeTip, options_Pipettes, options_LabWares, options_Columns } from './data';
-import { AspireDispense } from '../../Components/aspireDispense';
+import { cilSettings } from '@coreui/icons'
+import { options_ChangeTip, options_Pipettes, options_LabWares, options_Wells, options_Blowout } from './data';
 import { Notes } from '../../Components/notes'
+import defaultFlow from 'src/assets/images/wellOrder/defaultFlow.svg'
 
-export const MixForm = () => {
+
+export const MixForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   const [validated, setValidated] = useState(false);
   const [selectedPipette, setSelectedPipette] = useState('');
   const [selectedLabWare, setSelectedLabWare] = useState('');
@@ -14,6 +15,30 @@ export const MixForm = () => {
   const [activeHeader, setActiveHeader] = useState('');
   const [showComponent, setShowComponent] = useState(false);
   const [isNotesOpen, setIsNotesOpen] = useState(false);
+  const [currentSVG, setCurrentSVG] = useState(defaultFlow);
+  const [isAspireDispenseActive, setIsAspireDispenseActive] = useState(false);
+  const handleSvgClick = () => {
+    setCurrentSVG(currentSVG === defaultFlow ? defaultFlow : defaultFlow);
+  };
+  const [checkboxStates, setCheckboxStates] = useState({
+    flowRateDelay: false,
+    flowRateTouchTipDispense: false,
+    flowRateBlowoutDispense: false,
+    flowRateTouchTipDispenseInput: false
+    // Add other checkboxes here in the format: id: false
+  });
+
+  const handleLocalClose = () => {
+    onClose();
+  };
+
+  const handleCheckboxChange = (e) => {
+    setCheckboxStates({
+      ...checkboxStates,
+      [e.target.id]: e.target.checked
+    });
+  };
+
 
   const handleNotesClick = () => {
     setIsNotesOpen(true)
@@ -23,23 +48,17 @@ export const MixForm = () => {
     setIsNotesOpen(false)
   }
 
-  const handleIconClick = (header) => {
-    // If the same header is clicked again, close the component and reset the state
-    if (header === activeHeader) {
-      setShowComponent(false);
-      setActiveHeader('');
-    } else if (activeHeader === "DISPENSE" || activeHeader === "ASPIRATE") {
-      // If a different header is clicked, show the component with the new header
-      setShowComponent(false);
-      setActiveHeader('');
-    } else {
-      setShowComponent(true);
-      setActiveHeader(header);
-    }
+  const handleIconClick = () => {
+    setIsAspireDispenseActive(!isAspireDispenseActive);
+    setShowComponent(!isAspireDispenseActive);
   };
 
 
-  const isActive = (header) => activeHeader === header;
+
+
+
+  const isActive = () => isAspireDispenseActive;
+
 
   const handleSubmit = (event) => {
     const form = event.currentTarget;
@@ -61,10 +80,6 @@ export const MixForm = () => {
   const handleColumnChange = (event) => {
     setSelectedColumn(event.target.value);
   }
-
-  const handleDelete = () => {
-    console.log("Delete action triggered");
-  };
 
   return (
     <>
@@ -128,16 +143,16 @@ export const MixForm = () => {
 
               {/* Column Row */}
               <CCol md={2}>
-                <CFormLabel htmlFor="columnsSelect">Columns</CFormLabel>
+                <CFormLabel htmlFor="wellSelect">Wells</CFormLabel>
                 <CFormSelect
-                  id="columnsSelect"
+                  id="wellSelect"
                   required
                   onChange={handleColumnChange}
                   value={selectedColumn}
                   options={
                     selectedColumn === ''
-                      ? [{ value: '', label: 'Select Column', disabled: true, hidden: true }, ...options_Columns]
-                      : options_Columns
+                      ? [{ value: '', label: 'Select Well', disabled: true, hidden: true }, ...options_Wells]
+                      : options_Wells
                   }
                 />
                 <CFormFeedback valid>Looks good!</CFormFeedback>
@@ -154,18 +169,18 @@ export const MixForm = () => {
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    borderBottom: `2px solid ${isActive('ASPIRATE') ? '#01AAB1' : 'black'}`,
+                    borderBottom: `2px solid ${isActive() ? '#01AAB1' : 'black'}`,
                   }}
                 >
                   <h5
                     className='modal-subtitle'
-                    style={{ color: isActive('ASPIRATE') ? '#01AAB1' : 'black' }}
+                    style={{ color: isActive() ? '#01AAB1' : 'black' }}
                   >
                     ASPIRATE
                   </h5>
                   <CIcon
                     size='sm'
-                    icon={cilPencil}
+                    icon={cilSettings}
                     onClick={() => handleIconClick('ASPIRATE')}
                     style={{ color: isActive('ASPIRATE') ? '#01AAB1' : 'black', cursor: "pointer" }}
                   />
@@ -175,25 +190,144 @@ export const MixForm = () => {
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    borderBottom: `2px solid ${isActive('DISPENSE') ? '#01AAB1' : 'black'}`,
+                    borderBottom: `2px solid ${isActive() ? '#01AAB1' : 'black'}`,
                   }}
                 >
                   <h5
                     className='modal-subtitle'
-                    style={{ color: isActive('DISPENSE') ? '#01AAB1' : 'black' }}
+                    style={{ color: isActive() ? '#01AAB1' : 'black' }}
                   >
                     DISPENSE
                   </h5>
                   <CIcon
                     size='sm'
-                    icon={cilPencil}
+                    icon={cilSettings}
                     onClick={() => handleIconClick('DISPENSE')}
                     style={{ color: isActive('DISPENSE') ? '#01AAB1' : 'black', cursor: "pointer" }}
                   />
                 </CCol>
               </div>
             </CRow>
-            {showComponent && <AspireDispense />}
+            <CRow>
+
+              <CCol md={2}>
+                <CFormLabel htmlFor="flowRateAspirate">Flow Rate</CFormLabel>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  {isActive() && (
+                    <>
+                      <CFormInput
+                        type="text"
+                        id="flowRateAspirate"
+                        placeholder="Default (μL/s)"
+                      />
+
+                    </>
+                  )}
+                  <CFormCheck
+                    id="flowRateDelay"
+                    label="Delay"
+                    onChange={handleCheckboxChange}
+                    checked={checkboxStates.flowRateDelay}
+                  />
+                </div>
+              </CCol>
+
+              <CCol md={2}>
+                <CFormLabel htmlFor='tipPosition'>Tip Position</CFormLabel>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  {isActive() && (
+                    <>
+                      <CFormInput
+                        type="text"
+                        id="tipPosition"
+                        placeholder="Default (mm)"
+                      />
+                      {checkboxStates.flowRateDelay && (
+                        <CFormInput
+                          type='number'
+                          id="tipPositionNumber"
+                          placeholder='Number of (s)'
+                        />
+                      )}
+                    </>
+                  )}
+                </div>
+              </CCol>
+              <CCol md={2}>
+                {isActive() && (
+
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <CFormLabel htmlFor='wellOrder'>Well Order</CFormLabel>
+                    <img
+                      src={currentSVG}
+                      alt="Clickable icon"
+                      onClick={handleSvgClick}
+                      style={{ cursor: 'pointer', alignSelf: 'flex-start' }}  // Add alignSelf if you want to center the icon
+                    />
+                    {/* If you have more form elements related to the Well Order, they would go here. */}
+                  </div>
+
+                )}
+              </CCol>
+
+              <CCol md={2} className='flow-rate-col'>
+                <CFormLabel htmlFor='flowRate'>Flow Rate</CFormLabel>
+                {isActive() && (<CFormInput style={{ width: 'none' }} type="text" placeholder='Default (μL/s)'></CFormInput>)}
+                <div className="row g-2" style={{ marginTop: '4px' }}>
+                  <div className="col-6">
+
+                    <CFormCheck
+                      id="flowRateDelayDispense"
+                      label="Delay"
+                      onChange={handleCheckboxChange}
+                      checked={checkboxStates.flowRateDelayDispense}
+                    />
+                  </div>
+                  <div className="col-6" style={{ minHeight: '58px', opacity: checkboxStates.flowRateDelayDispense ? 1 : 0 }}>
+                    <CFormInput
+                      type='number'
+                      id="flowRateDelayDispenseInput"
+                      placeholder='Number of (s)'
+                    />
+                  </div>
+                  <div className="col-6">
+                    <CFormCheck id="flowRateTouchTipDispense"
+                      label="Touch Tip"
+                      onChange={handleCheckboxChange}
+                      checked={checkboxStates.flowRateTouchTipDispense}
+                    />
+                  </div>
+                  <div className="col-6" style={{ minHeight: '58px', opacity: checkboxStates.flowRateTouchTipDispense ? 1 : 0 }}>
+                    <CFormInput
+                      type='number'
+                      id="flowRateTouchTipDispenseInput"
+                      placeholder='Number of tips'
+                    />
+                  </div>
+                  <div className="col-6">
+                    <CFormCheck id="flowRateBlowoutDispense"
+                      label="Blowout"
+                      onChange={handleCheckboxChange}
+                      checked={checkboxStates.flowRateBlowoutDispense}
+                    />
+                  </div>
+                  <div className="col-6" style={{ minHeight: '58px', opacity: checkboxStates.flowRateBlowoutDispense ? 1 : 0 }}>
+                    <CFormSelect
+                      id="flowRateBlowoutDispenseInput"
+                      required
+                      onChange={handleColumnChange}
+                      value={selectedColumn}
+                      options={
+                        selectedColumn === ''
+                          ? [{ value: '', label: 'Select Blowout', disabled: true, hidden: true }, ...options_Blowout]
+                          : options_Blowout
+                      }
+                    />
+                  </div>
+                </div>
+              </CCol>
+            </CRow>
+
 
             {/* SPACER */}
             <CCol md={5}></CCol>
@@ -213,11 +347,11 @@ export const MixForm = () => {
             {/* Buttons */}
             <CRow className="mt-4">
               <CCol xs={6} style={{ display: 'flex', justifyContent: 'flex-start', gap: '10px' }}>
-                <CButton color="danger" className="me-2" onClick={handleDelete}>Delete</CButton>
+                <CButton color="danger" className="me-2" onClick={() => onDelete({ target: { id: stepId, value: stepTitle } })}>Delete</CButton>
                 <CButton color="secondary" className="me-2" onClick={handleNotesClick}>Notes</CButton>
               </CCol>
               <CCol xs={6} style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-                <CButton color="secondary" className="me-2" onClick={() => { }}>Close</CButton>
+                <CButton color="secondary" className="me-2" onClick={handleLocalClose}>Close</CButton>
                 <CButton color="primary" type="submit">Save</CButton>
               </CCol>
             </CRow>
