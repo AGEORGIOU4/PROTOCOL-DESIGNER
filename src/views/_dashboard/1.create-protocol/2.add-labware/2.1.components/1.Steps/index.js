@@ -12,6 +12,8 @@ import { TransferForm } from './Actions/Transfer/Transfer'
 import { TitleBar } from 'src/_common/helpers'
 import { MixForm } from './Actions/Mix/Mix'
 import { DelayForm } from './Actions/Delay/Delay'
+import { ThermoBlockForm } from './Actions/Thermoblock/Thermoblock'
+import { MagnetForm } from './Actions/Magnet/Manget'
 
 
 var STEP_ID = -1
@@ -26,6 +28,10 @@ const RenderStepForm = (modalTitle, handleClose, handleDeleteStep, stepId, stepT
       return <MixForm onClose={handleClose} onDelete={handleDeleteStep} stepId={stepId} stepTitle={stepTitle} />
     case 'Delay':
       return <DelayForm onClose={handleClose} onDelete={handleDeleteStep} stepId={stepId} stepTitle={stepTitle} />
+    case 'Thermoblock':
+      return <ThermoBlockForm onClose={handleClose} onDelete={handleDeleteStep} stepId={stepId} stepTitle={stepTitle} />
+    case 'Magnet':
+      return <MagnetForm onClose={handleClose} onDelete={handleDeleteStep} stepId={stepId} stepTitle={stepTitle} />
     default:
       break;
   }

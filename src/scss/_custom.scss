@@ -639,3 +639,27 @@ pre {
   /* Darken the background more */
   /* Higher than the first modal */
 }
+
+.custom-tooltip .tooltip-inner {
+  border-radius: 15px;
+  border: 2px solid #236B6F;
+  background: #CCEEEF;
+  color: #555555
+}
+
+/* Normal state of the SVG with default stroke */
+.info-icon path {
+  stroke: #666666;
+}
+
+/* Hover state of the SVG changing the stroke and fill of specific paths */
+.info-icon:hover path {
+  stroke: #236B6F;
+  /* This changes the SVG's stroke color on hover */
+}
+
+/* Changing the fill of the circular path */
+.info-icon:hover path:first-child {
+  fill: #CCEEEF;
+  /* This changes the SVG's fill color on hover for the first path */
+}
