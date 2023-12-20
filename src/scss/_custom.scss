@@ -641,10 +641,16 @@ pre {
 }
 
 .custom-tooltip .tooltip-inner {
+  min-width: 200px;
+  /* Minimum width */
+  max-width: 400px;
+  /* Maximum width */
+  word-wrap: break-word;
+  /* Break long words */
   border-radius: 15px;
   border: 2px solid #236B6F;
   background: #CCEEEF;
-  color: #555555
+  color: #555555;
 }
 
 /* Normal state of the SVG with default stroke */
@@ -662,4 +668,13 @@ pre {
 .info-icon:hover path:first-child {
   fill: #CCEEEF;
   /* This changes the SVG's fill color on hover for the first path */
+}
+
+.delete-btn-trash {
+  background-color: transparent;
+  border: none;
+}
+
+.delete-btn-trash:hover {
+  background-color: transparent;
 }

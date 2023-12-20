@@ -1,4 +1,4 @@
-import { cilAperture, cilArrowRight, cilAvTimer, cilColorFill, cilMediaPause, cilMove, cilQrCode, cilPencil, cilTrash, cilSnowflake } from '@coreui/icons'
+import { cilAperture, cilArrowRight, cilAvTimer, cilColorFill, cilMediaPause, cilMove, cilQrCode, cilCamera, cilPencil, cilTrash, cilSnowflake } from '@coreui/icons'
 import { cil3dRotate, cilLink, cilSwapVertical, cilTemperature, cilLockLocked } from '@coreui/icons-pro'
 
 export const generateStepID = () => {
@@ -42,6 +42,10 @@ export const getIcons = (action) => {
       return cilLockLocked;
     case 'Barcode':
       return cilQrCode
+    case 'Camera':
+      return cilCamera;
+    case 'Trash':
+      return cilTrash;
     case 'Storage':
       return cilSnowflake
     case 'Heater Shaker':
@@ -72,6 +76,10 @@ export const getDuration = (action) => {
     case 'Storage':
       return '99';
     case 'Barcode':
+      return '99';
+    case 'Camera':
+      return '99';
+    case 'Trash':
       return '99';
     case 'Thermoblock':
       return '60';
