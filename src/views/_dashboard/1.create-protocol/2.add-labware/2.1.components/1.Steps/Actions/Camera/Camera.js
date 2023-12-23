@@ -3,6 +3,7 @@ import { CCol, CForm, CTooltip, CFormInput, CFormLabel, CMultiSelect, CRow, CBut
 import { Notes } from '../../Components/notes';
 import { options_LabWares } from './data';
 import { ReactComponent as InfoCircleIcon } from 'src/assets/images/generic/infoCircle.svg';
+import { useStateManager } from 'react-select';
 
 export const CameraForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     // State declarations
@@ -11,6 +12,7 @@ export const CameraForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     const [selectedLabWare, setSelectedLabWare] = useState([]);
     const [checkboxStates, setCheckboxStates] = useState({ pauseDelay: false, delay: false });
     const [isPhotoOn, setIsPhotoOn] = useState(false);
+    const [isPhotoVideoOn, setIsPhotoVideoOn] = useState(false)
     const [isVideoOn, setIsVideoOn] = useState(false);
 
     // Handlers for various user interactions
@@ -19,11 +21,13 @@ export const CameraForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     const handleToggleChange = (toggleId) => {
         if (toggleId === 'photo') {
             setIsPhotoOn(!isPhotoOn);
+            setIsPhotoVideoOn(!isPhotoVideoOn)
             if (isVideoOn) setIsVideoOn(!isVideoOn);
         } else if (toggleId === 'video') {
             setIsVideoOn(!isVideoOn);
             if (isPhotoOn) setIsPhotoOn(!isPhotoOn);
         }
+        if (toggleId == 'photoVideo') setIsPhotoVideoOn(!isPhotoVideoOn)
     }
 
 
@@ -127,6 +131,30 @@ export const CameraForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                                         <InfoCircleIcon className="info-icon mt-2" />
                                     </CTooltip>
                                 </CCol>
+                                <CRow>
+                                    <CCol md={2} className='mt-3'>
+                                        <CFormLabel htmlFor='photoVideoAction'>Photo</CFormLabel>
+                                        <CFormSwitch
+                                            label={isPhotoVideoOn ? "Yes" : "No"}
+                                            id="formSwitchCheckPhotoVideo"
+                                            onChange={() => handleToggleChange('photoVideo')}
+                                            checked={isPhotoVideoOn}
+                                        />
+                                    </CCol>
+                                </CRow>
+                                {isPhotoVideoOn && (<>
+                                    <CRow>
+                                        <CCol md={2}>
+                                            <CFormLabel htmlFor='quantityAction'>Quantity</CFormLabel>
+                                            <CFormInput min="0" type="number" id="pictureNumber" required placeholder='Picture Number' />
+                                        </CCol>
+                                        <CCol md={2}>
+                                            <CFormLabel htmlFor='timeLapseActionVideoPhoto'>Time Lapse</CFormLabel>
+                                            <CFormInput min="0" type='number' id="timeLapseVideoPhoto" required placeholder='Default (s)' />
+                                        </CCol>
+                                    </CRow>
+                                </>)}
+
                             </CRow>
                         )}
 

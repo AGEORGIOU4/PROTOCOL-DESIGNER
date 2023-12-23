@@ -19,6 +19,7 @@ import { StorageForm } from './Actions/Storage/Storage'
 import { BarCodeForm } from './Actions/BarCode/BarCode'
 import { CameraForm } from './Actions/Camera/Camera'
 import { TrashForm } from './Actions/Trash/Trash'
+import { ThemrocyclerForm } from './Actions/Thermocycler/Thermocycler'
 
 
 var STEP_ID = -1
@@ -47,6 +48,8 @@ const RenderStepForm = (modalTitle, handleClose, handleDeleteStep, stepId, stepT
       return <CameraForm onClose={handleClose} onDelete={handleDeleteStep} stepId={stepId} stepTitle={stepTitle} />
     case 'Trash':
       return <TrashForm onClose={handleClose} onDelete={handleDeleteStep} stepId={stepId} stepTitle={stepTitle} />
+    case 'Thermocycler':
+      return <ThemrocyclerForm onClose={handleClose} onDelete={handleDeleteStep} stepId={stepId} stepTitle={stepTitle} />
     default:
       break;
   }
@@ -55,7 +58,7 @@ const RenderStepForm = (modalTitle, handleClose, handleDeleteStep, stepId, stepT
 const LabwareSteps = ({ active }) => {
   const [resetFlag, setResetFlag] = useState(true)
 
-  const [stepsList, setStepsList] = useState(["Transfer", "Mix", "Delay", "Heater Shaker", "Centrifuge", "Magnet", "Camera", "Seal - Peel", "Storage", "Trash", "Barcode", "Thermoblock", "PCR", "Trash"]);
+  const [stepsList, setStepsList] = useState(["Transfer", "Mix", "Delay", "Heater Shaker", "Centrifuge", "Magnet", "Camera", "Seal - Peel", "Storage", "Trash", "Barcode", "Thermocycler", "Thermoblock", "PCR", "Trash"]);
   const [selectedSteps, setSelectedSteps] = useState([])
 
   // States for Modal
