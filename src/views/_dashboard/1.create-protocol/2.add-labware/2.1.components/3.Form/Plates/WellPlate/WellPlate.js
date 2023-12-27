@@ -116,9 +116,7 @@ export default function WellPlateSelection({ selectedSlot, selectedLabware, sele
             document.getElementById(tmp_arr[i]).style.background = tmp_color;
           } catch (e) {
           }
-
         }
-
       })
     }
   }, [])
@@ -155,9 +153,10 @@ export default function WellPlateSelection({ selectedSlot, selectedLabware, sele
         localStorage.setItem('slots', JSON.stringify(items));
       }
 
-      //handleClose();
+      handleClose();
     }
   }
+
   const clearAll = () => {
     let items = JSON.parse(localStorage.getItem('slots')); // Check memory
     let foundItem = items?.find(item => item.id === selectedSlot.id);
@@ -184,7 +183,6 @@ export default function WellPlateSelection({ selectedSlot, selectedLabware, sele
       }
     })
   };
-
 
   return (
     <>

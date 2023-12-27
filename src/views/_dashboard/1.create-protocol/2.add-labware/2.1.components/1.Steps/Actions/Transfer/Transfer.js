@@ -1,10 +1,36 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { CCol, CForm, CFormCheck, CFormFeedback, CFormInput, CFormLabel, CFormSelect, CInputGroup, CInputGroupText, CRow } from '@coreui/react-pro'
 import { useState } from 'react'
 import { options_ChangeTip, options_Pipettes } from './data';
 
 export const TransferForm = () => {
+  const [source, setSource] = useState([]);
+
   const [validated, setValidated] = useState(false)
+
+
+  useEffect(() => {
+    let items = []
+    try {
+      items = JSON.parse(localStorage.getItem('slots')); // Check memory
+    } catch (e) {
+      console.log(e)
+    }
+
+
+    let tmp_arr = [];
+    if (items) {
+      items?.map((item, index) => {
+        if (index > 0) {
+
+        }
+      })
+      console.log(tmp_arr)
+      setSource(items)
+    }
+    console.log(items)
+
+  }, [])
 
   const handleSubmit = (event) => {
     const form = event.currentTarget
@@ -54,7 +80,7 @@ export const TransferForm = () => {
 
             <CCol md={3}>
               <CFormLabel htmlFor="validationCustom03">Source</CFormLabel>
-              <CFormSelect options={[]} id="validationCustom03" required />
+              <CFormSelect options={source} id="validationCustom03" required />
               <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
 
@@ -69,7 +95,7 @@ export const TransferForm = () => {
 
             <CCol md={3}>
               <CFormLabel htmlFor="validationCustom05">Destination</CFormLabel>
-              <CFormSelect options={[]} id="validationCustom05" required />
+              <CFormSelect options={source} id="validationCustom05" required />
               <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
 

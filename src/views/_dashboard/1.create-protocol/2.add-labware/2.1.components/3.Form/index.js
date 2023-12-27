@@ -187,6 +187,8 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
     setSelectedLiquid('');
     setLiquidVolume('');
     setVisible(false)
+
+    window.location.reload();
   }
 
   const getSelectedLabware = () => {
@@ -319,9 +321,12 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
               handleChangeSelectedLiquid={handleChangeSelectedLiquid}
               handleChangeLiquidVolume={handleChangeLiquidVolume} />
             <ReservoirSelection
+              selectedSlot={selectedSlot}
               selectedLabware={selectedLabwareName}
               selectedLiquid={selectedLiquid}
-              liquidVolume={liquidVolume} />
+              liquidVolume={liquidVolume}
+              handleClose={handleClose}
+            />
           </>
         )}
 
@@ -333,9 +338,12 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
               handleChangeSelectedLiquid={handleChangeSelectedLiquid}
               handleChangeLiquidVolume={handleChangeLiquidVolume} />
             <AluminiumBlockSelection
+              selectedSlot={selectedSlot}
               selectedLabware={selectedLabwareName}
               selectedLiquid={selectedLiquid}
-              liquidVolume={liquidVolume} />
+              liquidVolume={liquidVolume}
+              handleClose={handleClose}
+            />
           </>
         )}
 

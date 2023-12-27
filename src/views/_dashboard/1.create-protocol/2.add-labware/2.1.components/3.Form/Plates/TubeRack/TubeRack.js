@@ -84,6 +84,7 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
         <>
           <CTooltip
             style={{ display: liquid ? 'block' : 'none' }}
+            id={id}
             key={id}
             content={
               <>
@@ -168,9 +169,7 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
             document.getElementById(tmp_arr[i]).style.background = tmp_color;
           } catch (e) {
           }
-
         }
-
       })
     }
   }, [])
@@ -207,7 +206,7 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
         localStorage.setItem('slots', JSON.stringify(items));
       }
 
-      //handleClose();
+      handleClose();
     }
   }
 
