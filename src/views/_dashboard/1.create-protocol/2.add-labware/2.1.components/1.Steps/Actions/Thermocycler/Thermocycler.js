@@ -15,7 +15,7 @@ export const ThemrocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     const [checkToggleStates, setToggleStates] = useState({ thermoBlock: false, lid: false, lidPosition: false });
     const [selectTemperature, setTemperatures] = useState({ thermoBlock: '°C', lid: '°C' })
     const [isFirstSelection, setIsFirstSelection] = useState({ thermoBlock: true, lid: true });
-    const [removedStepId, setRemovedStepId] = useState(null);
+    const [removeStepId, setRemoveStepId] = useState(null);
 
     const [inputValues, setInputValues] = useState({});
 
@@ -58,9 +58,9 @@ export const ThemrocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     };
 
     useEffect(() => {
-        console.log("UseEffect")
-        console.log(inputValues);
+        console.log("Updated inputValues:", inputValues);
     }, [inputValues]);
+
 
 
 
@@ -91,58 +91,54 @@ export const ThemrocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     }
 
     const handleStepRemoval = uniqueIdToRemove => {
-        setAddStep(prevSteps => {
-            // Debugging: Log current steps and inputValues
-            console.log("Current Steps", prevSteps);
-            console.log("Current inputValues", inputValues);
+        setRemoveStepId(uniqueIdToRemove); // Mark the step for removal
+    };
 
-            // Mapping of unique IDs to step numbers
-            const idToStepNumberMap = prevSteps.reduce((acc, step, index) => {
-                acc[step.id] = index + 1;
-                return acc;
-            }, {});
+    useEffect(() => {
+        if (removeStepId === null) return;
 
-            // Filter out the step to be removed
-            const newSteps = prevSteps.filter(step => step.id !== uniqueIdToRemove);
+        const idToStepNumberMap = addStep.reduce((acc, step, index) => {
+            acc[step.id] = index + 1;
+            return acc;
+        }, {});
 
-            // Determine the number of the step to be removed
-            const stepNumberToRemove = idToStepNumberMap[uniqueIdToRemove];
+        const newSteps = addStep.filter(step => step.id !== removeStepId);
+        const stepNumberToRemove = idToStepNumberMap[removeStepId];
 
-            // Update the input values for remaining steps
-            setInputValues(prevInputValues => {
-                const updatedInputValues = { ...prevInputValues };
-                debugger
-                delete updatedInputValues[uniqueIdToRemove];
+        const updatedInputValues = { ...inputValues };
+        delete updatedInputValues[removeStepId];
 
-                Object.keys(updatedInputValues).forEach(key => {
-                    const currentStepNumber = idToStepNumberMap[key];
-                    if (currentStepNumber > stepNumberToRemove) {
-                        const newKey = prevSteps[currentStepNumber - 2].id;
-                        updatedInputValues[newKey] = updatedInputValues[key];
-                        delete updatedInputValues[key];
-                    }
-                });
+        // Shift input values down
+        Object.keys(updatedInputValues).forEach(key => {
+            const currentStepNumber = idToStepNumberMap[key];
+            if (currentStepNumber > stepNumberToRemove) {
+                const newKey = newSteps[currentStepNumber - 2].id;
+                updatedInputValues[newKey] = updatedInputValues[key];
+                delete updatedInputValues[key];
+            }
+        });
 
-                return updatedInputValues;
-            });
-
-            // Update the step number for remaining steps
-            return newSteps.map((step, index) => {
-                const newStepNumber = index + 1;
-                // Update necessary attributes to reflect the new step number
-                const updatedComponent = React.cloneElement(step.component, {
+        // Update the step components with new step numbers
+        const updatedSteps = newSteps.map((step, index) => {
+            const newStepNumber = index + 1;
+            return {
+                ...step,
+                component: React.cloneElement(step.component, {
                     ...step.component.props,
                     key: `step-${newStepNumber}`,
                     children: React.cloneElement(step.component.props.children, {
                         ...step.component.props.children.props,
                         children: updateStepChildren(step.component.props.children.props.children, newStepNumber)
                     }),
-                });
-
-                return { ...step, component: updatedComponent };
-            });
+                })
+            };
         });
-    };
+
+        setAddStep(updatedSteps);
+        setInputValues(updatedInputValues);
+        setRemoveStepId(null); // Reset the remove step ID
+    }, [removeStepId, addStep, inputValues]);
+
 
 
     const handleLocalClose = () => onClose();
@@ -161,48 +157,85 @@ export const ThemrocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     const addStepComponent = () => {
         const uniqueId = uuidv4(); // Use unique ID for key identification, not for display
 
-        const stepNumber = addStep.length + 1;
-        setIsButtonClicked(stepNumber > 0);
-        const isNotFirstStep = addStep.length > 0;
-        const newStep = (
-            <>
-                <CRow className={isNotFirstStep ? "mt-2" : ""}>
-                    <CCol md={3}>
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <CFormLabel htmlFor={`nameStepInput${uniqueId}`} style={{ marginRight: '10px' }}>{stepNumber}.</CFormLabel>
-                            <CFormInput
-                                type="text"
-                                id={`nameStepInput${uniqueId}`}
-                                value={inputValues[uniqueId]?.name || ''}
-                                onChange={(e) => handleInputChange(uniqueId, 'name', e.target.value)}
-                                required
-                                placeholder='Enter Name'
-                            />
+        // Schedule the input values update
+        setInputValues(prevValues => {
+            // Initialize input values for this step
+            const updatedValues = {
+                ...prevValues,
+                [uniqueId]: { name: '', temperature: '', timeMinutes: '', timeSeconds: '' }
+            };
 
-                        </div>
-                    </CCol>
-                    <CCol md={3}>
-                        <CFormInput type="number" min="0" id={`temperatureStepInput${uniqueId}`} onChange={(e) => handleInputChange(uniqueId, "temperature", e.target.value)} required placeholder='Default (°C)' />
-                    </CCol>
-                    <CCol md={2}>
-                        <CFormInput type="number" min="0" id={`timeMinutesStepInput${uniqueId}`} onChange={(e) => handleInputChange(uniqueId, "timeMinutes", e.target.value)} required placeholder='Default (m)' />
-                    </CCol>
+            // Now schedule the step addition
+            setAddStep(prevSteps => {
+                const stepNumber = prevSteps.length + 1;
+                const isNotFirstStep = prevSteps.length > 0;
+                const newStep = (
+                    <>
+                        <CRow className={isNotFirstStep ? "mt-2" : ""}>
+                            <CCol md={3}>
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <CFormLabel htmlFor={`nameStepInput${uniqueId}`} style={{ marginRight: '10px' }}>{stepNumber}.</CFormLabel>
+                                    <CFormInput
+                                        type="text"
+                                        id={`nameStepInput${uniqueId}`}
+                                        defaultValue={inputValues[uniqueId]?.name || ''}
+                                        onChange={(e) => handleInputChange(uniqueId, 'name', e.target.value)}
+                                        required
+                                        placeholder='Enter Name'
+                                    />
+                                </div>
+                            </CCol>
+                            <CCol md={3}>
+                                <CFormInput
+                                    type="number"
+                                    min="0"
+                                    id={`temperatureStepInput${uniqueId}`}
+                                    defaultValue={updatedValues[uniqueId].temperature}
+                                    onChange={(e) => handleInputChange(uniqueId, "temperature", e.target.value)}
+                                    required
+                                    placeholder='Default (°C)'
+                                />
+                            </CCol>
+                            <CCol md={2}>
+                                <CFormInput
+                                    type="number"
+                                    min="0"
+                                    id={`timeMinutesStepInput${uniqueId}`}
+                                    defaultValue={updatedValues[uniqueId].timeMinutes}
+                                    onChange={(e) => handleInputChange(uniqueId, "timeMinutes", e.target.value)}
+                                    required
+                                    placeholder='Default (m)'
+                                />
+                            </CCol>
+                            <CCol md={2}>
+                                <CFormInput
+                                    type="number"
+                                    min="0"
+                                    id={`timeSecondsStepInput${uniqueId}`}
+                                    value={updatedValues[uniqueId].timeSeconds}
+                                    onChange={(e) => handleInputChange(uniqueId, "timeSeconds", e.target.value)}
+                                    required
+                                    placeholder='Default (s)'
+                                />
+                            </CCol>
+                            <CCol md={2} style={{ display: "flex", justifyContent: 'flex-end', alignItems: "center" }}>
+                                <CloseCircle size="32" style={{ cursor: 'pointer' }} onClick={() => handleStepRemoval(uniqueId)} color="#414141" />
+                            </CCol>
+                        </CRow>
+                    </>
+                );
 
-                    <CCol md={2}>
-                        <CFormInput type="number" min="0" id={`timeSecondsStepInput${uniqueId}`} onChange={(e) => handleInputChange(uniqueId, e.target.value)} required placeholder='Default (s)' />
-                    </CCol>
-                    <CCol md={2} style={{ display: "flex", justifyContent: 'flex-end', alignItems: "center" }}>
-                        <CloseCircle size="32" style={{ cursor: 'pointer' }} onClick={() => handleStepRemoval(uniqueId)} color="#414141" />
-                    </CCol>
-                </CRow>
-            </>
-        )
-        setAddStep(prevSteps => {
-            const newSteps = [...prevSteps, { id: uniqueId, component: newStep }];
-            return newSteps;
+                // Return the updated steps array with the new step included
+                return [...prevSteps, { id: uniqueId, component: newStep }];
+            });
+
+            // Return the updated input values
+            return updatedValues;
         });
 
-    }
+        setIsButtonClicked(true); // Update button clicked state if necessary
+    };
+
     return (
         <>
             <CRow>
