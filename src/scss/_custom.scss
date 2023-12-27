@@ -695,7 +695,24 @@ pre {
 }
 
 
-.profile-btn-steps:focus {
+.profile-btn-steps:active {
   background-color: transparent !important;
-  border-color: black !important;
+
+}
+
+.justify-start-force {
+  display: 'flex' !important;
+  justify-content: flex-start !important;
+}
+
+.justify-end-force {
+  display: 'flex' !important;
+  justify-content: flex-end !important;
+}
+
+
+.col-center-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

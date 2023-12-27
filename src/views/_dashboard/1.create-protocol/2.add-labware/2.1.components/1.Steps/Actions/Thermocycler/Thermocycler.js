@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { AddCircle } from 'iconsax-react';
-import { CCol, CForm, CTooltip, CFormInput, CFormLabel, CFormSelect, CMultiSelect, CRow, CButton, CFormSwitch, CFormCheck, CCloseButton } from '@coreui/react-pro';
+import React, { useState, useEffect } from 'react';
+import { AddCircle, CloseCircle } from 'iconsax-react';
+import { CCol, CForm, CFormInput, CFormLabel, CFormSelect, CMultiSelect, CRow, CButton, CFormSwitch, CFormCheck, CCloseButton } from '@coreui/react-pro';
 import { Notes } from '../../Components/notes';
 import { options_LabWares, options_Temperature } from './data';
-import { ReactComponent as InfoCircleIcon } from 'src/assets/images/generic/infoCircle.svg';
-import { useStateManager } from 'react-select';
+import { v4 as uuidv4 } from 'uuid';
+
 
 export const ThemrocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     // State declarations
@@ -15,6 +15,12 @@ export const ThemrocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     const [checkToggleStates, setToggleStates] = useState({ thermoBlock: false, lid: false, lidPosition: false });
     const [selectTemperature, setTemperatures] = useState({ thermoBlock: '°C', lid: '°C' })
     const [isFirstSelection, setIsFirstSelection] = useState({ thermoBlock: true, lid: true });
+    const [removedStepId, setRemovedStepId] = useState(null);
+
+    const [inputValues, setInputValues] = useState({});
+
+    const [addStep, setAddStep] = useState([])
+    const [isButtonClicked, setIsButtonClicked] = useState(false);
 
 
     // Handlers for various user interactions
@@ -36,8 +42,107 @@ export const ThemrocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
         setIsFirstSelection({ ...isFirstSelection, [id]: false });
     };
 
+    const handleInputChange = (uniqueId, inputName, value) => {
+        console.log(`Input Changed - ID: ${uniqueId}, Field: ${inputName}, Value: ${value}`);
+        setInputValues(prevValues => {
+            const updatedValues = {
+                ...prevValues,
+                [uniqueId]: {
+                    ...prevValues[uniqueId] || {},
+                    [inputName]: value
+                }
+            };
+            console.log('Updated inputValues in handleInputChange', updatedValues);
+            return updatedValues;
+        });
+    };
+
+    useEffect(() => {
+        console.log("UseEffect")
+        console.log(inputValues);
+    }, [inputValues]);
+
+
 
     const handleLabWareChange = (selectedOptions) => setSelectedLabWare(selectedOptions);
+
+
+    function updateStepChildren(children, newStepNumber) {
+        return React.Children.map(children, (child) => {
+            if (!React.isValidElement(child)) return child;
+            let newProps = { ...child.props };
+
+            if (child.props.id && child.props.id.startsWith('nameStepInput')) {
+                newProps.id = `nameStepInput${newStepNumber}`;
+            }
+
+            if (child.type === CFormLabel && child.props.htmlFor && child.props.htmlFor.startsWith('nameStepInput')) {
+                return React.cloneElement(child, {
+                    children: `${newStepNumber}.`
+                });
+            }
+
+            if (child.props.children) {
+                newProps.children = updateStepChildren(child.props.children, newStepNumber);
+            }
+
+            return React.cloneElement(child, newProps);
+        });
+    }
+
+    const handleStepRemoval = uniqueIdToRemove => {
+        setAddStep(prevSteps => {
+            // Debugging: Log current steps and inputValues
+            console.log("Current Steps", prevSteps);
+            console.log("Current inputValues", inputValues);
+
+            // Mapping of unique IDs to step numbers
+            const idToStepNumberMap = prevSteps.reduce((acc, step, index) => {
+                acc[step.id] = index + 1;
+                return acc;
+            }, {});
+
+            // Filter out the step to be removed
+            const newSteps = prevSteps.filter(step => step.id !== uniqueIdToRemove);
+
+            // Determine the number of the step to be removed
+            const stepNumberToRemove = idToStepNumberMap[uniqueIdToRemove];
+
+            // Update the input values for remaining steps
+            setInputValues(prevInputValues => {
+                const updatedInputValues = { ...prevInputValues };
+                debugger
+                delete updatedInputValues[uniqueIdToRemove];
+
+                Object.keys(updatedInputValues).forEach(key => {
+                    const currentStepNumber = idToStepNumberMap[key];
+                    if (currentStepNumber > stepNumberToRemove) {
+                        const newKey = prevSteps[currentStepNumber - 2].id;
+                        updatedInputValues[newKey] = updatedInputValues[key];
+                        delete updatedInputValues[key];
+                    }
+                });
+
+                return updatedInputValues;
+            });
+
+            // Update the step number for remaining steps
+            return newSteps.map((step, index) => {
+                const newStepNumber = index + 1;
+                // Update necessary attributes to reflect the new step number
+                const updatedComponent = React.cloneElement(step.component, {
+                    ...step.component.props,
+                    key: `step-${newStepNumber}`,
+                    children: React.cloneElement(step.component.props.children, {
+                        ...step.component.props.children.props,
+                        children: updateStepChildren(step.component.props.children.props.children, newStepNumber)
+                    }),
+                });
+
+                return { ...step, component: updatedComponent };
+            });
+        });
+    };
 
 
     const handleLocalClose = () => onClose();
@@ -52,6 +157,52 @@ export const ThemrocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     const handleNotesClick = () => setIsNotesOpen(true);
     const closeNotes = () => setIsNotesOpen(false);
 
+
+    const addStepComponent = () => {
+        const uniqueId = uuidv4(); // Use unique ID for key identification, not for display
+
+        const stepNumber = addStep.length + 1;
+        setIsButtonClicked(stepNumber > 0);
+        const isNotFirstStep = addStep.length > 0;
+        const newStep = (
+            <>
+                <CRow className={isNotFirstStep ? "mt-2" : ""}>
+                    <CCol md={3}>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <CFormLabel htmlFor={`nameStepInput${uniqueId}`} style={{ marginRight: '10px' }}>{stepNumber}.</CFormLabel>
+                            <CFormInput
+                                type="text"
+                                id={`nameStepInput${uniqueId}`}
+                                value={inputValues[uniqueId]?.name || ''}
+                                onChange={(e) => handleInputChange(uniqueId, 'name', e.target.value)}
+                                required
+                                placeholder='Enter Name'
+                            />
+
+                        </div>
+                    </CCol>
+                    <CCol md={3}>
+                        <CFormInput type="number" min="0" id={`temperatureStepInput${uniqueId}`} onChange={(e) => handleInputChange(uniqueId, "temperature", e.target.value)} required placeholder='Default (°C)' />
+                    </CCol>
+                    <CCol md={2}>
+                        <CFormInput type="number" min="0" id={`timeMinutesStepInput${uniqueId}`} onChange={(e) => handleInputChange(uniqueId, "timeMinutes", e.target.value)} required placeholder='Default (m)' />
+                    </CCol>
+
+                    <CCol md={2}>
+                        <CFormInput type="number" min="0" id={`timeSecondsStepInput${uniqueId}`} onChange={(e) => handleInputChange(uniqueId, e.target.value)} required placeholder='Default (s)' />
+                    </CCol>
+                    <CCol md={2} style={{ display: "flex", justifyContent: 'flex-end', alignItems: "center" }}>
+                        <CloseCircle size="32" style={{ cursor: 'pointer' }} onClick={() => handleStepRemoval(uniqueId)} color="#414141" />
+                    </CCol>
+                </CRow>
+            </>
+        )
+        setAddStep(prevSteps => {
+            const newSteps = [...prevSteps, { id: uniqueId, component: newStep }];
+            return newSteps;
+        });
+
+    }
     return (
         <>
             <CRow>
@@ -70,7 +221,7 @@ export const ThemrocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                                 <CCol md={3} className='mt-4'>
                                     <CFormLabel htmlFor="labWareInput">Labware</CFormLabel>
                                     <CMultiSelect
-                                        id="labwareSelect"
+                                        id="labWareInput"
                                         options={options_LabWares}
                                         value={selectedLabWare}
                                         onChange={handleLabWareChange}
@@ -105,7 +256,7 @@ export const ThemrocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                             <>
                                 <CRow className='mt-2'>
                                     <CCol md={4}>
-                                        <CFormLabel htmlFor="ThermocyclerBlockToggle">Thermocycler Block</CFormLabel>
+                                        <CFormLabel htmlFor="ThermocyclerBlockToggle1">Thermocycler Block</CFormLabel>
                                         <CFormSwitch
                                             label={checkToggleStates.thermoBlock ? "Active" : "Deactivate"}
                                             id="thermoBlock"
@@ -165,7 +316,7 @@ export const ThemrocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                                         )}
                                     </CCol>
                                     <CCol md={4}>
-                                        <CFormLabel htmlFor="LidPositionToggle">Lid Position</CFormLabel>
+                                        <CFormLabel htmlFor="LidPositionToggle1">Lid Position</CFormLabel>
                                         <CFormSwitch
                                             label={checkToggleStates.lidPosition ? "Open" : "Closed"}
                                             id="lidPosition"
@@ -186,13 +337,14 @@ export const ThemrocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                                     </CCol>
                                 </CRow>
 
+
                                 <CRow className='mt-2'>
                                     <CCol md={4}>
                                         <CCol md={8}>
                                             <CFormLabel htmlFor='volumeProfileSetting'>Volume</CFormLabel>
                                             <CFormInput
                                                 type='number'
-                                                id="volumeProfileInput"
+                                                id="volumeProfileSetting"
                                                 min="0"
                                                 required
                                                 placeholder='Default (μL)'
@@ -205,7 +357,7 @@ export const ThemrocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                                             <CFormLabel htmlFor='lidTemperatureProfileSetting'>Lid Temperature</CFormLabel>
                                             <CFormInput
                                                 type='number'
-                                                id="lidTemperatureProfileInput"
+                                                id="lidTemperatureProfileSetting"
                                                 min="0"
                                                 required
                                                 placeholder='Default (°C)'
@@ -221,16 +373,31 @@ export const ThemrocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
 
                                 <CRow className='mt-4'>
                                     <CCol md={5}>
-                                        <CFormLabel htmlFor="profileSettings">Profile Steps</CFormLabel>
+                                        <CFormLabel htmlFor="profileSettingsSteps">Profile Steps</CFormLabel>
                                     </CCol>
                                 </CRow>
 
                                 <CRow>
-                                    <CCol md={2}>
-                                        <CButton className='profile-btn-steps'>
-                                            <AddCircle size="24" style={{ marginTop: "-2px" }} /> Step</CButton>
+                                    <CCol md={3}>
+                                        <CFormLabel htmlFor="nameStep">Name</CFormLabel>
+                                    </CCol>
+                                    <CCol md={3}>
+                                        <CFormLabel htmlFor="temperatureStep"> Temperature</CFormLabel>
                                     </CCol>
                                     <CCol md={2}>
+                                        <CFormLabel htmlFor="timeStep">Time</CFormLabel>
+                                    </CCol>
+                                </CRow>
+
+                                {addStep.map(step => step.component)}
+
+
+                                <CRow className={`mt-4 ${isButtonClicked ? 'justify-end-force' : 'justify-start-force'}`}>
+                                    <CCol md={2} className={`${isButtonClicked ? 'col-center-content' : ''}`}>
+                                        <CButton className='profile-btn-steps' onClick={addStepComponent}>
+                                            <AddCircle size="24" style={{ marginTop: "-2px" }} /> Step</CButton>
+                                    </CCol>
+                                    <CCol md={2} className={`${isButtonClicked ? 'col-center-content' : ''}`}>
                                         <CButton className='profile-btn-steps'>
                                             <AddCircle size="24" style={{ marginTop: "-2px" }} /> Cycle</CButton>
                                     </CCol>
@@ -244,10 +411,10 @@ export const ThemrocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
 
                                 <CRow className='mt-2'>
                                     <CCol md={4}>
-                                        <CFormLabel htmlFor="ThermocyclerBlockToggle">Thermocycler Block</CFormLabel>
+                                        <CFormLabel htmlFor="ThermocyclerBlockToggle2">Thermocycler Block</CFormLabel>
                                         <CFormSwitch
                                             label={checkToggleStates.thermoBlock ? "Active" : "Deactivate"}
-                                            id="thermoBlock"
+                                            id="ThermocyclerBlockToggle2"
                                             onChange={handleTogglesChange}
                                             checked={checkToggleStates.thermoBlock}
                                         />
@@ -304,7 +471,7 @@ export const ThemrocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                                         )}
                                     </CCol>
                                     <CCol md={4}>
-                                        <CFormLabel htmlFor="LidPositionToggle">Lid Position</CFormLabel>
+                                        <CFormLabel htmlFor="LidPositionToggle2">Lid Position</CFormLabel>
                                         <CFormSwitch
                                             label={checkToggleStates.lidPosition ? "Open" : "Closed"}
                                             id="lidPosition"
@@ -331,7 +498,7 @@ export const ThemrocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                         <Notes isNotesOpen={isNotesOpen} onClose={closeNotes} />
                     </CForm>
                 </CCol>
-            </CRow>
+            </CRow >
         </>
     );
 };
