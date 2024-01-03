@@ -412,12 +412,12 @@ export const ThemrocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                                                                 <CCol md={1} style={{ display: "flex", justifyContent: 'flex-start', alignItems: "center" }}>
                                                                     <CloseCircle size="32" style={{ cursor: 'pointer' }} onClick={() => handleStepRemoval(cycleStep.uniqueId)} color="#414141" />
                                                                 </CCol>
-                                                                {shouldShowArrows && (isLastStep || stepIndex === 0) && (
+                                                                {/* {shouldShowArrows && (isLastStep || stepIndex === 0) && (
 
                                                                     <CCol md={1}>
                                                                         <ArrowSvg />
                                                                     </CCol>
-                                                                )}
+                                                                )} */}
                                                                 {cycleStep.isFirstStep && (
                                                                     <CCol md={1} style={{ display: "flex", justifyContent: 'flex-start', alignItems: "center" }}>
                                                                         <CFormInput
