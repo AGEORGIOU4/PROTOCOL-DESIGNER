@@ -11,19 +11,45 @@ import { cilPlus } from '@coreui/icons'
 import { TransferForm } from './Actions/Transfer/Transfer'
 import { TitleBar } from 'src/_common/helpers'
 import { MixForm } from './Actions/Mix/Mix'
+import { DelayForm } from './Actions/Delay/Delay'
+import { ThermoBlockForm } from './Actions/Thermoblock/Thermoblock'
+import { MagnetForm } from './Actions/Magnet/Manget'
+import { SeelPeelForm } from './Actions/SealPeel/SeelPeel'
+import { StorageForm } from './Actions/Storage/Storage'
+import { BarCodeForm } from './Actions/BarCode/BarCode'
+import { CameraForm } from './Actions/Camera/Camera'
+import { TrashForm } from './Actions/Trash/Trash'
+import { ThemrocyclerForm } from './Actions/Thermocycler/Thermocycler'
 
 
 var STEP_ID = -1
 var STEP_INDEX = -1;
 var STEP_TITLE = "";
 
-const RenderStepForm = (modalTitle) => {
+const RenderStepForm = (modalTitle, handleClose, handleDeleteStep, stepId, stepTitle) => {
   switch (modalTitle) {
     case 'Transfer':
       return <TransferForm />
     case 'Mix':
-    // return <MixForm />
-
+      return <MixForm onClose={handleClose} onDelete={handleDeleteStep} stepId={stepId} stepTitle={stepTitle} />
+    case 'Delay':
+      return <DelayForm onClose={handleClose} onDelete={handleDeleteStep} stepId={stepId} stepTitle={stepTitle} />
+    case 'Thermoblock':
+      return <ThermoBlockForm onClose={handleClose} onDelete={handleDeleteStep} stepId={stepId} stepTitle={stepTitle} />
+    case 'Magnet':
+      return <MagnetForm onClose={handleClose} onDelete={handleDeleteStep} stepId={stepId} stepTitle={stepTitle} />
+    case 'Seal - Peel':
+      return <SeelPeelForm onClose={handleClose} onDelete={handleDeleteStep} stepId={stepId} stepTitle={stepTitle} />
+    case 'Storage':
+      return <StorageForm onClose={handleClose} onDelete={handleDeleteStep} stepId={stepId} stepTitle={stepTitle} />
+    case 'Barcode':
+      return <BarCodeForm onClose={handleClose} onDelete={handleDeleteStep} stepId={stepId} stepTitle={stepTitle} />
+    case 'Camera':
+      return <CameraForm onClose={handleClose} onDelete={handleDeleteStep} stepId={stepId} stepTitle={stepTitle} />
+    case 'Trash':
+      return <TrashForm onClose={handleClose} onDelete={handleDeleteStep} stepId={stepId} stepTitle={stepTitle} />
+    case 'Thermocycler':
+      return <ThemrocyclerForm onClose={handleClose} onDelete={handleDeleteStep} stepId={stepId} stepTitle={stepTitle} />
     default:
       break;
   }
@@ -32,7 +58,7 @@ const RenderStepForm = (modalTitle) => {
 const LabwareSteps = ({ active }) => {
   const [resetFlag, setResetFlag] = useState(true)
 
-  const [stepsList, setStepsList] = useState(["Transfer", "Mix", "Delay", "Heater Shaker", "Centrifuge", "Magnet", "Thermoblock", "PCR", "Trash"]);
+  const [stepsList, setStepsList] = useState(["Transfer", "Mix", "Delay", "Heater Shaker", "Centrifuge", "Magnet", "Camera", "Seal - Peel", "Storage", "Trash", "Barcode", "Thermocycler", "Thermoblock", "PCR", "Trash"]);
   const [selectedSteps, setSelectedSteps] = useState([])
 
   // States for Modal
@@ -239,7 +265,7 @@ const LabwareSteps = ({ active }) => {
       </CSidebar >
 
       <AddLabwareModal visible={visible} setVisible={setVisible} title={stepTitle} stepID={stepID} stepIndex={stepIndex} handleClose={handleClose}>
-        {RenderStepForm(stepTitle)}
+        {RenderStepForm(stepTitle, handleClose, handleDeleteStep, stepID, stepTitle)}
       </AddLabwareModal>
 
     </>

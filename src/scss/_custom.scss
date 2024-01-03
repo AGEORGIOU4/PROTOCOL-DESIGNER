@@ -616,3 +616,103 @@ pre {
   color: black;
   font-weight: 900;
 }
+
+/* Apply a default margin-left for mobile devices */
+.flow-rate-col {
+  margin-left: 90px !important;
+}
+
+/* This media query will apply styles for screens that are wider than 768px */
+@media (min-width: 768px) {
+  .flow-rate-col {
+    margin-left: 126px !important;
+  }
+}
+
+.custom-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  /* Darken the background more */
+  /* Higher than the first modal */
+}
+
+.custom-tooltip .tooltip-inner {
+  min-width: 200px;
+  /* Minimum width */
+  max-width: 400px;
+  /* Maximum width */
+  word-wrap: break-word;
+  /* Break long words */
+  border-radius: 15px;
+  border: 2px solid #236B6F;
+  background: #CCEEEF;
+  color: #555555;
+}
+
+/* Normal state of the SVG with default stroke */
+.info-icon path {
+  stroke: #666666;
+}
+
+/* Hover state of the SVG changing the stroke and fill of specific paths */
+.info-icon:hover path {
+  stroke: #236B6F;
+  /* This changes the SVG's stroke color on hover */
+}
+
+/* Changing the fill of the circular path */
+.info-icon:hover path:first-child {
+  fill: #CCEEEF;
+  /* This changes the SVG's fill color on hover for the first path */
+}
+
+.delete-btn-trash {
+  background-color: transparent;
+  border: none;
+}
+
+.delete-btn-trash:hover {
+  background-color: transparent;
+}
+
+
+.profile-btn-steps {
+  width: 177px;
+  height: 60px;
+  border-radius: 15px;
+  border: 5px solid #414141;
+  background: #FFF;
+  box-shadow: 0px 0px 30px 0px rgba(51, 51, 51, 0.70);
+}
+
+.profile-btn-steps:hover {
+  background-color: transparent;
+  border-color: #414141;
+}
+
+
+.profile-btn-steps:active {
+  background-color: transparent !important;
+
+}
+
+.justify-start-force {
+  display: 'flex' !important;
+  justify-content: flex-start !important;
+}
+
+.justify-end-force {
+  display: 'flex' !important;
+  justify-content: flex-end !important;
+}
+
+
+.col-center-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
