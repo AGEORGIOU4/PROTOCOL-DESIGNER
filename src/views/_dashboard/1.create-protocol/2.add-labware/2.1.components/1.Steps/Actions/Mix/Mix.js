@@ -345,16 +345,17 @@ export const MixForm = ({ onClose, onDelete, stepId, stepTitle }) => {
             </CCol>
 
             {/* Buttons */}
-            <CRow className="mt-4">
-              <CCol xs={6} style={{ display: 'flex', justifyContent: 'flex-start', gap: '10px' }}>
-                <CButton color="danger" className="me-2" onClick={() => onDelete({ target: { id: stepId, value: stepTitle } })}>Delete</CButton>
-                <CButton color="secondary" className="me-2" onClick={handleNotesClick}>Notes</CButton>
+            <CRow className='mt-3'>
+              <CCol md={6} style={{ display: 'flex', justifyContent: 'flex-start', gap: '50px' }}>
+                <CButton className='dial-btn-left' onClick={() => onDelete({ target: { id: stepId, value: stepTitle } })}>Delete</CButton>
+                <CButton className='dial-btn-left' onClick={handleNotesClick}>Notes</CButton>
               </CCol>
-              <CCol xs={6} style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-                <CButton color="secondary" className="me-2" onClick={handleLocalClose}>Close</CButton>
-                <CButton color="primary" type="submit">Save</CButton>
+              <CCol md={{ span: 4, offset: 1 }} style={{ display: 'flex', justifyContent: 'flex-end', gap: '50px' }}>
+                <CButton className='dial-btn-close' onClick={handleLocalClose}>Close</CButton>
+                <CButton className='dial-btn-save' type="submit">Save</CButton>
               </CCol>
             </CRow>
+
             <Notes isNotesOpen={isNotesOpen} onClose={closeNotes} />
           </CForm>
         </CCol>

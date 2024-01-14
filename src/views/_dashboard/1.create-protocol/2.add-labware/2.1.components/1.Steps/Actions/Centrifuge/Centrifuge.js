@@ -162,8 +162,7 @@ export const CentrifugeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                             </CCol>
                         </CRow>
                         {selectedLabWare.length >= 2 && (
-                            <CRow>
-                                {/* {labwarePairs.map((pair, index))} */}
+                            <CRow className='mb-4'>
                                 <CCol md={3}>
                                     <DragDropContext onDragEnd={result => handleOnDragEnd(result, 'left')}>
                                         <Droppable droppableId="leftColumn">
@@ -177,8 +176,10 @@ export const CentrifugeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                                                                     {...provided.draggableProps}
                                                                     {...provided.dragHandleProps}
                                                                 >
-                                                                    {/* Your left column item here */}
-                                                                    <CCard className={snapshot.isDragging ? "pair-cards dragging" : "pair-cards"}>{truncateText(pair.left.content, 20)} {snapshot.isDragging && <Maximize1 style={{ marginLeft: "20px" }} />} {/* Render icon only when dragging */}</CCard>
+                                                                    <CCard className={snapshot.isDragging ? "pair-cards dragging" : "pair-cards"}>
+                                                                        {truncateText(pair.left.content, 20)}
+                                                                        {snapshot.isDragging && <Maximize1 style={{ marginLeft: "20px" }} />}
+                                                                    </CCard>
                                                                 </div>
                                                             )}
                                                         </Draggable>
@@ -189,10 +190,17 @@ export const CentrifugeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                                         </Droppable>
                                     </DragDropContext>
                                 </CCol>
-                                {/* ... 'Paired With' static content here */}
-                                <CCol md={1} style={{ marginTop: "45px" }}>
-                                    Paired With
+
+                                {/* Static 'Paired With' column for each pair */}
+                                <CCol md={1} style={{ textAlign: "center" }}>
+                                    {labwarePairs.map((pair, index) => (
+                                        <div key={index} style={{ marginTop: index === 0 ? "45px" : "65px" }}>
+                                            Paired With
+                                        </div>
+                                    ))}
                                 </CCol>
+
+
                                 <CCol md={3}>
                                     <DragDropContext onDragEnd={result => handleOnDragEnd(result, 'right')}>
                                         <Droppable droppableId="rightColumn">
@@ -202,18 +210,14 @@ export const CentrifugeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                                                         <Draggable key={pair.right.id} draggableId={pair.right.id} index={index} >
                                                             {(provided, snapshot) => (
                                                                 <div
-
                                                                     ref={provided.innerRef}
                                                                     {...provided.draggableProps}
                                                                     {...provided.dragHandleProps}
                                                                 >
-                                                                    {/* Your right column item here */}
                                                                     <CCard className={snapshot.isDragging ? "pair-cards dragging" : "pair-cards"}>
                                                                         <span>{truncateText(pair.right.content, 20)}</span>
                                                                         {snapshot.isDragging && <Maximize1 style={{ marginLeft: "20px" }} />}
                                                                     </CCard>
-
-
                                                                 </div>
                                                             )}
                                                         </Draggable>
@@ -228,7 +232,7 @@ export const CentrifugeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                         )}
 
 
-                        <CRow>
+                        <CRow className='mt-'>
                             <CCol md={2}>
                                 <CFormLabel htmlFor='temperatureInput'>Temperature</CFormLabel>
                                 <CFormSelect
@@ -290,13 +294,13 @@ export const CentrifugeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
 
                         {/* Form Buttons */}
                         <CRow className='mt-3'>
-                            <CCol md={6} style={{ display: 'flex', justifyContent: 'flex-start', gap: '100px' }}>
-                                <CButton color="danger" onClick={() => onDelete({ target: { id: stepId, value: stepTitle } })}>Delete</CButton>
-                                <CButton color="secondary" onClick={handleNotesClick}>Notes</CButton>
+                            <CCol md={6} style={{ display: 'flex', justifyContent: 'flex-start', gap: '50px' }}>
+                                <CButton className='dial-btn-left' onClick={() => onDelete({ target: { id: stepId, value: stepTitle } })}>Delete</CButton>
+                                <CButton className='dial-btn-left' onClick={handleNotesClick}>Notes</CButton>
                             </CCol>
-                            <CCol md={{ span: 4, offset: 1 }} style={{ display: 'flex', justifyContent: 'flex-end', gap: '100px' }}>
-                                <CButton color="secondary" onClick={handleLocalClose}>Close</CButton>
-                                <CButton color="primary" type="submit">Save</CButton>
+                            <CCol md={{ span: 4, offset: 1 }} style={{ display: 'flex', justifyContent: 'flex-end', gap: '50px' }}>
+                                <CButton className='dial-btn-close' onClick={handleLocalClose}>Close</CButton>
+                                <CButton className='dial-btn-save' type="submit">Save</CButton>
                             </CCol>
                         </CRow>
 
