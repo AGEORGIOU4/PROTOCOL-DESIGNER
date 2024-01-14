@@ -5,6 +5,7 @@ import { Notes } from '../../Components/notes';
 import { options_LabWares, options_Temperature } from './data';
 import { ReactComponent as ArrowSvg } from 'src/assets/images/generic/grouping.svg';
 import { v4 as uuidv4 } from 'uuid';
+import { ConnectionStep } from '../../Components/connectionStep'
 
 
 export const ThemrocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
@@ -113,7 +114,6 @@ export const ThemrocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
 
     const addStepToCycle = (cycleUniqueId) => {
         setAddStep(prevSteps => prevSteps.map(stepOrCycle => {
-            debugger
             if (stepOrCycle.uniqueId === cycleUniqueId && stepOrCycle.isCycle) {
                 const newCycleStep = {
                     name: '',
@@ -354,13 +354,18 @@ export const ThemrocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                                                 {/* Now map over each step in the cycle */}
                                                 {stepOrCycle.cycleSteps.map((cycleStep, stepIndex, cycleStepsArray) => {
                                                     const isLastStep = stepIndex === cycleStepsArray.length - 1;
+                                                    const variant = () => {
+                                                        if (stepIndex === 0) return 'first'
+                                                        if (stepIndex === cycleStepsArray.length - 1) return 'last'
+                                                        return null
+                                                    }
 
                                                     return (
                                                         <>
-                                                            <CRow key={cycleStep.uniqueId} className="mt-2">
+                                                            <CRow key={cycleStep.uniqueId} className="pt-2">
 
                                                                 {/* Step Name */}
-                                                                <CCol md={3}>
+                                                                <CCol md={2}>
                                                                     <div style={{ display: 'flex', alignItems: 'center' }}>
                                                                         <CFormLabel htmlFor={`nameStepInput${stepOrCycle.uniqueId}`} style={{ marginRight: '10px' }}>{index + 1}.{stepIndex + 1}</CFormLabel>
                                                                         <CFormInput
@@ -375,7 +380,7 @@ export const ThemrocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                                                                 </CCol>
 
                                                                 {/* Step Temperature */}
-                                                                <CCol md={3}>
+                                                                <CCol md={2}>
                                                                     <CFormInput
                                                                         type="number"
                                                                         min="0"
@@ -409,15 +414,10 @@ export const ThemrocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                                                                     />
                                                                 </CCol>
 
-                                                                <CCol md={1} style={{ display: "flex", justifyContent: 'flex-start', alignItems: "center" }}>
+                                                                <CCol md={2} style={{ display: "flex", justifyContent: 'flex-start', alignItems: "center" }}>
                                                                     <CloseCircle size="32" style={{ cursor: 'pointer' }} onClick={() => handleStepRemoval(cycleStep.uniqueId)} color="#414141" />
+                                                                    {cycleStepsArray.length > 1 && <div style={{ width: 28, height: '100%' }}><ConnectionStep variant={variant()} /></div>}
                                                                 </CCol>
-                                                                {/* {shouldShowArrows && (isLastStep || stepIndex === 0) && (
-
-                                                                    <CCol md={1}>
-                                                                        <ArrowSvg />
-                                                                    </CCol>
-                                                                )} */}
                                                                 {cycleStep.isFirstStep && (
                                                                     <CCol md={1} style={{ display: "flex", justifyContent: 'flex-start', alignItems: "center" }}>
                                                                         <CFormInput
@@ -596,13 +596,13 @@ export const ThemrocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
 
                         {/* Form Buttons */}
                         <CRow className='mt-3'>
-                            <CCol md={6} style={{ display: 'flex', justifyContent: 'flex-start', gap: '100px' }}>
-                                <CButton color="danger" onClick={() => onDelete({ target: { id: stepId, value: stepTitle } })}>Delete</CButton>
-                                <CButton color="secondary" onClick={handleNotesClick}>Notes</CButton>
+                            <CCol md={6} style={{ display: 'flex', justifyContent: 'flex-start', gap: '50px' }}>
+                                <CButton className='dial-btn-left' onClick={() => onDelete({ target: { id: stepId, value: stepTitle } })}>Delete</CButton>
+                                <CButton className='dial-btn-left' onClick={handleNotesClick}>Notes</CButton>
                             </CCol>
-                            <CCol md={{ span: 4, offset: 1 }} style={{ display: 'flex', justifyContent: 'flex-end', gap: '100px' }}>
-                                <CButton color="secondary" onClick={handleLocalClose}>Close</CButton>
-                                <CButton color="primary" type="submit">Save</CButton>
+                            <CCol md={{ span: 4, offset: 1 }} style={{ display: 'flex', justifyContent: 'flex-end', gap: '50px' }}>
+                                <CButton className='dial-btn-close' onClick={handleLocalClose}>Close</CButton>
+                                <CButton className='dial-btn-save' type="submit">Save</CButton>
                             </CCol>
                         </CRow>
 

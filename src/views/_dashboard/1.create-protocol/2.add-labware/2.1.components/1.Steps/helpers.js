@@ -1,4 +1,4 @@
-import { cilAperture, cilArrowRight, cilAvTimer, cilColorFill, cilMediaPause, cilMove, cilRecycle, cilLoop, cilQrCode, cilCamera, cilPencil, cilTrash, cilSnowflake } from '@coreui/icons'
+import { cilAperture, cilArrowRight, cilAvTimer, cilColorFill, cilMediaPause, cilChart, cilMove, cilRecycle, cilLoop, cilQrCode, cilCamera, cilPencil, cilTrash, cilSnowflake } from '@coreui/icons'
 import { cil3dRotate, cilLink, cilSwapVertical, cilTemperature, cilLockLocked } from '@coreui/icons-pro'
 
 export const generateStepID = () => {
