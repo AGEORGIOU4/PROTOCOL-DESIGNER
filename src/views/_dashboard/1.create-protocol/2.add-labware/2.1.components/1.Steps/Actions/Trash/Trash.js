@@ -36,7 +36,6 @@ export const TrashForm = ({ onClose, onDelete, stepId, stepTitle }) => {
         }
     };
 
-
     const deleteButtonLabel = () => {
         if (selectedLabware.size === 0) {
             return ''; // No button if none selected
@@ -55,6 +54,7 @@ export const TrashForm = ({ onClose, onDelete, stepId, stepTitle }) => {
         // Clear the selection after deleting
         setSelectedLabware(new Set());
     };
+
     const handleDelete = () => {
         // If 'Delete All' is selected, we might want to handle it differently
         if (selectedLabware.size === labwareOptions.length) {
@@ -68,9 +68,8 @@ export const TrashForm = ({ onClose, onDelete, stepId, stepTitle }) => {
         setSelectedLabware(new Set());
     };
 
-
-
     const handleLocalClose = () => onClose();
+
     const handleSubmit = (event) => {
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
@@ -79,7 +78,9 @@ export const TrashForm = ({ onClose, onDelete, stepId, stepTitle }) => {
         }
         setValidated(true);
     };
+
     const handleNotesClick = () => setIsNotesOpen(true);
+
     const closeNotes = () => setIsNotesOpen(false);
 
     return (

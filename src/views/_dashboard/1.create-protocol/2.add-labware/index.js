@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CCol, CNav, CNavItem, CNavLink, CRow, CTabContent, CTabPane } from '@coreui/react-pro';
 
 import { Form } from './2.1.components/3.Form';
@@ -22,6 +22,16 @@ const AddLabware = () => {
     setNewLabwareSelection(newData);
 
   }
+
+  useEffect(() => {
+    let items = []
+    try {
+      items = JSON.parse(localStorage.getItem('slots')); // Check memory
+    } catch (e) {
+      console.log(e)
+    }
+    console.log(items)
+  }, [])
 
   return (
     <>
