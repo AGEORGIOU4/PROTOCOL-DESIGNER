@@ -175,17 +175,15 @@ export const ThermoBlockForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                     )}
                     {/* Buttons */}
                     <CRow className='mt-3'>
-                        {/* Left Button Group: Delete and Notes */}
-                        <CCol md={6} style={{ display: 'flex', justifyContent: 'flex-start', gap: '100px' }}>
-                            <CButton color="danger" onClick={() => onDelete({ target: { id: stepId, value: stepTitle } })}>Delete</CButton>
-                            <CButton color="secondary" onClick={handleNotesClick}>Notes</CButton>
-                        </CCol>
-                        {/* Right Button Group: Close and Save, aligned with the Message to Display input */}
-                        <CCol md={{ span: 4, offset: 1 }} style={{ display: 'flex', justifyContent: 'flex-end', gap: '100px' }}>
-                            <CButton color="secondary" onClick={handleLocalClose}>Close</CButton>
-                            <CButton color="primary" type="submit">Save</CButton>
-                        </CCol>
-                    </CRow>
+                            <CCol md={6} style={{ display: 'flex', justifyContent: 'flex-start', gap: '50px' }}>
+                                <CButton className='dial-btn-left' onClick={() => onDelete({ target: { id: stepId, value: stepTitle } })}>Delete</CButton>
+                                <CButton className='dial-btn-left' onClick={handleNotesClick}>Notes</CButton>
+                            </CCol>
+                            <CCol md={{ span: 4, offset: 1 }} style={{ display: 'flex', justifyContent: 'flex-end', gap: '50px' }}>
+                                <CButton className='dial-btn-close' onClick={handleLocalClose}>Close</CButton>
+                                <CButton className='dial-btn-save' type="submit">Save</CButton>
+                            </CCol>
+                        </CRow>
 
                     <Notes isNotesOpen={isNotesOpen} onClose={closeNotes} />
                 </CForm>
