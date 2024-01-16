@@ -68,7 +68,7 @@ export const DelayForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                                     checked={checkboxStates.delay}
                                 />
                             </CCol>
-                            <CCol md={{ span: 4, offset: 1 }} >
+                            <CCol md={6}  >
                                 <CFormInput type='text' id="messageDisplay" required placeholder='Add a Message' />
                             </CCol>
                         </CRow>
@@ -94,7 +94,7 @@ export const DelayForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                                 <CButton className='dial-btn-left' onClick={() => onDelete({ target: { id: stepId, value: stepTitle } })}>Delete</CButton>
                                 <CButton className='dial-btn-left' onClick={handleNotesClick}>Notes</CButton>
                             </CCol>
-                            <CCol md={{ span: 4, offset: 1 }} style={{ display: 'flex', justifyContent: 'flex-end', gap: '50px' }}>
+                            <CCol md={6} style={{ display: 'flex', justifyContent: 'flex-end', gap: '50px' }}>
                                 <CButton className='dial-btn-close' onClick={handleLocalClose}>Close</CButton>
                                 <CButton className='dial-btn-save' type="submit">Save</CButton>
                             </CCol>

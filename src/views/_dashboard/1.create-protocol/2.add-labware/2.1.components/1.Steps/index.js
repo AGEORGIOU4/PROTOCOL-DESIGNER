@@ -61,7 +61,7 @@ const RenderStepForm = (modalTitle, handleClose, handleDeleteStep, stepId, stepT
 const LabwareSteps = ({ active }) => {
   const [resetFlag, setResetFlag] = useState(true)
 
-  const [stepsList, setStepsList] = useState(["Transfer", "Mix", "Delay", "Heater Shaker", "Centrifuge", "Magnet", "Camera", "Seal - Peel", "Storage", "Trash", "Barcode", "Thermocycler", "Thermoblock", "PCR", "Trash"]);
+  const [stepsList, setStepsList] = useState(["Transfer", "Mix", "Delay", "Centrifuge", "Magnet", "Camera", "Seal - Peel", "Storage", "Trash", "Barcode", "Thermocycler", "Thermoblock", "Trash"]);
   const [selectedSteps, setSelectedSteps] = useState([])
 
   // States for Modal

@@ -19,17 +19,20 @@ export const TransferForm = () => {
     }
 
 
-    let tmp_arr = [];
+    let tmp_items = [];
+
     if (items) {
       items?.map((item, index) => {
         if (index > 0) {
-
+          tmp_items.push(item)
         }
       })
-      console.log(tmp_arr)
-      setSource(items)
+
+      const new_items = tmp_items.map(item => ({ ...item, label: item.labware_type }))
+      console.log(new_items)
+      setSource(new_items)
     }
-    console.log(items)
+    //    console.log(items)
 
   }, [])
 
@@ -87,7 +90,7 @@ export const TransferForm = () => {
 
             <CCol md={2}>
               <CFormLabel htmlFor="validationCustom04">Wells</CFormLabel>
-              <CFormInput type='number' id="validationCustom04" required />
+              <CFormInput onClick={(e) => console.log("clicked")} id="validationCustom04" required />
               <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
 

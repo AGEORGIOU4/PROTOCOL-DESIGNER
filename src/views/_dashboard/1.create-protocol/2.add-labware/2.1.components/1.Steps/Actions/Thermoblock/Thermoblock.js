@@ -175,15 +175,15 @@ export const ThermoBlockForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                     )}
                     {/* Buttons */}
                     <CRow className='mt-3'>
-                            <CCol md={6} style={{ display: 'flex', justifyContent: 'flex-start', gap: '50px' }}>
-                                <CButton className='dial-btn-left' onClick={() => onDelete({ target: { id: stepId, value: stepTitle } })}>Delete</CButton>
-                                <CButton className='dial-btn-left' onClick={handleNotesClick}>Notes</CButton>
-                            </CCol>
-                            <CCol md={{ span: 4, offset: 1 }} style={{ display: 'flex', justifyContent: 'flex-end', gap: '50px' }}>
-                                <CButton className='dial-btn-close' onClick={handleLocalClose}>Close</CButton>
-                                <CButton className='dial-btn-save' type="submit">Save</CButton>
-                            </CCol>
-                        </CRow>
+                        <CCol md={6} style={{ display: 'flex', justifyContent: 'flex-start', gap: '50px' }}>
+                            <CButton className='dial-btn-left' onClick={() => onDelete({ target: { id: stepId, value: stepTitle } })}>Delete</CButton>
+                            <CButton className='dial-btn-left' onClick={handleNotesClick}>Notes</CButton>
+                        </CCol>
+                        <CCol md={6} style={{ display: 'flex', justifyContent: 'flex-end', gap: '50px' }}>
+                            <CButton className='dial-btn-close' onClick={handleLocalClose}>Close</CButton>
+                            <CButton className='dial-btn-save' type="submit">Save</CButton>
+                        </CCol>
+                    </CRow>
 
                     <Notes isNotesOpen={isNotesOpen} onClose={closeNotes} />
                 </CForm>

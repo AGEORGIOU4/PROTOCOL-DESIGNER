@@ -50,10 +50,6 @@ export const getIcons = (action) => {
       return cilTrash;
     case 'Storage':
       return cilSnowflake
-    case 'Heater Shaker':
-      return cilSwapVertical;
-    case 'PCR':
-      return cil3dRotate;
     case 'Centrifuge':
       return cilAperture;
     case 'Trash':
@@ -87,8 +83,7 @@ export const getDuration = (action) => {
       return '99';
     case 'Thermoblock':
       return '60';
-    case 'PCR':
-      return '75';
+
     case 'Centrifuge':
       return '65';
     case 'Trash':
