@@ -61,14 +61,35 @@ export const MixForm = ({ onClose, onDelete, stepId, stepTitle }) => {
 
 
   const handleSubmit = (event) => {
+    event.preventDefault();
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
-      event.preventDefault();
       event.stopPropagation();
+      setValidated(true);
+      return;
     }
-    setValidated(true);
-  };
 
+    const formData = {
+      pipette: selectedPipette,
+      mixVolume: form.querySelector('#mixVolumeInput').value,
+      repetitions: form.querySelector('#repetitionsInput').value,
+      labware: selectedLabWare,
+      wells: selectedColumn,
+      flowRateAspirate: isActive('ASPIRATE') ? form.querySelector('#flowRateAspirate').value : '',
+      tipPosition: isActive() ? form.querySelector('#tipPosition').value : '',
+      tipPositionNumber: isActive() && checkboxStates.flowRateDelay ? form.querySelector('#tipPositionNumber').value : '',
+      wellOrder: isActive() ? currentSVG : '',
+      flowRateDispense: isActive() ? form.querySelector('#flowRateDelayDispenseInput').value : '',
+      touchTip: isActive() && checkboxStates.flowRateTouchTipDispense ? form.querySelector('#flowRateTouchTipDispenseInput').value : '',
+      blowout: isActive() && checkboxStates.flowRateBlowoutDispense ? form.querySelector('#flowRateBlowoutDispenseInput').value : '',
+      changeTip: form.querySelector('#validationCustom05').value,
+    };
+
+    console.log(JSON.stringify(formData, null, 2));
+
+    // Now you have the form data in formData JSON object, and you can perform any action you want with it.
+    // If you want to send it to a server, make an API request here.
+  };
   const handlePipetteChange = (event) => {
     setSelectedPipette(event.target.value);
   };

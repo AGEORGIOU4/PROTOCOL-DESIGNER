@@ -28,13 +28,31 @@ export const MagnetForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     };
     const handleLocalClose = () => onClose();
     const handleSubmit = (event) => {
+        event.preventDefault();
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
-            event.preventDefault();
             event.stopPropagation();
+            setValidated(true);
+            return;
         }
-        setValidated(true);
+
+        const formData = {
+            step: stepTitle,
+            parameters: {
+
+                labware_ids: selectedLabWare.map(option => option.value), // assuming options_LabWares contains objects with 'value' properties
+                manget_action: isMagnetOn,
+                perception_action: isPrecipitationTime,
+                perception_hour: defaultHour,
+                perception_minute: defaultMinute,
+                perception_second: defaultSecond,
+                deactivate_perception_action: checkboxStates.deactivePrecipitation,
+            }
+        }
+        console.log(JSON.stringify(formData, null, 2));
     };
+
+
     const handleNotesClick = () => setIsNotesOpen(true);
     const closeNotes = () => setIsNotesOpen(false);
 

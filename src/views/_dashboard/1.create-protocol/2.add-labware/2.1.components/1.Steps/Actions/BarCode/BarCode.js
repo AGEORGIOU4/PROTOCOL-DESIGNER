@@ -10,6 +10,8 @@ export const BarCodeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     const [validated, setValidated] = useState(false);
     const [selectedLabWare, setSelectedLabWare] = useState([]);
     const [checkboxStates, setCheckboxStates] = useState({ pauseDelay: false, delay: false });
+    const [checkboxValidationFailed, setCheckboxValidationFailed] = useState(false);
+
 
 
     // Handlers for various user interactions
@@ -19,18 +21,44 @@ export const BarCodeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
 
         // Set the clicked checkbox to true
         setCheckboxStates({ ...resetStates, [e.target.id]: e.target.checked });
+        setSelectedLabWare([]);
+
     };
     const handleLabWareChange = (selectedOptions) => setSelectedLabWare(selectedOptions);
 
     const handleLocalClose = () => onClose();
     const handleSubmit = (event) => {
+        event.preventDefault();
         const form = event.currentTarget;
-        if (form.checkValidity() === false) {
-            event.preventDefault();
+
+        // Check if all checkboxes are false
+        const allCheckboxesFalse = Object.values(checkboxStates).every(state => !state);
+        if (allCheckboxesFalse || !form.checkValidity() || selectedLabWare.length <= 0) {
+            // Prevent form submission and mark form as invalid
             event.stopPropagation();
+            setCheckboxValidationFailed(true);
+            setValidated(false);
+        } else {
+            // Form is valid, you can process the form data
+            setValidated(true);
+            setCheckboxValidationFailed(false);
+            let activeLabwareType = Object.keys(checkboxStates).find(key => checkboxStates[key]);
+
+            const formData = {
+                step: stepTitle,
+                parameters: {
+                    labwareType: activeLabwareType,
+                    selectedLabWare: selectedLabWare.map(option => option.value),
+                }
+            };
+
+            console.log(JSON.stringify(formData, null, 2));
         }
-        setValidated(true);
     };
+
+
+
+
     const handleNotesClick = () => setIsNotesOpen(true);
     const closeNotes = () => setIsNotesOpen(false);
 
@@ -51,7 +79,7 @@ export const BarCodeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
 
 
                         {/* Microplate Checkbox and MultiSelect */}
-                        <CRow className="align-items-start">
+                        <CRow className="align-items-end" >
                             <CCol md={3} className='mt-4'>
                                 <CFormCheck
                                     id="microplate"
@@ -73,7 +101,7 @@ export const BarCodeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                             )}
                         </CRow>
                         {/* QR Code and MultiSelect */}
-                        <CRow className="align-items-start">
+                        <CRow className="align-items-end">
                             <CCol md={3} className='mt-3'>
                                 <CFormCheck
                                     id="qrCode"
@@ -96,7 +124,7 @@ export const BarCodeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                         </CRow>
 
                         {/* Specimen Tube Checkbox and MultiSelect */}
-                        <CRow className="align-items-start">
+                        <CRow className="align-items-end">
                             <CCol md={3} className='mt-3'>
                                 <CFormCheck
                                     id="specimenTube"
@@ -116,6 +144,18 @@ export const BarCodeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                                     />
                                 </CCol>
                             )}
+                            {/* ... your existing JSX ... */}
+
+                            {checkboxValidationFailed && (
+                                <CRow className='mt-3'>
+                                    <CCol md={12}>
+                                        <div className="alert alert-danger-custom" role="alert">
+                                            At least one checkbox is required to be checked to save.
+                                        </div>
+                                    </CCol>
+                                </CRow>
+                            )}
+
                         </CRow>
                         {/* Form Buttons */}
                         <CRow className='mt-3'>

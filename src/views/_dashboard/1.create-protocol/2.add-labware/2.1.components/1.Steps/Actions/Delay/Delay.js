@@ -22,13 +22,32 @@ export const DelayForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     };
 
     const handleSubmit = (event) => {
+        event.preventDefault();
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
             event.preventDefault();
             event.stopPropagation();
         }
+
+        const formData = {
+            step: stepTitle,
+            parameters: {
+                delay_pause_action: checkboxStates.pauseDelay,
+                delay_action: checkboxStates.delay,
+                messageDisplay: form.querySelector('#messageDisplay').value,
+                dealay_hour: checkboxStates.delay ? form.querySelector('#defaultHour').value : '',
+                delay_minute: checkboxStates.delay ? form.querySelector('#defaultMinute').value : '',
+                delay_second: checkboxStates.delay ? form.querySelector('#defaultSecond').value : '',
+            }
+        };
         setValidated(true);
+
+        console.log(JSON.stringify(formData, null, 2));
+
+        // Now you have the form data in formData JSON object, and you can perform any action you want with it.
+        // If you want to send it to a server, make an API request here.
     };
+
 
     const handleNotesClick = () => setIsNotesOpen(true);
     const closeNotes = () => setIsNotesOpen(false);

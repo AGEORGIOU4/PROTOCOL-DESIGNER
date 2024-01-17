@@ -803,3 +803,12 @@ pre {
 //   background-color: #01AAB1;
 //   color: #FFFFFF;
 // }
+
+.alert-danger-custom {
+  background-color: #f8d7da; /* Light red for the interior */
+  border: 1px solid #e60000; /* Darker shade of red for the stroke */
+  color: #721c24; /* Text color */
+  padding: .75rem 1.25rem;
+  margin-bottom: 1rem;
+  border-radius: .25rem;
+}
