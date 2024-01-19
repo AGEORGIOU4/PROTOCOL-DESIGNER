@@ -319,7 +319,7 @@ const LabwareSteps = ({ active }) => {
     } catch (e) {
       console.log(e);
     }
-  }, [selectedSteps]);
+  }, [selectedSteps, resetFlag]);
 
   //  LOCAL STORAGE MANAGEMENT - Get Storage
   useEffect(() => {
