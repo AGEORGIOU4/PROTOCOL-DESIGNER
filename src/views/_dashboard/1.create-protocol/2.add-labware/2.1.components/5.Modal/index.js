@@ -6,10 +6,11 @@ import { getIcons } from "../1.Steps/helpers";
 const AddLabwareModal = ({ children, header = true, title = '', footerText = '', stepID = '', stepIndex = '', visible, handleClose }) => {
   // let titleToUpper = stepTitle.toUpperCase();
   let titleToUpper = title;
+
   return (
     <>
 
-      <CModal fullscreen backdrop={'static'} className="add-labware-modal" visible={visible} onClose={handleClose} >
+      <CModal fullscreen backdrop={'static'} className={title == 'Thermocycler' ? "add-labware-modal-tb" : 'add-labware-modal'} visible={visible} onClose={handleClose} >
         {header &&
           <CModalHeader style={{ background: '#585858' }} closeButton={false}>
             <CModalTitle id="StaticBackdropExampleLabel" style={{ color: 'white' }}><CIcon icon={getIcons(title)} /> {titleToUpper}</CModalTitle>
@@ -23,7 +24,9 @@ const AddLabwareModal = ({ children, header = true, title = '', footerText = '',
           {children}
 
         </CModalBody>
-
+        <CModalFooter>
+          <strong>Step {stepIndex + 1} ({stepID})</strong>
+        </CModalFooter>
       </CModal >
     </>
   )

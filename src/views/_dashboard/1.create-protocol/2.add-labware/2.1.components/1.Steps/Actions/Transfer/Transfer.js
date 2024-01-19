@@ -1,14 +1,38 @@
 import React, { useEffect } from 'react';
-import { CCol, CForm, CFormCheck, CFormFeedback, CFormInput, CFormLabel, CFormSelect, CInputGroup, CInputGroupText, CRow } from '@coreui/react-pro'
+import { CButton, CCol, CForm, CFormCheck, CFormFeedback, CFormInput, CFormLabel, CFormSelect, CInputGroup, CInputGroupText, CRow } from '@coreui/react-pro'
 import { useState } from 'react'
 import { options_ChangeTip, options_Pipettes } from './data';
 import CIcon from '@coreui/icons-react';
+import { cidEyedropper } from '@coreui/icons-pro';
+import AddLabwareModal from '../../../5.Modal';
+import { AddLiquids } from '../../../3.Form/helpers';
+import TubeRackSelection from '../../../3.Form/Plates/TubeRack/TubeRack';
+import WellPlateSelection from '../../../3.Form/Plates/WellPlate/WellPlate';
+import ReservoirSelection from '../../../3.Form/Plates/Reservoir/Reservoir';
+import AluminiumBlockSelection from '../../../3.Form/Plates/AluminiumBlock/AluminiumBlock';
 
 export const TransferForm = () => {
-  const [source, setSource] = useState([]);
+  const [visible, setVisible] = useState(false);
 
+  const [sourceItems, setSourceItems] = useState([]);
   const [validated, setValidated] = useState(false)
 
+  const [selectedSource, setSelectedSource] = useState('')
+  const [selectedDestination, setSelectedDestination] = useState('')
+
+  const [tubeRackSelect, setTubeRackSelect] = useState('')
+  const [wellPlateSelect, setWellPlateSelect] = useState('')
+  const [reservoirSelect, setReservoirSelect] = useState('')
+  const [aluminiumBlockSelect, setAluminiumBlockSelect] = useState('')
+
+
+  const [selectedLabwareName, setSelectedLabwareName] = useState('');
+  const [selectedLabwareType, setSelectedLabwareType] = useState('');
+
+  const [selectedLiquid, setSelectedLiquid] = useState('')
+  const [liquidVolume, setLiquidVolume] = useState('')
+
+  let selectedSlot = '';
 
   useEffect(() => {
     let items = []
@@ -17,7 +41,6 @@ export const TransferForm = () => {
     } catch (e) {
       console.log(e)
     }
-
 
     let tmp_items = [];
 
@@ -28,13 +51,16 @@ export const TransferForm = () => {
         }
       })
 
-      const new_items = tmp_items.map(item => ({ ...item, label: item.labware_type }))
-      console.log(new_items)
-      setSource(new_items)
+      const new_items = tmp_items.map(item => ({ value: JSON.stringify(item), label: item.name }))
+      setSourceItems(new_items)
+      setSelectedSource(new_items[0])
+      selectedSlot = JSON.parse(new_items[0].value)
+      console.log(selectedSlot)
     }
-    //    console.log(items)
 
+    handleTypeOfLabware()
   }, [])
+
 
   const handleSubmit = (event) => {
     const form = event.currentTarget
@@ -45,6 +71,83 @@ export const TransferForm = () => {
     setValidated(true)
   }
 
+  const handleTypeOfLabware = () => {
+    if (selectedSlot.labware_type == "tube_rack") {
+      setTubeRackSelect(selectedSlot.labware_name)
+      setWellPlateSelect('')
+      setReservoirSelect('')
+      setAluminiumBlockSelect('')
+    }
+
+    if (selectedSlot.labware_type == "well_plate") {
+      setTubeRackSelect('')
+      setWellPlateSelect(selectedSlot.labware_name)
+      setReservoirSelect('')
+      setAluminiumBlockSelect('')
+    }
+
+    if (selectedSlot.labware_type == "reservoir") {
+      setTubeRackSelect('')
+      setWellPlateSelect('')
+      setReservoirSelect(selectedSlot.labware_name)
+      setAluminiumBlockSelect('');
+    }
+
+    if (selectedSlot.labware_type == "aluminium_block") {
+      setTubeRackSelect('')
+      setWellPlateSelect('')
+      setReservoirSelect('')
+      setAluminiumBlockSelect(selectedSlot.labware_name);
+    }
+  }
+
+  const handleChangeSource = (e) => {
+    setSelectedSource(e.target.value);
+    selectedSlot = JSON.parse(e.target.value)
+
+    handleTypeOfLabware()
+  }
+
+  const handleClose = () => {
+    setVisible(false)
+  }
+
+  const getSelectedLabware = () => {
+    if (tubeRackSelect) {
+      setSelectedLabwareName(tubeRackSelect);
+      setSelectedLabwareType("tube_rack");
+    }
+    if (wellPlateSelect) {
+      setSelectedLabwareName(wellPlateSelect);
+      setSelectedLabwareType("well_plate");
+    }
+    if (reservoirSelect) {
+      setSelectedLabwareName(reservoirSelect);
+      setSelectedLabwareType("reservoir");
+    }
+    if (aluminiumBlockSelect) {
+      setSelectedLabwareName(aluminiumBlockSelect);
+      setSelectedLabwareType("aluminium_block");
+    }
+
+    if (selectedLabwareName == 'N/A') {
+      setSelectedLabwareName('');
+      setSelectedLabwareType('');
+    }
+  }
+
+  const handleAddLiquids = () => {
+    getSelectedLabware();
+    setVisible(true)
+  }
+
+  const handleChangeSelectedLiquid = (e, color) => {
+    setSelectedLiquid(e);
+  }
+
+  const handleChangeLiquidVolume = (e) => {
+    setLiquidVolume(e.target.value);
+  }
 
   return (
     <>
@@ -58,14 +161,14 @@ export const TransferForm = () => {
             </div>
 
 
-            <CCol md={3}>
+            <CCol md={4}>
               <CFormLabel htmlFor="validationCustom01">Pipette</CFormLabel>
               <CFormSelect options={options_Pipettes} id="validationCustom01" required />
               <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
 
-            <CCol md={2}>
-              <CFormLabel htmlFor="validationCustom02">Volume Per Well</CFormLabel>
+            <CCol md={1}>
+              <CFormLabel htmlFor="validationCustom02">Volume Per</CFormLabel>
               <CInputGroup className="mb-3">
                 <CFormInput type='number' id="validationCustom02" required />
                 <CInputGroupText id="basic-addon2">μL</CInputGroupText>
@@ -82,15 +185,18 @@ export const TransferForm = () => {
               </CCol>
             </div>
 
-            <CCol md={3}>
+            <CCol md={4}>
               <CFormLabel htmlFor="validationCustom03">Source</CFormLabel>
-              <CFormSelect options={source} id="validationCustom03" required />
+              <CFormSelect options={sourceItems} id="validationCustom03" value={selectedSource || ''} onChange={(e) => handleChangeSource(e)} required />
               <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
 
-            <CCol md={2}>
+            <CCol md={1}>
               <CFormLabel htmlFor="validationCustom04">Wells</CFormLabel>
-              <CFormInput onClick={(e) => console.log("clicked")} id="validationCustom04" required />
+              <CFormInput style={{ caretColor: 'transparent' }} onClick={handleAddLiquids} id="validationCustom04" required />
+
+              {/* <CButton className='standard-btn' style={{ marginRight: '10px' }} disabled={tubeRack || wellPlate || reservoir || aluminiumBlock ? false : true} onClick={handleAddLiquids}><CIcon size='sm' icon={cidEyedropper} /> ADD LIQUIDS</CButton> */}
+
               <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
 
@@ -99,7 +205,7 @@ export const TransferForm = () => {
 
             <CCol md={3}>
               <CFormLabel htmlFor="validationCustom05">Destination</CFormLabel>
-              <CFormSelect options={source} id="validationCustom05" required />
+              <CFormSelect options={sourceItems} id="validationCustom05" required />
               <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
 
@@ -148,6 +254,80 @@ export const TransferForm = () => {
 
 
       <br />
+
+      <AddLabwareModal visible={visible} handleClose={handleClose} title={selectedLabwareName} footerText={selectedLabwareName}>
+
+        {tubeRackSelect && React.Children.toArray(
+          <>
+            <AddLiquids
+              selectedLiquid={selectedLiquid}
+              liquidVolume={liquidVolume}
+              handleChangeSelectedLiquid={handleChangeSelectedLiquid}
+              handleChangeLiquidVolume={handleChangeLiquidVolume}
+            />
+            <TubeRackSelection
+              selectedSlot={selectedSlot}
+              selectedLabware={selectedLabwareName}
+              selectedLiquid={selectedLiquid}
+              liquidVolume={liquidVolume}
+              handleClose={handleClose}
+            />
+          </>
+        )}
+
+        {wellPlateSelect && React.Children.toArray(
+          <>
+            <AddLiquids
+              selectedLiquid={selectedLiquid}
+              liquidVolume={liquidVolume}
+              handleChangeSelectedLiquid={handleChangeSelectedLiquid}
+              handleChangeLiquidVolume={handleChangeLiquidVolume} />
+            <WellPlateSelection
+              selectedSlot={selectedSlot}
+              selectedLabware={selectedLabwareName}
+              selectedLiquid={selectedLiquid}
+              liquidVolume={liquidVolume}
+              handleClose={handleClose}
+            />
+          </>
+        )}
+
+        {reservoirSelect && React.Children.toArray(
+          <>
+            <AddLiquids
+              selectedLiquid={selectedLiquid}
+              liquidVolume={liquidVolume}
+              handleChangeSelectedLiquid={handleChangeSelectedLiquid}
+              handleChangeLiquidVolume={handleChangeLiquidVolume} />
+            <ReservoirSelection
+              selectedSlot={selectedSlot}
+              selectedLabware={selectedLabwareName}
+              selectedLiquid={selectedLiquid}
+              liquidVolume={liquidVolume}
+              handleClose={handleClose}
+            />
+          </>
+        )}
+
+        {aluminiumBlockSelect && React.Children.toArray(
+          <>
+            <AddLiquids
+              selectedLiquid={selectedLiquid}
+              liquidVolume={liquidVolume}
+              handleChangeSelectedLiquid={handleChangeSelectedLiquid}
+              handleChangeLiquidVolume={handleChangeLiquidVolume} />
+            <AluminiumBlockSelection
+              selectedSlot={selectedSlot}
+              selectedLabware={selectedLabwareName}
+              selectedLiquid={selectedLiquid}
+              liquidVolume={liquidVolume}
+              handleClose={handleClose}
+            />
+          </>
+        )}
+
+      </AddLabwareModal>
+
     </>
   )
 }

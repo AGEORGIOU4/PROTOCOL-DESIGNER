@@ -19,7 +19,7 @@ import { StorageForm } from './Actions/Storage/Storage'
 import { BarCodeForm } from './Actions/BarCode/BarCode'
 import { CameraForm } from './Actions/Camera/Camera'
 import { TrashForm } from './Actions/Trash/Trash'
-import { ThemrocyclerForm } from './Actions/Thermocycler/Thermocycler'
+import { ThermocyclerForm } from './Actions/Thermocycler/Thermocycler'
 import { CentrifugeForm } from './Actions/Centrifuge/Centrifuge'
 
 
@@ -50,7 +50,7 @@ const RenderStepForm = (modalTitle, handleClose, handleDeleteStep, stepId, stepT
     case 'Trash':
       return <TrashForm onClose={handleClose} onDelete={handleDeleteStep} stepId={stepId} stepTitle={stepTitle} />
     case 'Thermocycler':
-      return <ThemrocyclerForm onClose={handleClose} onDelete={handleDeleteStep} stepId={stepId} stepTitle={stepTitle} />
+      return <ThermocyclerForm onClose={handleClose} onDelete={handleDeleteStep} stepId={stepId} stepTitle={stepTitle} />
     case 'Centrifuge':
       return <CentrifugeForm onClose={handleClose} onDelete={handleDeleteStep} stepId={stepId} stepTitle={stepTitle} />
     default:

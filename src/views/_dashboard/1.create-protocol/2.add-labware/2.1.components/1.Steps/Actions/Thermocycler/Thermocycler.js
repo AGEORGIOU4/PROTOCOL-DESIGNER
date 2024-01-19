@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ConnectionStep } from '../../Components/connectionStep'
 
 
-export const ThemrocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
+export const ThermocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     // State declarations
     const [isNotesOpen, setIsNotesOpen] = useState(false);
     const [validated, setValidated] = useState(false);
@@ -419,7 +419,7 @@ export const ThemrocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                                                                     {cycleStepsArray.length > 1 && <div style={{ width: 28, height: '100%' }}><ConnectionStep variant={variant()} /></div>}
                                                                 </CCol>
                                                                 {cycleStep.isFirstStep && (
-                                                                    <CCol md={1} style={{ display: "flex", justifyContent: 'flex-start', alignItems: "center" }}>
+                                                                    <CCol md={2} style={{ display: "flex", justifyContent: 'flex-start', alignItems: "center" }}>
                                                                         <CFormInput
                                                                             type="number"
                                                                             min="0"
@@ -504,14 +504,18 @@ export const ThemrocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                                     }
                                 })}
 
-                                < CRow className={`mt-4 ${isButtonClicked ? 'justify-end-force' : 'justify-start-force'}`}>
-                                    <CCol md={2} className={`${isButtonClicked ? 'col-center-content' : ''}`}>
+                                < CRow className={`mt-4 justify-end-force`}>
+                                    {/* <CCol md={2} className={`${isButtonClicked ? 'col-center-content' : ''}`}>
                                         <CButton className='profile-btn-steps' onClick={addStepComponent}>
                                             <AddCircle size="24" style={{ marginTop: "-2px" }} /> Step</CButton>
                                     </CCol>
                                     <CCol md={2} className={`${isButtonClicked ? 'col-center-content' : ''}`}>
                                         <CButton className='profile-btn-steps' onClick={addCycleComponent}>
                                             <AddCircle size="24" style={{ marginTop: "-2px" }} /> Cycle</CButton>
+                                    </CCol> */}
+                                    <CCol md={6} style={{ display: 'flex', justifyContent: 'flex-end', gap: '20px' }}>
+                                        <CButton className='profile-btn-steps' onClick={addStepComponent}><AddCircle size="24" style={{ marginTop: "-2px" }} /> Step</CButton>
+                                        <CButton className='profile-btn-steps' onClick={addCycleComponent}><AddCircle size="24" style={{ marginTop: "-2px" }} /> Cycle</CButton>
                                     </CCol>
                                 </CRow>
 

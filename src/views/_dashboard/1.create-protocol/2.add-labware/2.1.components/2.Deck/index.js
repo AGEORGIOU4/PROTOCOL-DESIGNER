@@ -31,7 +31,7 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
         preset = items;
       } else { // Default Preset
         preset.push(
-          { id: 0, name: '+', tube_rack: "", well_plate: "", reservoir: "", aluminium_block: "", labware_type: "", liquids: { selected: [] } }
+          { id: 0, name: '+', labware_name: "", labware_type: "", liquids: { selected: [] } }
         );
 
       }
@@ -69,10 +69,7 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
   const handleCreate = () => {
     let id = 0;
     let name = 'Slot ' + id;
-    let tube_rack = '';
-    let well_plate = '';
-    let reservoir = '';
-    let aluminium_block = '';
+    let labware_name = "";
     let labware_type = "";
     let liquids = { selected: [] };
 
@@ -82,16 +79,12 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
           if (index_col === (row.length - 1)) {
             id = col.id + 1;
             name = 'Slot ' + id;
-            tube_rack = '';
-            well_plate = '';
-            reservoir = '';
-            aluminium_block = '';
-
+            labware_name = '';
             labware_type = '';
             liquids = { selected: [] }
             deckSlots1D[index_row].push(
               {
-                id, name, tube_rack, well_plate, reservoir, aluminium_block, labware_type, liquids: liquids
+                id, name, labware_name, labware_type, liquids: liquids
               },
 
             )
@@ -101,7 +94,7 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
     })
 
     let item = {
-      id: id, name: name, tube_rack: tube_rack, well_plate: well_plate, reservoir: reservoir, aluminium_block: aluminium_block, labware_type: labware_type, liquids: { selected: [] }
+      id: id, name: name, labware_name: labware_name, labware_type: labware_type, liquids: { selected: [] }
     };
 
     splitBoard();
@@ -112,18 +105,11 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
   const handleDuplicate = (item) => {
     let id = 0;
     let name = 'Slot ' + id;
-    let tube_rack = '';
-    let well_plate = '';
-    let reservoir = '';
-    let aluminium_block = '';
+    let labware_name = "";
     let labware_type = "";
     let liquids = { selected: [] };
 
-
-    tube_rack = item.tube_rack;
-    well_plate = item.well_plate;
-    reservoir = item.reservoir;
-    aluminium_block = item.aluminium_block;
+    labware_name = item.labware_name;
     labware_type = item.labware_type;
     liquids = item.liquids;
 
@@ -133,14 +119,11 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
           if (index_col === (row.length - 1)) {
             id = col.id + 1;
             name = 'Slot ' + id;
-            tube_rack = tube_rack;
-            well_plate = well_plate;
-            reservoir = reservoir;
-            aluminium_block = aluminium_block;
+            labware_name = labware_name;
             labware_type = labware_type;
             liquids = liquids;
 
-            deckSlots1D[index_row].push({ id, name, tube_rack, well_plate, reservoir, aluminium_block, labware_type, liquids: liquids })
+            deckSlots1D[index_row].push({ id, name, labware_name, labware_type, liquids: liquids })
           }
         })
       }
@@ -221,7 +204,7 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
             <CRow key={index} style={{ margin: '20px' }}>
               {React.Children.toArray(
                 rows?.map((item, index) => {
-                  let labwareSelection = item.tube_rack || item.well_plate || item.reservoir || item.aluminium_block;
+                  let labwareSelection = item.labware_name
                   let flag = false;
 
                   try {

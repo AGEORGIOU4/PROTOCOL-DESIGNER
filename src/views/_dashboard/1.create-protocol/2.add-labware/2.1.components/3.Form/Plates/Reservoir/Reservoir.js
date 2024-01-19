@@ -68,15 +68,19 @@ export default function ReservoirSelection({ selectedSlot, selectedLabware, sele
       let liquid = '';
       let volume = '';
 
-      let tmp_selected = selectedSlot.liquids.selected;
-      tmp_selected?.map((selected, index) => {
-        selected.wells?.map((well, index) => {
-          if (well == id) {
-            liquid = selected.liquid;
-            volume = selected.volume;
-          }
+      try {
+        let tmp_selected = selectedSlot.liquids.selected;
+        tmp_selected?.map((selected, index) => {
+          selected.wells?.map((well, index) => {
+            if (well == id) {
+              liquid = selected.liquid;
+              volume = selected.volume;
+            }
+          })
         })
-      })
+      } catch (e) {
+        console.log(e)
+      }
 
       return (
 
