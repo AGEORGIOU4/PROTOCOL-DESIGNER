@@ -1,6 +1,13 @@
-import React from 'react'
-import { CCard, CCardBody, CCardHeader, CCol, CRow, CTimePicker } from '@coreui/react-pro'
-import { DocsExample } from 'src/components'
+import React from "react";
+import {
+  CCard,
+  CCardBody,
+  CCardHeader,
+  CCol,
+  CRow,
+  CTimePicker,
+} from "@coreui/react-pro";
+import { DocsExample } from "src/components";
 
 const TimePicker = () => {
   return (
@@ -31,8 +38,8 @@ const TimePicker = () => {
           </CCardHeader>
           <CCardBody>
             <p className="text-medium-emphasis small">
-              Set heights using <code>size</code> property like <code>size=&#34;lg&#34;</code> and{' '}
-              <code>size=&#34;sm&#34;</code>.
+              Set heights using <code>size</code> property like{" "}
+              <code>size=&#34;lg&#34;</code> and <code>size=&#34;sm&#34;</code>.
             </p>
             <DocsExample href="forms/time-picker/#sizing">
               <CRow className="row mb-4">
@@ -56,8 +63,8 @@ const TimePicker = () => {
           </CCardHeader>
           <CCardBody>
             <p className="text-medium-emphasis small">
-              Add the <code>disabled</code> boolean attribute on an input to give it a grayed out
-              appearance and remove pointer events.
+              Add the <code>disabled</code> boolean attribute on an input to
+              give it a grayed out appearance and remove pointer events.
             </p>
             <DocsExample href="forms/time-picker/#disabled">
               <CRow>
@@ -76,8 +83,8 @@ const TimePicker = () => {
           </CCardHeader>
           <CCardBody>
             <p className="text-medium-emphasis small">
-              Add the <code>inputReadOnly</code> boolean attribute to prevent modification of the
-              input&#39;s value.
+              Add the <code>inputReadOnly</code> boolean attribute to prevent
+              modification of the input&#39;s value.
             </p>
             <DocsExample href="forms/time-picker/#readonly">
               <CRow>
@@ -90,7 +97,7 @@ const TimePicker = () => {
         </CCard>
       </CCol>
     </CRow>
-  )
-}
+  );
+};
 
-export default TimePicker
+export default TimePicker;

@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import {
   CAvatar,
   CBadge,
@@ -7,23 +7,28 @@ import {
   CDropdownItem,
   CDropdownMenu,
   CDropdownToggle,
-} from '@coreui/react-pro'
-import CIcon from '@coreui/icons-react'
-import { cilEnvelopeOpen } from '@coreui/icons'
+} from "@coreui/react-pro";
+import CIcon from "@coreui/icons-react";
+import { cilEnvelopeOpen } from "@coreui/icons";
 
-import avatar4 from './../../assets/images/avatars/4.jpg'
-import avatar5 from './../../assets/images/avatars/5.jpg'
-import avatar6 from './../../assets/images/avatars/6.jpg'
-import avatar7 from './../../assets/images/avatars/7.jpg'
+import avatar4 from "./../../assets/images/avatars/4.jpg";
+import avatar5 from "./../../assets/images/avatars/5.jpg";
+import avatar6 from "./../../assets/images/avatars/6.jpg";
+import avatar7 from "./../../assets/images/avatars/7.jpg";
 
 const AppHeaderDropdownMssg = () => {
-  const itemsCount = 4
+  const itemsCount = 4;
   return (
     <CDropdown variant="nav-item" alignment="end">
       <CDropdownToggle className="c-header-nav-link" caret={false}>
         <span className="d-inline-block my-1 mx-2 position-relative">
           <CIcon icon={cilEnvelopeOpen} size="lg" />
-          <CBadge color="danger" position="top-end" shape="rounded-circle" className="p-1">
+          <CBadge
+            color="danger"
+            position="top-end"
+            shape="rounded-circle"
+            className="p-1"
+          >
             <span className="visually-hidden">{itemsCount} new alerts</span>
           </CBadge>
         </span>
@@ -39,14 +44,17 @@ const AppHeaderDropdownMssg = () => {
             </div>
             <div>
               <small className="text-medium-emphasis">John Doe</small>
-              <small className="text-medium-emphasis float-end mt-1">Just now</small>
+              <small className="text-medium-emphasis float-end mt-1">
+                Just now
+              </small>
             </div>
             <div className="text-truncate font-weight-bold">
-              <span className="fa fa-exclamation text-danger"></span> Important message
+              <span className="fa fa-exclamation text-danger"></span> Important
+              message
             </div>
             <div className="small text-medium-emphasis text-truncate">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-              incididunt...
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+              eiusmod tempor incididunt...
             </div>
           </div>
         </CDropdownItem>
@@ -57,12 +65,16 @@ const AppHeaderDropdownMssg = () => {
             </div>
             <div>
               <small className="text-medium-emphasis">Jane Dovve</small>
-              <small className="text-medium-emphasis float-end mt-1">5 minutes ago</small>
+              <small className="text-medium-emphasis float-end mt-1">
+                5 minutes ago
+              </small>
             </div>
-            <div className="text-truncate font-weight-bold">Lorem ipsum dolor sit amet</div>
+            <div className="text-truncate font-weight-bold">
+              Lorem ipsum dolor sit amet
+            </div>
             <div className="small text-medium-emphasis text-truncate">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-              incididunt...
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+              eiusmod tempor incididunt...
             </div>
           </div>
         </CDropdownItem>
@@ -73,12 +85,16 @@ const AppHeaderDropdownMssg = () => {
             </div>
             <div>
               <small className="text-medium-emphasis">Janet Doe</small>
-              <small className="text-medium-emphasis float-end mt-1">1:52 PM</small>
+              <small className="text-medium-emphasis float-end mt-1">
+                1:52 PM
+              </small>
             </div>
-            <div className="text-truncate font-weight-bold">Lorem ipsum dolor sit amet</div>
+            <div className="text-truncate font-weight-bold">
+              Lorem ipsum dolor sit amet
+            </div>
             <div className="small text-medium-emphasis text-truncate">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-              incididunt...
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+              eiusmod tempor incididunt...
             </div>
           </div>
         </CDropdownItem>
@@ -89,12 +105,16 @@ const AppHeaderDropdownMssg = () => {
             </div>
             <div>
               <small className="text-medium-emphasis">Joe Doe</small>
-              <small className="text-medium-emphasis float-end mt-1">4:03 AM</small>
+              <small className="text-medium-emphasis float-end mt-1">
+                4:03 AM
+              </small>
             </div>
-            <div className="text-truncate font-weight-bold">Lorem ipsum dolor sit amet</div>
+            <div className="text-truncate font-weight-bold">
+              Lorem ipsum dolor sit amet
+            </div>
             <div className="small text-medium-emphasis text-truncate">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-              incididunt...
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+              eiusmod tempor incididunt...
             </div>
           </div>
         </CDropdownItem>
@@ -103,7 +123,7 @@ const AppHeaderDropdownMssg = () => {
         </CDropdownItem>
       </CDropdownMenu>
     </CDropdown>
-  )
-}
+  );
+};
 
-export default AppHeaderDropdownMssg
+export default AppHeaderDropdownMssg;

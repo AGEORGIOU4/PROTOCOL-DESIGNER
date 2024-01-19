@@ -1,9 +1,7 @@
-import React from 'react'
-import { AppContent, AppHeader, AppSidebar } from '../components/index'
-
+import React from "react";
+import { AppContent, AppHeader, AppSidebar } from "../components/index";
 
 const DefaultLayout = () => {
-
   return (
     <>
       {/* <AppSidebar /> */}
@@ -18,7 +16,7 @@ const DefaultLayout = () => {
       </div>
       {/* <AppAside /> */}
     </>
-  )
-}
+  );
+};
 
-export default DefaultLayout
+export default DefaultLayout;

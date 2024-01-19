@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import {
   CButton,
   CCard,
@@ -12,15 +12,15 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
-} from '@coreui/react-pro'
-import CIcon from '@coreui/icons-react'
-import { cilDollar, cilPrint, cilSave } from '@coreui/icons'
+} from "@coreui/react-pro";
+import CIcon from "@coreui/icons-react";
+import { cilDollar, cilPrint, cilSave } from "@coreui/icons";
 
 const Invoice = () => {
   const print = (e) => {
-    e.preventDefault()
-    window.print()
-  }
+    e.preventDefault();
+    window.print();
+  };
 
   return (
     <CCard>
@@ -36,7 +36,13 @@ const Invoice = () => {
         >
           <CIcon icon={cilPrint} /> Print
         </CButton>
-        <CButton className="me-1 float-end" href="" tag="a" size="sm" color="info">
+        <CButton
+          className="me-1 float-end"
+          href=""
+          tag="a"
+          size="sm"
+          color="info"
+        >
           <CIcon icon={cilSave} /> Save
         </CButton>
       </CCardHeader>
@@ -81,23 +87,33 @@ const Invoice = () => {
               <CTableHeaderCell className="text-center">#</CTableHeaderCell>
               <CTableHeaderCell>Item</CTableHeaderCell>
               <CTableHeaderCell>Description</CTableHeaderCell>
-              <CTableHeaderCell className="text-center">Quantity</CTableHeaderCell>
-              <CTableHeaderCell className="text-end">Unit Cost</CTableHeaderCell>
+              <CTableHeaderCell className="text-center">
+                Quantity
+              </CTableHeaderCell>
+              <CTableHeaderCell className="text-end">
+                Unit Cost
+              </CTableHeaderCell>
               <CTableHeaderCell className="text-end">Total</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
           <CTableBody>
             <CTableRow>
               <CTableDataCell className="text-center">1</CTableDataCell>
-              <CTableDataCell className="text-start">Origin License</CTableDataCell>
-              <CTableDataCell className="text-start">Extended License</CTableDataCell>
+              <CTableDataCell className="text-start">
+                Origin License
+              </CTableDataCell>
+              <CTableDataCell className="text-start">
+                Extended License
+              </CTableDataCell>
               <CTableDataCell className="text-center">1</CTableDataCell>
               <CTableDataCell className="text-end">$999,00</CTableDataCell>
               <CTableDataCell className="text-end">$999,00</CTableDataCell>
             </CTableRow>
             <CTableRow>
               <CTableDataCell className="text-center">2</CTableDataCell>
-              <CTableDataCell className="text-start">Custom Services</CTableDataCell>
+              <CTableDataCell className="text-start">
+                Custom Services
+              </CTableDataCell>
               <CTableDataCell className="text-start">
                 Installation and Customization (per hour)
               </CTableDataCell>
@@ -108,15 +124,21 @@ const Invoice = () => {
             <CTableRow>
               <CTableDataCell className="text-center">3</CTableDataCell>
               <CTableDataCell className="text-start">Hosting</CTableDataCell>
-              <CTableDataCell className="text-start">1 year subscription</CTableDataCell>
+              <CTableDataCell className="text-start">
+                1 year subscription
+              </CTableDataCell>
               <CTableDataCell className="text-center">1</CTableDataCell>
               <CTableDataCell className="text-end">$499,00</CTableDataCell>
               <CTableDataCell className="text-end">$499,00</CTableDataCell>
             </CTableRow>
             <CTableRow>
               <CTableDataCell className="text-center">4</CTableDataCell>
-              <CTableDataCell className="text-start">Platinum Support</CTableDataCell>
-              <CTableDataCell className="text-start">1 year subscription 24/7</CTableDataCell>
+              <CTableDataCell className="text-start">
+                Platinum Support
+              </CTableDataCell>
+              <CTableDataCell className="text-start">
+                1 year subscription 24/7
+              </CTableDataCell>
               <CTableDataCell className="text-center">1</CTableDataCell>
               <CTableDataCell className="text-end">$3.999,00</CTableDataCell>
               <CTableDataCell className="text-end">$3.999,00</CTableDataCell>
@@ -125,10 +147,12 @@ const Invoice = () => {
         </CTable>
         <CRow>
           <CCol lg={4} sm={5}>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-            dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+            aliquip ex ea commodo consequat. Duis aute irure dolor in
+            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+            pariatur.
           </CCol>
           <CCol lg={4} sm={5} className="ms-auto">
             <CTable>
@@ -137,13 +161,17 @@ const Invoice = () => {
                   <CTableDataCell className="text-start">
                     <strong>Subtotal</strong>
                   </CTableDataCell>
-                  <CTableDataCell className="text-end">$8.497,00</CTableDataCell>
+                  <CTableDataCell className="text-end">
+                    $8.497,00
+                  </CTableDataCell>
                 </CTableRow>
                 <CTableRow>
                   <CTableDataCell className="text-start">
                     <strong>Discount (20%)</strong>
                   </CTableDataCell>
-                  <CTableDataCell className="text-end">$1,699,40</CTableDataCell>
+                  <CTableDataCell className="text-end">
+                    $1,699,40
+                  </CTableDataCell>
                 </CTableRow>
                 <CTableRow>
                   <CTableDataCell className="text-start">
@@ -168,7 +196,7 @@ const Invoice = () => {
         </CRow>
       </CCardBody>
     </CCard>
-  )
-}
+  );
+};
 
-export default Invoice
+export default Invoice;

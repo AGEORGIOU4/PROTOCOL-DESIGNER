@@ -1,51 +1,59 @@
-import React from 'react'
-import { CCard, CCardBody, CCardHeader, CCol, CMultiSelect, CRow } from '@coreui/react-pro'
-import { DocsExample } from 'src/components'
+import React from "react";
+import {
+  CCard,
+  CCardBody,
+  CCardHeader,
+  CCol,
+  CMultiSelect,
+  CRow,
+} from "@coreui/react-pro";
+import { DocsExample } from "src/components";
 
 const MultiSelect = () => {
   const options = [
     {
       value: 0,
-      text: 'Angular',
+      text: "Angular",
     },
     {
       value: 1,
-      text: 'Bootstrap',
+      text: "Bootstrap",
     },
     {
       value: 2,
-      text: 'React.js',
+      text: "React.js",
       selected: true,
     },
     {
       value: 3,
-      text: 'Vue.js',
+      text: "Vue.js",
     },
     {
-      label: 'backend',
+      label: "backend",
       options: [
         {
           value: 4,
-          text: 'Django',
+          text: "Django",
         },
         {
           value: 5,
-          text: 'Laravel',
+          text: "Laravel",
         },
         {
           value: 6,
-          text: 'Node.js',
+          text: "Node.js",
         },
       ],
     },
-  ]
+  ];
 
   return (
     <CRow>
       <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>CoreUI React Multi Select</strong> <small>with Checkbox (Default Style)</small>
+            <strong>CoreUI React Multi Select</strong>{" "}
+            <small>with Checkbox (Default Style)</small>
           </CCardHeader>
           <CCardBody>
             <DocsExample href="forms/multi-select">
@@ -76,16 +84,32 @@ const MultiSelect = () => {
             <DocsExample href="forms/multi-select">
               <CRow>
                 <CCol md={3}>
-                  <CMultiSelect options={options} optionsStyle="text" multiple={false} />
+                  <CMultiSelect
+                    options={options}
+                    optionsStyle="text"
+                    multiple={false}
+                  />
                 </CCol>
                 <CCol md={3}>
-                  <CMultiSelect options={options} optionsStyle="text" selectionType="text" />
+                  <CMultiSelect
+                    options={options}
+                    optionsStyle="text"
+                    selectionType="text"
+                  />
                 </CCol>
                 <CCol md={3}>
-                  <CMultiSelect options={options} optionsStyle="text" selectionType="tags" />
+                  <CMultiSelect
+                    options={options}
+                    optionsStyle="text"
+                    selectionType="tags"
+                  />
                 </CCol>
                 <CCol md={3}>
-                  <CMultiSelect options={options} optionsStyle="text" selectionType="counter" />
+                  <CMultiSelect
+                    options={options}
+                    optionsStyle="text"
+                    selectionType="counter"
+                  />
                 </CCol>
               </CRow>
             </DocsExample>
@@ -93,7 +117,7 @@ const MultiSelect = () => {
         </CCard>
       </CCol>
     </CRow>
-  )
-}
+  );
+};
 
-export default MultiSelect
+export default MultiSelect;
