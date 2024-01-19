@@ -247,34 +247,31 @@ pre {
 }
 
 .cancel-btn {
-  background-color: #ebedef;
-  border: 2px solid #ebedef;
-  padding: 0.375rem 0.75rem !important;
-  font-size: 14px;
-  border-radius: 0 !important;
-  color: #585858;
-  width: 12em;
+  background-color: transparent;
+  border-radius: 100%;
+  font-size: 16px;
+  color: #fff;
   font-weight: 900;
 }
 
-.cancel-btn:active {
-  background-color: #ebedef;
-  border: 2px solid #ebedef;
-  box-shadow: none !important;
-  outline: 0;
-}
+// .cancel-btn:active {
+//   background-color: #ebedef;
+//   border: 2px solid #ebedef;
+//   box-shadow: none !important;
+//   outline: 0;
+// }
 
-.cancel-btn:focus {
-  outline: 0;
-}
+// .cancel-btn:focus {
+//   outline: 0;
+// }
 
-.cancel-btn:hover {
-  background-color: black;
-  border: 2px solid black;
-  border-radius: 0;
-  color: #dedede;
-  font-weight: 900;
-}
+// .cancel-btn:hover {
+//   background-color: transparent;
+//   border-radius: 100%;
+//   font-size: 16px;
+//   color: #fff;
+//   font-weight: 900;
+// }
 
 .add-labware-slot-btn-create {
   background-color: white;
@@ -391,8 +388,7 @@ pre {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
-  border: var(--cui-border-width) solid
-    var(--cui-form-select-border-color, var(--cui-border-color));
+  border: var(--cui-border-width) solid var(--cui-form-select-border-color, var(--cui-border-color));
   border-color: var(--cui-border-color) !important;
   border-radius: 0.375rem !important;
   transition:
@@ -422,8 +418,7 @@ pre {
   width: 100% !important;
   box-shadow: none !important;
   border-radius: var(--cui-border-radius) !important;
-  border: var(--cui-border-width) solid
-    var(--cui-input-border-color, var(--cui-border-color)) !important;
+  border: var(--cui-border-width) solid var(--cui-input-border-color, var(--cui-border-color)) !important;
   margin-bottom: 6px;
 }
 
@@ -516,8 +511,7 @@ pre {
   align-items: center;
   justify-content: space-between;
   padding: 8px 10px 16px 10px;
-  border-bottom: var(--cui-modal-header-border-width) solid
-    var(--cui-modal-header-border-color);
+  border-bottom: var(--cui-modal-header-border-width) solid var(--cui-modal-header-border-color);
   border-top-left-radius: var(--cui-modal-inner-border-radius);
   border-top-right-radius: var(--cui-modal-inner-border-radius);
 }

@@ -15,6 +15,7 @@ const AddLabwareModal = ({
   header = true,
   title = "",
   footerText = "",
+  showFooter = false,
   stepID = "",
   stepIndex = "",
   visible,
@@ -47,16 +48,18 @@ const AddLabwareModal = ({
               className="cancel-btn"
               onClick={handleClose}
             >
-              <CIcon size="sm" icon={cilX} /> CLOSE
+              <CIcon size="sm" icon={cilX} />
             </CButton>
           </CModalHeader>
         )}
         <CModalBody>{children}</CModalBody>
-        <CModalFooter>
-          <strong>
-            Step {stepIndex + 1} ({stepID})
-          </strong>
-        </CModalFooter>
+        {showFooter &&
+          <CModalFooter style={{ justifyContent: 'start', fontSize: 'large' }}>
+            <strong>
+              Step {stepIndex + 1} ({stepID})
+            </strong>
+          </CModalFooter>
+        }
       </CModal>
     </>
   );

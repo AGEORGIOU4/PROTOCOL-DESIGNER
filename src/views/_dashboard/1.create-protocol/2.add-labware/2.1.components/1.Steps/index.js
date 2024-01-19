@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   CListGroup,
   CDropdown,
@@ -43,7 +43,14 @@ const RenderStepForm = (
 ) => {
   switch (modalTitle) {
     case "Transfer":
-      return <TransferForm />;
+      return (
+        <TransferForm
+          onClose={handleClose}
+          onDelete={handleDeleteStep}
+          stepId={stepId}
+          stepTitle={stepTitle}
+        />
+      );
     case "Mix":
       return (
         <MixForm
@@ -166,7 +173,7 @@ const LabwareSteps = ({ active }) => {
     "Thermoblock",
     "Trash",
   ]);
-  const [selectedSteps, setSelectedSteps] = useState([]);
+  const [selectedSteps, setSelectedSteps] = useState(JSON.parse(localStorage.getItem("steps")) || []);
 
   // States for Modal
   const [stepID, setStepID] = useState(STEP_ID);
@@ -302,6 +309,31 @@ const LabwareSteps = ({ active }) => {
     setResetFlag(!resetFlag);
   };
 
+  //  LOCAL STORAGE MANAGEMENT - Update Storage
+  useEffect(() => {
+    try {
+      if (selectedSteps) {
+        localStorage.setItem("steps", JSON.stringify(selectedSteps));
+        console.log(selectedSteps)
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }, [selectedSteps]);
+
+  //  LOCAL STORAGE MANAGEMENT - Get Storage
+  useEffect(() => {
+    let items = [];
+    try {
+      items = JSON.parse(localStorage.getItem("steps")); // Check memory
+      console.log(items)
+    } catch (e) {
+      console.log(e);
+    }
+
+
+  }, []);
+
   return (
     <>
       <CSidebar
@@ -409,6 +441,7 @@ const LabwareSteps = ({ active }) => {
         stepID={stepID}
         stepIndex={stepIndex}
         handleClose={handleClose}
+        showFooter={true}
       >
         {RenderStepForm(
           stepTitle,

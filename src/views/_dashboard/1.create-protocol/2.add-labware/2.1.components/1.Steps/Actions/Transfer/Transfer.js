@@ -22,8 +22,9 @@ import TubeRackSelection from "../../../3.Form/Plates/TubeRack/TubeRack";
 import WellPlateSelection from "../../../3.Form/Plates/WellPlate/WellPlate";
 import ReservoirSelection from "../../../3.Form/Plates/Reservoir/Reservoir";
 import AluminiumBlockSelection from "../../../3.Form/Plates/AluminiumBlock/AluminiumBlock";
+import { Notes } from "../../Components/notes";
 
-export const TransferForm = () => {
+export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   const [visible, setVisible] = useState(false);
 
   const [sourceItems, setSourceItems] = useState([]);
@@ -44,6 +45,8 @@ export const TransferForm = () => {
   const [liquidVolume, setLiquidVolume] = useState("");
 
   let selectedSlot = "";
+
+  const [isNotesOpen, setIsNotesOpen] = useState(false);
 
   useEffect(() => {
     let items = [];
@@ -68,6 +71,7 @@ export const TransferForm = () => {
       }));
       setSourceItems(new_items);
       setSelectedSource(new_items[0]);
+      setSelectedDestination(new_items[0]);
       selectedSlot = JSON.parse(new_items[0].value);
       console.log(selectedSlot);
     }
@@ -121,6 +125,13 @@ export const TransferForm = () => {
     handleTypeOfLabware();
   };
 
+  const handleChangeDestination = (e) => {
+    setSelectedDestination(e.target.value);
+    selectedSlot = JSON.parse(e.target.value);
+
+    handleTypeOfLabware();
+  };
+
   const handleClose = () => {
     setVisible(false);
   };
@@ -161,6 +172,10 @@ export const TransferForm = () => {
   const handleChangeLiquidVolume = (e) => {
     setLiquidVolume(e.target.value);
   };
+
+  const handleNotesClick = () => setIsNotesOpen(true);
+  const closeNotes = () => setIsNotesOpen(false);
+  const handleLocalClose = () => onClose();
 
   return (
     <>
@@ -227,27 +242,32 @@ export const TransferForm = () => {
                 required
               />
 
-              {/* <CButton className='standard-btn' style={{ marginRight: '10px' }} disabled={tubeRack || wellPlate || reservoir || aluminiumBlock ? false : true} onClick={handleAddLiquids}><CIcon size='sm' icon={cidEyedropper} /> ADD LIQUIDS</CButton> */}
-
               <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
 
             {/* SPACER */}
             <CCol md={2}></CCol>
 
-            <CCol md={3}>
+            <CCol md={4}>
               <CFormLabel htmlFor="validationCustom05">Destination</CFormLabel>
               <CFormSelect
                 options={sourceItems}
                 id="validationCustom05"
+                value={selectedDestination || ""}
+                onChange={(e) => handleChangeDestination(e)}
                 required
               />
               <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
 
-            <CCol md={2}>
+            <CCol md={1}>
               <CFormLabel htmlFor="validationCustom06">Wells</CFormLabel>
-              <CFormInput type="number" id="validationCustom06" required />
+              <CFormInput
+                style={{ caretColor: "transparent" }}
+                onClick={handleAddLiquids}
+                id="validationCustom06"
+                required
+              />
               <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
 
@@ -287,11 +307,54 @@ export const TransferForm = () => {
 
       <br />
 
+      {/* Control Buttons */}
+      <CRow className="mt-3">
+        <CCol
+          md={6}
+          style={{
+            display: "flex",
+            justifyContent: "flex-start",
+            gap: "50px",
+          }}
+        >
+          <CButton
+            className="dial-btn-left"
+            onClick={() =>
+              onDelete({ target: { id: stepId, value: stepTitle } })
+            }
+          >
+            Delete
+          </CButton>
+          <CButton className="dial-btn-left" onClick={handleNotesClick}>
+            Notes
+          </CButton>
+        </CCol>
+        <CCol
+          md={6}
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            gap: "50px",
+          }}
+        >
+          <CButton className="dial-btn-close" onClick={handleLocalClose}>
+            Close
+          </CButton>
+          <CButton className="dial-btn-save" type="submit">
+            Save
+          </CButton>
+        </CCol>
+      </CRow>
+
+      {/* Notes Component */}
+      <Notes isNotesOpen={isNotesOpen} onClose={closeNotes} />
+
       <AddLabwareModal
         visible={visible}
         handleClose={handleClose}
         title={selectedLabwareName}
         footerText={selectedLabwareName}
+        showFooter={true}
       >
         {tubeRackSelect &&
           React.Children.toArray(
