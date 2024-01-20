@@ -1,8 +1,19 @@
-import React, { useState } from 'react';
-import { CCol, CForm, CFormCheck, CTooltip, CFormInput, CFormLabel, CMultiSelect, CRow, CButton, CFormSwitch } from '@coreui/react-pro';
-import { Notes } from '../../Components/notes';
-import { options_LabWares } from './data';
-import { ReactComponent as InfoCircleIcon } from 'src/assets/images/generic/infoCircle.svg';
+import React, { useState } from "react";
+import {
+  CCol,
+  CForm,
+  CFormCheck,
+  CTooltip,
+  CFormInput,
+  CFormLabel,
+  CMultiSelect,
+  CRow,
+  CButton,
+  CFormSwitch,
+} from "@coreui/react-pro";
+import { Notes } from "../../Components/notes";
+import { options_LabWares } from "./data";
+import { ReactComponent as InfoCircleIcon } from "src/assets/images/generic/infoCircle.svg";
 
 export const BarCodeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     // State declarations
@@ -14,10 +25,14 @@ export const BarCodeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
 
 
 
-    // Handlers for various user interactions
-    const handleCheckboxChange = (e) => {
-        // Reset all checkboxes to false
-        const resetStates = { fridge: false, freezer: false, roomTemperature: false };
+  // Handlers for various user interactions
+  const handleCheckboxChange = (e) => {
+    // Reset all checkboxes to false
+    const resetStates = {
+      fridge: false,
+      freezer: false,
+      roomTemperature: false,
+    };
 
         // Set the clicked checkbox to true
         setCheckboxStates({ ...resetStates, [e.target.id]: e.target.checked });
@@ -62,21 +77,25 @@ export const BarCodeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     const handleNotesClick = () => setIsNotesOpen(true);
     const closeNotes = () => setIsNotesOpen(false);
 
-    return (
-        <>
-            <CRow>
-                <CCol md={12}>
-                    <CForm className="row g-3 needs-validaiton" noValidate validated={validated} onSubmit={handleSubmit}>
-                        {/* Form Header */}
-                        <div className='modal-header-row'>
-                            <CCol md={7}>
-                                <h5 className='modal-subtitle'>Barcode</h5>
-                            </CCol>
-                        </div>
+  return (
+    <>
+      <CRow>
+        <CCol md={12}>
+          <CForm
+            className="row g-3 needs-validaiton"
+            noValidate
+            validated={validated}
+            onSubmit={handleSubmit}
+          >
+            {/* Form Header */}
+            <div className="modal-header-row">
+              <CCol md={7}>
+                <h5 className="modal-subtitle">Barcode</h5>
+              </CCol>
+            </div>
 
-                        {/* Spacer*/}
-                        <CCol md={2}></CCol>
-
+            {/* Spacer*/}
+            <CCol md={2}></CCol>
 
                         {/* Microplate Checkbox and MultiSelect */}
                         <CRow className="align-items-end" >
@@ -169,11 +188,11 @@ export const BarCodeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                             </CCol>
                         </CRow>
 
-                        {/* Notes Component */}
-                        <Notes isNotesOpen={isNotesOpen} onClose={closeNotes} />
-                    </CForm>
-                </CCol>
-            </CRow >
-        </>
-    );
+            {/* Notes Component */}
+            <Notes isNotesOpen={isNotesOpen} onClose={closeNotes} />
+          </CForm>
+        </CCol>
+      </CRow>
+    </>
+  );
 };

@@ -1,14 +1,14 @@
-import React, { Suspense } from 'react'
-import { Navigate, Route, Routes } from 'react-router-dom'
-import { CContainer, CSpinner } from '@coreui/react-pro'
+import React, { Suspense } from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
+import { CContainer, CSpinner } from "@coreui/react-pro";
 
 // routes config
-import routes from '../routes'
-import AppBreadcrumb from './AppBreadcrumb'
+import routes from "../routes";
+import AppBreadcrumb from "./AppBreadcrumb";
 
 const AppContent = () => {
   return (
-    <CContainer fluid style={{ padding: '0' }}>
+    <CContainer fluid style={{ padding: "0" }}>
       <AppBreadcrumb />
       <Suspense fallback={<CSpinner color="primary" />}>
         <Routes>
@@ -23,13 +23,16 @@ const AppContent = () => {
                   element={<route.element />}
                 />
               )
-            )
+            );
           })}
-          <Route path="/" element={<Navigate to="protocol-designer" replace />} />
+          <Route
+            path="/"
+            element={<Navigate to="protocol-designer" replace />}
+          />
         </Routes>
       </Suspense>
     </CContainer>
-  )
-}
+  );
+};
 
-export default React.memo(AppContent)
+export default React.memo(AppContent);

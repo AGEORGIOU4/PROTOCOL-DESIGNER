@@ -1,0 +1,5 @@
+# Ignore artifacts:
+build
+coverage
+jsconfig.json
+jest.config.js

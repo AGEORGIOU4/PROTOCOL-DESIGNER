@@ -1,54 +1,60 @@
-import React, { useState } from 'react'
-import { CBadge, CButton, CCardBody, CCollapse, CSmartTable } from '@coreui/react-pro'
+import React, { useState } from "react";
+import {
+  CBadge,
+  CButton,
+  CCardBody,
+  CCollapse,
+  CSmartTable,
+} from "@coreui/react-pro";
 
-import data from './_data.js'
+import data from "./_data.js";
 
 const SmartTableBasicExample = () => {
-  const [details, setDetails] = useState([])
+  const [details, setDetails] = useState([]);
   const columns = [
     {
-      key: 'name',
-      _style: { width: '40%' },
+      key: "name",
+      _style: { width: "40%" },
     },
-    'registered',
-    { key: 'role', _style: { width: '20%' } },
-    { key: 'status', _style: { width: '20%' } },
+    "registered",
+    { key: "role", _style: { width: "20%" } },
+    { key: "status", _style: { width: "20%" } },
     {
-      key: 'show_details',
-      label: '',
-      _style: { width: '1%' },
+      key: "show_details",
+      label: "",
+      _style: { width: "1%" },
       filter: false,
       sorter: false,
     },
-  ]
+  ];
   const getBadge = (status) => {
     switch (status) {
-      case 'Active':
-        return 'success'
-      case 'Inactive':
-        return 'secondary'
-      case 'Pending':
-        return 'warning'
-      case 'Banned':
-        return 'danger'
+      case "Active":
+        return "success";
+      case "Inactive":
+        return "secondary";
+      case "Pending":
+        return "warning";
+      case "Banned":
+        return "danger";
       default:
-        return 'primary'
+        return "primary";
     }
-  }
+  };
   const toggleDetails = (index) => {
-    const position = details.indexOf(index)
-    let newDetails = details.slice()
+    const position = details.indexOf(index);
+    let newDetails = details.slice();
     if (position !== -1) {
-      newDetails.splice(position, 1)
+      newDetails.splice(position, 1);
     } else {
-      newDetails = [...details, index]
+      newDetails = [...details, index];
     }
-    setDetails(newDetails)
-  }
+    setDetails(newDetails);
+  };
 
   return (
     <CSmartTable
-      sorterValue={{ column: 'name', state: 'asc' }}
+      sorterValue={{ column: "name", state: "asc" }}
       clickableRows
       tableProps={{
         striped: true,
@@ -80,13 +86,13 @@ const SmartTableBasicExample = () => {
                 shape="square"
                 size="sm"
                 onClick={() => {
-                  toggleDetails(item.id)
+                  toggleDetails(item.id);
                 }}
               >
-                {details.includes(item.id) ? 'Hide' : 'Show'}
+                {details.includes(item.id) ? "Hide" : "Show"}
               </CButton>
             </td>
-          )
+          );
         },
         details: (item) => {
           return (
@@ -102,11 +108,11 @@ const SmartTableBasicExample = () => {
                 </CButton>
               </CCardBody>
             </CCollapse>
-          )
+          );
         },
       }}
     />
-  )
-}
+  );
+};
 
-export default SmartTableBasicExample
+export default SmartTableBasicExample;

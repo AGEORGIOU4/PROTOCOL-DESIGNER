@@ -1,5 +1,26 @@
-import { cilAperture, cilArrowRight, cilAvTimer, cilColorFill, cilMediaPause, cilChart, cilMove, cilRecycle, cilLoop, cilQrCode, cilCamera, cilPencil, cilTrash, cilSnowflake } from '@coreui/icons'
-import { cil3dRotate, cilLink, cilSwapVertical, cilTemperature, cilLockLocked } from '@coreui/icons-pro'
+import {
+  cilAperture,
+  cilArrowRight,
+  cilAvTimer,
+  cilColorFill,
+  cilMediaPause,
+  cilChart,
+  cilMove,
+  cilRecycle,
+  cilLoop,
+  cilQrCode,
+  cilCamera,
+  cilPencil,
+  cilTrash,
+  cilSnowflake,
+} from "@coreui/icons";
+import {
+  cil3dRotate,
+  cilLink,
+  cilSwapVertical,
+  cilTemperature,
+  cilLockLocked,
+} from "@coreui/icons-pro";
 
 export const generateStepID = () => {
   let length = 4;
@@ -12,81 +33,81 @@ export const generateStepID = () => {
   while (result.length < length) {
     result += Math.floor(Math.random() * 10); // Generates a random digit (0-9)
   }
-  return result
-}
+  return result;
+};
 
 export const getColor = (action) => {
   switch (action) {
-    case 'Delay':
-      return 'warning';
-    case 'Trash':
-      return 'danger';
+    case "Delay":
+      return "warning";
+    case "Trash":
+      return "danger";
     default:
-      return 'success'
+      return "success";
   }
-}
+};
 
 export const getIcons = (action) => {
   switch (action) {
-    case 'Transfer':
+    case "Transfer":
       return cilArrowRight;
-    case 'Mix':
+    case "Mix":
       return cilColorFill;
-    case 'Delay':
+    case "Delay":
       return cilMediaPause;
-    case 'Thermoblock':
+    case "Thermoblock":
       return cilTemperature;
-    case 'Magnet':
+    case "Magnet":
       return cilLink;
-    case 'Seal - Peel':
+    case "Seal - Peel":
       return cilLockLocked;
-    case 'Barcode':
-      return cilQrCode
-    case 'Thermocycler':
-      return cilLoop
-    case 'Camera':
+    case "Barcode":
+      return cilQrCode;
+    case "Thermocycler":
+      return cilLoop;
+    case "Camera":
       return cilCamera;
-    case 'Trash':
+    case "Trash":
       return cilTrash;
-    case 'Storage':
-      return cilSnowflake
-    case 'Centrifuge':
+    case "Storage":
+      return cilSnowflake;
+    case "Centrifuge":
       return cilAperture;
-    case 'Trash':
+    case "Trash":
       return cilTrash;
   }
-}
+};
 
 export const getDuration = (action) => {
   switch (action) {
-    case 'Transfer':
-      return '30';
-    case 'Mix':
-      return '15';
-    case 'Delay':
-      return '22';
-    case 'Heater Shaker':
-      return '10';
-    case 'Magnet':
-      return '45';
-    case 'Thermocycler':
-      return '99';
-    case 'Seal - Peel':
-      return '99';
-    case 'Storage':
-      return '99';
-    case 'Barcode':
-      return '99';
-    case 'Camera':
-      return '99';
-    case 'Trash':
-      return '99';
-    case 'Thermoblock':
-      return '60';
+    case "Transfer":
+      return "30";
+    case "Mix":
+      return "15";
+    case "Delay":
+      return "22";
+    case "Heater Shaker":
+      return "10";
+    case "Magnet":
+      return "45";
+    case "Thermocycler":
+      return "99";
+    case "Seal - Peel":
+      return "99";
+    case "Storage":
+      return "99";
+    case "Barcode":
+      return "99";
+    case "Camera":
+      return "99";
+    case "Trash":
+      return "99";
+    case "Thermoblock":
+      return "60";
 
-    case 'Centrifuge':
-      return '65';
-    case 'Trash':
-      return '5';
+    case "Centrifuge":
+      return "65";
+    case "Trash":
+      return "5";
   }
-}
+};

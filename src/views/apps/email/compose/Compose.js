@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import {
   CButtonToolbar,
   CDropdown,
@@ -14,8 +14,8 @@ import {
   CFormTextarea,
   CRow,
   CCol,
-} from '@coreui/react-pro'
-import CIcon from '@coreui/icons-react'
+} from "@coreui/react-pro";
+import CIcon from "@coreui/icons-react";
 import {
   cilAlignCenter,
   cilAlignLeft,
@@ -31,7 +31,7 @@ import {
   cilTags,
   cilTrash,
   cilUnderline,
-} from '@coreui/icons'
+} from "@coreui/icons";
 
 const Compose = () => {
   return (
@@ -75,7 +75,7 @@ const Compose = () => {
               <CButton color="light">
                 <CIcon icon={cilUnderline} />
               </CButton>
-            </CButtonGroup>{' '}
+            </CButtonGroup>{" "}
             <CButtonGroup className="me-1">
               <CButton color="light">
                 <CIcon icon={cilAlignLeft} />
@@ -133,15 +133,18 @@ const Compose = () => {
             </CDropdown>
           </CButtonToolbar>
           <div className="mb-3 mt-4">
-            <CFormTextarea rows="12" placeholder="Message content"></CFormTextarea>
+            <CFormTextarea
+              rows="12"
+              placeholder="Message content"
+            ></CFormTextarea>
           </div>
           <div>
             <CButton color="success" type="submit">
               Send
-            </CButton>{' '}
+            </CButton>{" "}
             <CButton color="light" type="submit">
               Draft
-            </CButton>{' '}
+            </CButton>{" "}
             <CButton color="danger" type="submit">
               Discard
             </CButton>
@@ -149,7 +152,7 @@ const Compose = () => {
         </CCol>
       </CRow>
     </>
-  )
-}
+  );
+};
 
-export default Compose
+export default Compose;

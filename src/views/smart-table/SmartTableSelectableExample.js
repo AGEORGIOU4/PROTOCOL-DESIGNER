@@ -1,42 +1,48 @@
-import React, { useState } from 'react'
-import { CBadge, CCardBody, CFormCheck, CFormLabel, CSmartTable } from '@coreui/react-pro'
+import React, { useState } from "react";
+import {
+  CBadge,
+  CCardBody,
+  CFormCheck,
+  CFormLabel,
+  CSmartTable,
+} from "@coreui/react-pro";
 
-import data from './_data.js'
+import data from "./_data.js";
 
 const SmartTableSelectableExample = () => {
-  const [selected, setSelected] = useState([2, 3])
+  const [selected, setSelected] = useState([2, 3]);
   const usersData = data.map((item, id) => {
-    const _selected = selected.includes(id)
+    const _selected = selected.includes(id);
     return {
       ...item,
       id,
       _selected,
-      _classes: [item._classes, _selected && 'table-selected'],
-    }
-  })
+      _classes: [item._classes, _selected && "table-selected"],
+    };
+  });
 
   const check = (e, id) => {
     if (e.target.checked) {
-      setSelected([...selected, id])
+      setSelected([...selected, id]);
     } else {
-      setSelected(selected.filter((itemId) => itemId !== id))
+      setSelected(selected.filter((itemId) => itemId !== id));
     }
-  }
+  };
 
   const getBadge = (status) => {
     switch (status) {
-      case 'Active':
-        return 'success'
-      case 'Inactive':
-        return 'secondary'
-      case 'Pending':
-        return 'warning'
-      case 'Banned':
-        return 'danger'
+      case "Active":
+        return "success";
+      case "Inactive":
+        return "secondary";
+      case "Pending":
+        return "warning";
+      case "Banned":
+        return "danger";
       default:
-        return 'primary'
+        return "primary";
     }
-  }
+  };
 
   return (
     <CCardBody>
@@ -44,11 +50,11 @@ const SmartTableSelectableExample = () => {
       <CSmartTable
         items={usersData}
         columns={[
-          { key: 'select', label: '', filter: false, sorter: false },
-          'name',
-          'registered',
-          'role',
-          'status',
+          { key: "select", label: "", filter: false, sorter: false },
+          "name",
+          "registered",
+          "role",
+          "status",
         ]}
         itemsPerPage={5}
         columnFilter
@@ -63,9 +69,12 @@ const SmartTableSelectableExample = () => {
                   checked={item._selected}
                   onChange={(e) => check(e, item.id)}
                 />
-                <CFormLabel variant="custom-checkbox" htmlFor={`checkbox${item.id}`} />
+                <CFormLabel
+                  variant="custom-checkbox"
+                  htmlFor={`checkbox${item.id}`}
+                />
               </td>
-            )
+            );
           },
           status: (item) => (
             <td>
@@ -78,7 +87,7 @@ const SmartTableSelectableExample = () => {
         }}
       />
     </CCardBody>
-  )
-}
+  );
+};
 
-export default SmartTableSelectableExample
+export default SmartTableSelectableExample;

@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import {
   CBadge,
   CDropdown,
@@ -7,8 +7,8 @@ import {
   CDropdownMenu,
   CDropdownToggle,
   CProgress,
-} from '@coreui/react-pro'
-import CIcon from '@coreui/icons-react'
+} from "@coreui/react-pro";
+import CIcon from "@coreui/icons-react";
 import {
   cilBasket,
   cilBell,
@@ -16,16 +16,21 @@ import {
   cilSpeedometer,
   cilUserFollow,
   cilUserUnfollow,
-} from '@coreui/icons'
+} from "@coreui/icons";
 
 const AppHeaderDropdownNotif = () => {
-  const itemsCount = 5
+  const itemsCount = 5;
   return (
     <CDropdown variant="nav-item" alignment="end">
       <CDropdownToggle caret={false}>
         <span className="d-inline-block my-1 mx-2 position-relative">
           <CIcon icon={cilBell} size="lg" />
-          <CBadge color="danger" position="top-end" shape="rounded-circle" className="p-1">
+          <CBadge
+            color="danger"
+            position="top-end"
+            shape="rounded-circle"
+            className="p-1"
+          >
             <span className="visually-hidden">{itemsCount} new alerts</span>
           </CBadge>
         </span>
@@ -35,19 +40,23 @@ const AppHeaderDropdownNotif = () => {
           <strong>You have {itemsCount} notifications</strong>
         </CDropdownHeader>
         <CDropdownItem>
-          <CIcon icon={cilUserFollow} className="me-2 text-success" /> New user registered
+          <CIcon icon={cilUserFollow} className="me-2 text-success" /> New user
+          registered
         </CDropdownItem>
         <CDropdownItem>
-          <CIcon icon={cilUserUnfollow} className="me-2 text-danger" /> User deleted
+          <CIcon icon={cilUserUnfollow} className="me-2 text-danger" /> User
+          deleted
         </CDropdownItem>
         <CDropdownItem>
-          <CIcon icon={cilChartPie} className="me-2 text-info" /> Sales report is ready
+          <CIcon icon={cilChartPie} className="me-2 text-info" /> Sales report
+          is ready
         </CDropdownItem>
         <CDropdownItem>
           <CIcon icon={cilBasket} className="me-2 text-primary" /> New client
         </CDropdownItem>
         <CDropdownItem>
-          <CIcon icon={cilSpeedometer} className="me-2 text-warning" /> Server overloaded
+          <CIcon icon={cilSpeedometer} className="me-2 text-warning" /> Server
+          overloaded
         </CDropdownItem>
         <CDropdownHeader className="bg-light dark:bg-white dark:bg-opacity-10">
           <strong>Server</strong>
@@ -59,7 +68,9 @@ const AppHeaderDropdownNotif = () => {
             </small>
           </div>
           <CProgress thin color="info-gradient" value={25} />
-          <small className="text-medium-emphasis">348 Processes. 1/4 Cores.</small>
+          <small className="text-medium-emphasis">
+            348 Processes. 1/4 Cores.
+          </small>
         </CDropdownItem>
         <CDropdownItem className="d-block">
           <div className="text-uppercase mb-1">
@@ -81,7 +92,7 @@ const AppHeaderDropdownNotif = () => {
         </CDropdownItem>
       </CDropdownMenu>
     </CDropdown>
-  )
-}
+  );
+};
 
-export default AppHeaderDropdownNotif
+export default AppHeaderDropdownNotif;

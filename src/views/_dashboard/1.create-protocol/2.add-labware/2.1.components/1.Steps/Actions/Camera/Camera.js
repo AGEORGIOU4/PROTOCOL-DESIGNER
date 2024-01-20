@@ -1,9 +1,19 @@
-import React, { useState } from 'react';
-import { CCol, CForm, CTooltip, CFormInput, CFormLabel, CMultiSelect, CRow, CButton, CFormSwitch } from '@coreui/react-pro';
-import { Notes } from '../../Components/notes';
-import { options_LabWares } from './data';
-import { ReactComponent as InfoCircleIcon } from 'src/assets/images/generic/infoCircle.svg';
-import { useStateManager } from 'react-select';
+import React, { useState } from "react";
+import {
+    CCol,
+    CForm,
+    CTooltip,
+    CFormInput,
+    CFormLabel,
+    CMultiSelect,
+    CRow,
+    CButton,
+    CFormSwitch,
+} from "@coreui/react-pro";
+import { Notes } from "../../Components/notes";
+import { options_LabWares } from "./data";
+import { ReactComponent as InfoCircleIcon } from "src/assets/images/generic/infoCircle.svg";
+import { useStateManager } from "react-select";
 
 export const CameraForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     // State declarations
@@ -103,47 +113,43 @@ export const CameraForm = ({ onClose, onDelete, stepId, stepTitle }) => {
 
                         {/* Labware Selection */}
                         <CRow>
-                            <CCol md={3} className='mt-4'>
+                            <CCol md={3} className="mt-4">
                                 <CFormLabel htmlFor="labWareInput">Labware</CFormLabel>
                                 <CMultiSelect
                                     id="labwareSelect"
                                     options={options_LabWares}
                                     value={selectedLabWare}
                                     onChange={handleLabWareChange}
-                                    placeholder='Select Labware'
+                                    placeholder="Select Labware"
                                 />
                             </CCol>
                         </CRow>
 
                         {/* Magnet Action Switch */}
-                        <CRow className='mt-3'>
+                        <CRow className="mt-3">
                             <CCol md={2}>
-                                <CFormLabel htmlFor='photoAction'>Photo</CFormLabel>
+                                <CFormLabel htmlFor="photoAction">Photo</CFormLabel>
                                 <CFormSwitch
                                     label={isPhotoOn ? "Yes" : "No"}
                                     id="formSwitchCheckPhoto"
-                                    onChange={() => handleToggleChange('photo')}
+                                    onChange={() => handleToggleChange("photo")}
                                     checked={isPhotoOn}
                                 />
                             </CCol>
                             <CCol md={2}>
-                                <CFormLabel htmlFor='magnetAction'>Video</CFormLabel>
+                                <CFormLabel htmlFor="magnetAction">Video</CFormLabel>
                                 <CFormSwitch
-
                                     label={isVideoOn ? "Yes" : "No"}
                                     id="formSwitchCheckVideo"
-                                    onChange={() => handleToggleChange('video')}
+                                    onChange={() => handleToggleChange("video")}
                                     checked={isVideoOn}
                                 />
-
                             </CCol>
                         </CRow>
 
-
                         {(isPhotoOn || isVideoOn) && (
-                            <CRow className='mt-4 mb-2'>
+                            <CRow className="mt-4 mb-2">
                                 {/* Common components for both photo and video */}
-
 
                                 {/* Components specific to photo toggle */}
                                 {isPhotoOn && (
@@ -262,14 +268,41 @@ export const CameraForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                         )}
 
                         {/* Form Buttons */}
-                        <CRow className='mt-3'>
-                            <CCol md={6} style={{ display: 'flex', justifyContent: 'flex-start', gap: '50px' }}>
-                                <CButton className='dial-btn-left' onClick={() => onDelete({ target: { id: stepId, value: stepTitle } })}>Delete</CButton>
-                                <CButton className='dial-btn-left' onClick={handleNotesClick}>Notes</CButton>
+                        <CRow className="mt-3">
+                            <CCol
+                                md={6}
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "flex-start",
+                                    gap: "50px",
+                                }}
+                            >
+                                <CButton
+                                    className="dial-btn-left"
+                                    onClick={() =>
+                                        onDelete({ target: { id: stepId, value: stepTitle } })
+                                    }
+                                >
+                                    Delete
+                                </CButton>
+                                <CButton className="dial-btn-left" onClick={handleNotesClick}>
+                                    Notes
+                                </CButton>
                             </CCol>
-                            <CCol md={6} style={{ display: 'flex', justifyContent: 'flex-end', gap: '50px' }}>
-                                <CButton className='dial-btn-close' onClick={handleLocalClose}>Close</CButton>
-                                <CButton className='dial-btn-save' type="submit">Save</CButton>
+                            <CCol
+                                md={6}
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "flex-end",
+                                    gap: "50px",
+                                }}
+                            >
+                                <CButton className="dial-btn-close" onClick={handleLocalClose}>
+                                    Close
+                                </CButton>
+                                <CButton className="dial-btn-save" type="submit">
+                                    Save
+                                </CButton>
                             </CCol>
                         </CRow>
 

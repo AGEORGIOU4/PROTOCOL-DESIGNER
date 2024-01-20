@@ -1,10 +1,10 @@
-import React from 'react'
-import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react-pro'
-import { DocsExample } from 'src/components'
+import React from "react";
+import { CCard, CCardBody, CCardHeader, CCol, CRow } from "@coreui/react-pro";
+import { DocsExample } from "src/components";
 
-import SmartTableBasixExample from './SmartTableBasixExample'
-import SmartTableDownloadableExample from './SmartTableDownloadableExample'
-import SmartTableSelectableExample from './SmartTableSelectableExample'
+import SmartTableBasixExample from "./SmartTableBasixExample";
+import SmartTableDownloadableExample from "./SmartTableDownloadableExample";
+import SmartTableSelectableExample from "./SmartTableSelectableExample";
 
 const SmartTable = () => {
   return (
@@ -12,7 +12,8 @@ const SmartTable = () => {
       <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>CoreUI Smart Table</strong> <small>React Table Component</small>
+            <strong>CoreUI Smart Table</strong>{" "}
+            <small>React Table Component</small>
           </CCardHeader>
           <CCardBody>
             <DocsExample href="components/smart-table/">
@@ -22,7 +23,8 @@ const SmartTable = () => {
         </CCard>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>CoreUI Smart Table</strong> <small>Table with selectable rows</small>
+            <strong>CoreUI Smart Table</strong>{" "}
+            <small>Table with selectable rows</small>
           </CCardHeader>
           <CCardBody>
             <DocsExample href="components/smart-table/">
@@ -32,7 +34,8 @@ const SmartTable = () => {
         </CCard>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>CoreUI Smart Table</strong> <small>Table with selectable rows</small>
+            <strong>CoreUI Smart Table</strong>{" "}
+            <small>Table with selectable rows</small>
           </CCardHeader>
           <CCardBody>
             <DocsExample href="components/smart-table/">
@@ -42,7 +45,7 @@ const SmartTable = () => {
         </CCard>
       </CCol>
     </CRow>
-  )
-}
+  );
+};
 
-export default SmartTable
+export default SmartTable;

@@ -1,10 +1,17 @@
-import React from 'react';
-import { CModal, CModalBody, CModalHeader, CModalTitle, CModalFooter, CButton } from '@coreui/react-pro';
-import { useModal } from 'src/contexts/ModalContext';
+import React from "react";
+import {
+  CModal,
+  CModalBody,
+  CModalHeader,
+  CModalTitle,
+  CModalFooter,
+  CButton,
+} from "@coreui/react-pro";
+import { useModal } from "src/contexts/ModalContext";
 
 export const WellOrder = () => {
   const { isModalOpen, closeModal } = useModal();
-  console.log(isModalOpen)
+  console.log(isModalOpen);
 
   return (
     <CModal
@@ -16,11 +23,11 @@ export const WellOrder = () => {
       <CModalHeader onClose={closeModal}>
         <CModalTitle>Well Order Settings</CModalTitle>
       </CModalHeader>
-      <CModalBody>
-        {/* Content of your Well Order settings */}
-      </CModalBody>
+      <CModalBody>{/* Content of your Well Order settings */}</CModalBody>
       <CModalFooter>
-        <CButton color="secondary" onClick={closeModal}>Close</CButton>
+        <CButton color="secondary" onClick={closeModal}>
+          Close
+        </CButton>
       </CModalFooter>
     </CModal>
   );

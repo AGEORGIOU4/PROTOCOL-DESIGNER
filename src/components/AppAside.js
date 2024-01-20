@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   CAvatar,
   CCloseButton,
@@ -14,8 +14,8 @@ import {
   CProgress,
   CSidebar,
   CSidebarHeader,
-} from '@coreui/react-pro'
-import CIcon from '@coreui/icons-react'
+} from "@coreui/react-pro";
+import CIcon from "@coreui/icons-react";
 import {
   cibSkype,
   cilCalendar,
@@ -24,32 +24,31 @@ import {
   cilLocationPin,
   cilSettings,
   cilSpeech,
-} from '@coreui/icons'
+} from "@coreui/icons";
 
-import avatar2 from './../assets/images/avatars/2.jpg'
-import avatar3 from './../assets/images/avatars/3.jpg'
-import avatar4 from './../assets/images/avatars/4.jpg'
-import avatar5 from './../assets/images/avatars/5.jpg'
-import avatar6 from './../assets/images/avatars/6.jpg'
-import avatar7 from './../assets/images/avatars/7.jpg'
-import avatar8 from './../assets/images/avatars/8.jpg'
+import avatar2 from "./../assets/images/avatars/2.jpg";
+import avatar3 from "./../assets/images/avatars/3.jpg";
+import avatar4 from "./../assets/images/avatars/4.jpg";
+import avatar5 from "./../assets/images/avatars/5.jpg";
+import avatar6 from "./../assets/images/avatars/6.jpg";
+import avatar7 from "./../assets/images/avatars/7.jpg";
+import avatar8 from "./../assets/images/avatars/8.jpg";
 
 const AppAside = () => {
-  const dispatch = useDispatch()
-  const asideShow = useSelector((state) => state.asideShow)
+  const dispatch = useDispatch();
+  const asideShow = useSelector((state) => state.asideShow);
 
-  const [activeKey, setActiveKey] = useState(1)
+  const [activeKey, setActiveKey] = useState(1);
 
   return (
     <CSidebar
       colorScheme="light"
       size="sm"
-
       placement="start"
-      position='fixed'
+      position="fixed"
       visible={true}
       onVisibleChange={(visible) => {
-        dispatch({ type: 'set', asideShow: visible })
+        dispatch({ type: "set", asideShow: visible });
       }}
     >
       <CSidebarHeader className="bg-transparent p-0">
@@ -59,8 +58,8 @@ const AppAside = () => {
               href="#"
               active={activeKey === 1}
               onClick={(e) => {
-                e.preventDefault()
-                setActiveKey(1)
+                e.preventDefault();
+                setActiveKey(1);
               }}
             >
               <CIcon icon={cilList} alt="CoreUI Icons List" />
@@ -71,8 +70,8 @@ const AppAside = () => {
               href="#"
               active={activeKey === 2}
               onClick={(e) => {
-                e.preventDefault()
-                setActiveKey(2)
+                e.preventDefault();
+                setActiveKey(2);
               }}
             >
               <CIcon icon={cilSpeech} alt="CoreUI Icons Speech" />
@@ -83,15 +82,17 @@ const AppAside = () => {
               href="#"
               active={activeKey === 3}
               onClick={(e) => {
-                e.preventDefault()
-                setActiveKey(3)
+                e.preventDefault();
+                setActiveKey(3);
               }}
             >
               <CIcon icon={cilSettings} alt="CoreUI Icons Settings" />
             </CNavLink>
           </CNavItem>
           <CNavItem className="ms-auto me-2 d-flex align-items-center">
-            <CCloseButton onClick={() => dispatch({ type: 'set', asideShow: false })} />
+            <CCloseButton
+              onClick={() => dispatch({ type: "set", asideShow: false })}
+            />
           </CNavItem>
         </CNav>
       </CSidebarHeader>
@@ -101,7 +102,10 @@ const AppAside = () => {
             <CListGroupItem className="list-group-item border-start-4 border-start-secondary bg-light dark:bg-white dark:bg-opacity-10 dark:text-medium-emphasis text-center fw-bold text-medium-emphasis text-uppercase small">
               Today
             </CListGroupItem>
-            <CListGroupItem href="#" className="border-start-4 border-start-warning">
+            <CListGroupItem
+              href="#"
+              className="border-start-4 border-start-warning"
+            >
               <CAvatar src={avatar7} size="lg" className="float-end" />
               <div>
                 Meeting with <strong>Lucas</strong>
@@ -113,7 +117,10 @@ const AppAside = () => {
                 <CIcon icon={cilLocationPin} /> Palo Alto, CA
               </small>
             </CListGroupItem>
-            <CListGroupItem href="#" className="border-start-4 border-start-info">
+            <CListGroupItem
+              href="#"
+              className="border-start-4 border-start-info"
+            >
               <CAvatar src={avatar4} size="lg" className="float-end" />
               <div>
                 Skype with <strong>Megan</strong>
@@ -128,7 +135,11 @@ const AppAside = () => {
             <CListGroupItem className="border-start-4 border-start-secondary bg-light dark:bg-white dark:bg-opacity-10 dark:text-medium-emphasis text-center fw-bold text-medium-emphasis text-uppercase small">
               Tomorrow
             </CListGroupItem>
-            <CListGroupItem accent="danger" href="#" className="border-start-4 border-start-danger">
+            <CListGroupItem
+              accent="danger"
+              href="#"
+              className="border-start-4 border-start-danger"
+            >
               <div>
                 New UI Project - <strong>deadline</strong>
               </div>
@@ -146,7 +157,10 @@ const AppAside = () => {
                 <CAvatar src={avatar6} size="sm" />
               </div>
             </CListGroupItem>
-            <CListGroupItem href="#" className="border-start-4 border-start-success">
+            <CListGroupItem
+              href="#"
+              className="border-start-4 border-start-success"
+            >
               <div>
                 <strong>#10 Startups.Garden</strong> Meetup
               </div>
@@ -157,7 +171,10 @@ const AppAside = () => {
                 <CIcon icon={cilLocationPin} /> Palo Alto, CA
               </small>
             </CListGroupItem>
-            <CListGroupItem href="#" className="border-start-4 border-start-primary border-bottom">
+            <CListGroupItem
+              href="#"
+              className="border-start-4 border-start-primary border-bottom"
+            >
               <div>
                 <strong>Team meeting</strong>
               </div>
@@ -187,12 +204,16 @@ const AppAside = () => {
             </div>
             <div>
               <small className="text-medium-emphasis">Lukasz Holeczek</small>
-              <small className="text-medium-emphasis float-end mt-1">1:52 PM</small>
+              <small className="text-medium-emphasis float-end mt-1">
+                1:52 PM
+              </small>
             </div>
-            <div className="text-truncate fw-semibold">Lorem ipsum dolor sit amet</div>
+            <div className="text-truncate fw-semibold">
+              Lorem ipsum dolor sit amet
+            </div>
             <small className="text-medium-emphasis">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-              incididunt...
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+              eiusmod tempor incididunt...
             </small>
           </div>
           <hr />
@@ -202,12 +223,16 @@ const AppAside = () => {
             </div>
             <div>
               <small className="text-medium-emphasis">Lukasz Holeczek</small>
-              <small className="text-medium-emphasis float-end mt-1">1:52 PM</small>
+              <small className="text-medium-emphasis float-end mt-1">
+                1:52 PM
+              </small>
             </div>
-            <div className="text-truncate fw-semibold">Lorem ipsum dolor sit amet</div>
+            <div className="text-truncate fw-semibold">
+              Lorem ipsum dolor sit amet
+            </div>
             <small className="text-medium-emphasis">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-              incididunt...
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+              eiusmod tempor incididunt...
             </small>
           </div>
           <hr />
@@ -217,12 +242,16 @@ const AppAside = () => {
             </div>
             <div>
               <small className="text-medium-emphasis">Lukasz Holeczek</small>
-              <small className="text-medium-emphasis float-end mt-1">1:52 PM</small>
+              <small className="text-medium-emphasis float-end mt-1">
+                1:52 PM
+              </small>
             </div>
-            <div className="text-truncate fw-semibold">Lorem ipsum dolor sit amet</div>
+            <div className="text-truncate fw-semibold">
+              Lorem ipsum dolor sit amet
+            </div>
             <small className="text-medium-emphasis">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-              incididunt...
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+              eiusmod tempor incididunt...
             </small>
           </div>
           <hr />
@@ -232,12 +261,16 @@ const AppAside = () => {
             </div>
             <div>
               <small className="text-medium-emphasis">Lukasz Holeczek</small>
-              <small className="text-medium-emphasis float-end mt-1">1:52 PM</small>
+              <small className="text-medium-emphasis float-end mt-1">
+                1:52 PM
+              </small>
             </div>
-            <div className="text-truncate fw-semibold">Lorem ipsum dolor sit amet</div>
+            <div className="text-truncate fw-semibold">
+              Lorem ipsum dolor sit amet
+            </div>
             <small className="text-medium-emphasis">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-              incididunt...
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+              eiusmod tempor incididunt...
             </small>
           </div>
           <hr />
@@ -247,12 +280,16 @@ const AppAside = () => {
             </div>
             <div>
               <small className="text-medium-emphasis">Lukasz Holeczek</small>
-              <small className="text-medium-emphasis float-end mt-1">1:52 PM</small>
+              <small className="text-medium-emphasis float-end mt-1">
+                1:52 PM
+              </small>
             </div>
-            <div className="text-truncate fw-semibold">Lorem ipsum dolor sit amet</div>
+            <div className="text-truncate fw-semibold">
+              Lorem ipsum dolor sit amet
+            </div>
             <small className="text-medium-emphasis">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-              incididunt...
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+              eiusmod tempor incididunt...
             </small>
           </div>
         </CTabPane>
@@ -260,12 +297,17 @@ const AppAside = () => {
           <h6>Settings</h6>
           <div>
             <div className="clearfix mt-4">
-              <CFormSwitch size="lg" label="Option 1" id="Option1" defaultChecked />
+              <CFormSwitch
+                size="lg"
+                label="Option 1"
+                id="Option1"
+                defaultChecked
+              />
             </div>
             <div>
               <small className="text-medium-emphasis">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua.
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </small>
             </div>
           </div>
@@ -275,8 +317,8 @@ const AppAside = () => {
             </div>
             <div>
               <small className="text-medium-emphasis">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua.
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </small>
             </div>
           </div>
@@ -287,7 +329,12 @@ const AppAside = () => {
           </div>
           <div>
             <div className="clearfix mt-3">
-              <CFormSwitch size="lg" label="Option 4" id="Option4" defaultChecked />
+              <CFormSwitch
+                size="lg"
+                label="Option 4"
+                id="Option4"
+                defaultChecked
+              />
             </div>
           </div>
           <hr />
@@ -298,7 +345,9 @@ const AppAside = () => {
             </small>
           </div>
           <CProgress thin color="info-gradient" value={25} />
-          <small className="text-medium-emphasis">348 Processes. 1/4 Cores.</small>
+          <small className="text-medium-emphasis">
+            348 Processes. 1/4 Cores.
+          </small>
           <div className="text-uppercase mb-1 mt-2">
             <small>
               <b>Memory Usage</b>
@@ -323,7 +372,7 @@ const AppAside = () => {
         </CTabPane>
       </CTabContent>
     </CSidebar>
-  )
-}
+  );
+};
 
-export default React.memo(AppAside)
+export default React.memo(AppAside);
