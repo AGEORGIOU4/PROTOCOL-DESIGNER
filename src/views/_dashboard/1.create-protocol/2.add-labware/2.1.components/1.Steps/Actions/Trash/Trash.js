@@ -89,25 +89,17 @@ export const TrashForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const form = event.currentTarget;
-    const selectedLabwareData = currentLabwareOptions.filter(item => selectedLabware.has(item.id));
 
     if (form.checkValidity() === false) {
       event.stopPropagation();
       setValidated(false);
     } else {
-      // Filter the currentLabwareOptions to include only those that are selected
-
-
-      // Construct the JSON object with the required data
       const formData = {
         stepId: stepId,
         stepTitle: stepTitle,
         deletedLabware: Array.from(deletedLabware)
       };
-
       console.log(JSON.stringify(formData, null, 2));
-
-
     }
     setValidated(true);
   };
