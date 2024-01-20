@@ -30,45 +30,46 @@ export const MagnetForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   const [isMagnetOn, setIsMagnetOn] = useState(false);
   const [isPrecipitationTime, setIsPrecipititationTime] = useState(false);
 
-    // Handlers for various user interactions
-    const handleDefaultHourChange = (e) => setDefaultHour(e.target.value);
-    const handleDefaultMinuteChange = (e) => setDefaultMinute(e.target.value);
-    const handleDefaultSecondChange = (e) => setDefaultSecond(e.target.value);
-    const handleCheckboxChange = (e) => setCheckboxStates({ ...checkboxStates, [e.target.id]: e.target.checked });
-    const handleLabWareChange = (selectedOptions) => setSelectedLabWare(selectedOptions);
-    const handleToggleChange = (toggleId) => {
-        if (toggleId === 'magnet') setIsMagnetOn(!isMagnetOn);
-        else if (toggleId === 'precipitationTime') setIsPrecipititationTime(!isPrecipitationTime);
-    };
-    const handleLocalClose = () => onClose();
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const form = event.currentTarget;
-        if (form.checkValidity() === false) {
-            event.stopPropagation();
-            setValidated(true);
-            return;
+  // Handlers for various user interactions
+  const handleDefaultHourChange = (e) => setDefaultHour(e.target.value);
+  const handleDefaultMinuteChange = (e) => setDefaultMinute(e.target.value);
+  const handleDefaultSecondChange = (e) => setDefaultSecond(e.target.value);
+  const handleCheckboxChange = (e) => setCheckboxStates({ ...checkboxStates, [e.target.id]: e.target.checked });
+  const handleLabWareChange = (selectedOptions) => setSelectedLabWare(selectedOptions);
+  const handleToggleChange = (toggleId) => {
+    if (toggleId === 'magnet') setIsMagnetOn(!isMagnetOn);
+    else if (toggleId === 'precipitationTime') setIsPrecipititationTime(!isPrecipitationTime);
+  };
+  const handleLocalClose = () => onClose();
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.stopPropagation();
+      setValidated(true);
+    } else {
+
+      const formData = {
+        step: stepTitle,
+        parameters: {
+
+          labware_ids: selectedLabWare.map(option => option.value),
+          manget_action: isMagnetOn,
+          perception_action: isPrecipitationTime,
+          perception_hour: defaultHour,
+          perception_minute: defaultMinute,
+          perception_second: defaultSecond,
+          deactivate_perception_action: checkboxStates.deactivePrecipitation,
         }
-
-        const formData = {
-            step: stepTitle,
-            parameters: {
-
-                labware_ids: selectedLabWare.map(option => option.value), // assuming options_LabWares contains objects with 'value' properties
-                manget_action: isMagnetOn,
-                perception_action: isPrecipitationTime,
-                perception_hour: defaultHour,
-                perception_minute: defaultMinute,
-                perception_second: defaultSecond,
-                deactivate_perception_action: checkboxStates.deactivePrecipitation,
-            }
-        }
-        console.log(JSON.stringify(formData, null, 2));
-    };
+      }
+      console.log(JSON.stringify(formData, null, 2));
+    }
+    setValidated(true)
+  };
 
 
-    const handleNotesClick = () => setIsNotesOpen(true);
-    const closeNotes = () => setIsNotesOpen(false);
+  const handleNotesClick = () => setIsNotesOpen(true);
+  const closeNotes = () => setIsNotesOpen(false);
 
   return (
     <>
@@ -97,6 +98,7 @@ export const MagnetForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                   value={selectedLabWare}
                   onChange={handleLabWareChange}
                   placeholder="Select Labware"
+                  required
                 />
               </CCol>
             </CRow>

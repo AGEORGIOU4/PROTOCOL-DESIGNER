@@ -2,17 +2,13 @@ import React, { useState } from "react";
 import {
   CCol,
   CForm,
-  CCardBody,
   CCard,
-  CFormCheck,
-  CTooltip,
   CFormInput,
   CFormSelect,
   CFormLabel,
   CMultiSelect,
   CRow,
-  CButton,
-  CFormSwitch,
+  CButton
 } from "@coreui/react-pro";
 import { Notes } from "../../Components/notes";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
@@ -156,13 +152,36 @@ export const CentrifugeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   };
 
   const handleSubmit = (event) => {
+    event.preventDefault();
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
-      event.preventDefault();
       event.stopPropagation();
+    } else {
+      // Collect data for JSON export
+      const formData = {
+        step: stepTitle,
+        parameters: {
+          labware: selectedLabWare.map(option => option.value),
+          time: {
+            hours: defaultHour,
+            minutes: defaultMinute,
+            seconds: defaultSecond
+          },
+          rpm: selectedRPM,
+          temperature: selectedTemperature,
+          labwarePairs: labwarePairs.map(pair => ({
+            left: pair.left.content,
+            right: pair.right.content
+          }))
+        }
+      };
+
+      // Log JSON to console or handle it as needed
+      console.log(JSON.stringify(formData, null, 2));
     }
     setValidated(true);
   };
+
   const handleNotesClick = () => setIsNotesOpen(true);
   const closeNotes = () => setIsNotesOpen(false);
 
@@ -193,6 +212,7 @@ export const CentrifugeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                   value={selectedLabWare}
                   onChange={handleLabWareChange}
                   placeholder="Select Labware"
+                  required
                 />
               </CCol>
             </CRow>
@@ -363,6 +383,8 @@ export const CentrifugeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                   type="text"
                   id="defaultHour"
                   required
+                  value={defaultHour}
+                  onChange={handleDefaultHourChange}
                   placeholder="Default (h)"
                 />
               </CCol>
@@ -372,6 +394,8 @@ export const CentrifugeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                   type="text"
                   id="defaultMinute"
                   required
+                  value={defaultMinute}
+                  onChange={handleDefaultMinuteChange}
                   placeholder="Default (m)"
                 />
               </CCol>
@@ -381,6 +405,8 @@ export const CentrifugeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                   type="text"
                   id="defaultSecond"
                   required
+                  value={defaultSecond}
+                  onChange={handleDefaultSecondChange}
                   placeholder="Default (s)"
                 />
               </CCol>

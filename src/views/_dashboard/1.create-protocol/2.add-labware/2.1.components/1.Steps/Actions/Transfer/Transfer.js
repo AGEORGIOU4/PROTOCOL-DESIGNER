@@ -80,13 +80,36 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   }, []);
 
   const handleSubmit = (event) => {
+    event.preventDefault();
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
-      event.preventDefault();
       event.stopPropagation();
+      setValidated(false);
+    } else {
+      const formData = {
+        stepTitle: stepTitle,
+        source: selectedSource,
+        destination: selectedDestination,
+        tubeRackSelect: tubeRackSelect,
+        wellPlateSelect: wellPlateSelect,
+        reservoirSelect: reservoirSelect,
+        aluminiumBlockSelect: aluminiumBlockSelect,
+        selectedLabware: {
+          name: selectedLabwareName,
+          type: selectedLabwareType
+        },
+        liquid: {
+          name: selectedLiquid,
+          volume: liquidVolume
+        }
+      };
+
+      console.log(JSON.stringify(formData, null, 2));
+
     }
     setValidated(true);
   };
+
 
   const handleTypeOfLabware = () => {
     if (selectedSlot.labware_type == "tube_rack") {
@@ -301,50 +324,51 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
               <CFormLabel htmlFor="validationPath">Path</CFormLabel>
               {/* Missing Icons from Figma as one entity please */}
             </CCol>
+            {/* Control Buttons */}
+            <CRow className="mt-3">
+              <CCol
+                md={6}
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  gap: "50px",
+                }}
+              >
+                <CButton
+                  className="dial-btn-left"
+                  onClick={() =>
+                    onDelete({ target: { id: stepId, value: stepTitle } })
+                  }
+                >
+                  Delete
+                </CButton>
+                <CButton className="dial-btn-left" onClick={handleNotesClick}>
+                  Notes
+                </CButton>
+              </CCol>
+              <CCol
+                md={6}
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: "50px",
+                }}
+              >
+                <CButton className="dial-btn-close" onClick={handleLocalClose}>
+                  Close
+                </CButton>
+                <CButton className="dial-btn-save" type="submit">
+                  Save
+                </CButton>
+              </CCol>
+            </CRow>
           </CForm>
         </CCol>
       </CRow>
 
       <br />
 
-      {/* Control Buttons */}
-      <CRow className="mt-3">
-        <CCol
-          md={6}
-          style={{
-            display: "flex",
-            justifyContent: "flex-start",
-            gap: "50px",
-          }}
-        >
-          <CButton
-            className="dial-btn-left"
-            onClick={() =>
-              onDelete({ target: { id: stepId, value: stepTitle } })
-            }
-          >
-            Delete
-          </CButton>
-          <CButton className="dial-btn-left" onClick={handleNotesClick}>
-            Notes
-          </CButton>
-        </CCol>
-        <CCol
-          md={6}
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            gap: "50px",
-          }}
-        >
-          <CButton className="dial-btn-close" onClick={handleLocalClose}>
-            Close
-          </CButton>
-          <CButton className="dial-btn-save" type="submit">
-            Save
-          </CButton>
-        </CCol>
-      </CRow>
+
 
       {/* Notes Component */}
       <Notes isNotesOpen={isNotesOpen} onClose={closeNotes} />

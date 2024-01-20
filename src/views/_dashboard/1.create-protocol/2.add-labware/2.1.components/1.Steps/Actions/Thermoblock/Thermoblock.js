@@ -22,6 +22,15 @@ export const ThermoBlockForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   const [selectedTemperature, setSelectedTemperature] = useState("°C");
   const [isFirstSelection, setIsFirstSelection] = useState(true);
   const [isFirstSelectionRPM, setIsFirstSelectionRPM] = useState(true);
+  const [timerHour, setTimerHour] = useState('');
+  const [timerMinute, setTimerMinute] = useState('');
+  const [timerSecond, setTimerSecond] = useState('');
+
+  const handleTimerHourChange = (e) => setTimerHour(e.target.value);
+  const handleTimerMinuteChange = (e) => setTimerMinute(e.target.value);
+  const handleTimerSecondChange = (e) => setTimerSecond(e.target.value);
+
+
 
   const [checkboxStates, setCheckboxStates] = useState({
     pauseDelay: false,
@@ -68,13 +77,34 @@ export const ThermoBlockForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   };
 
   const handleSubmit = (event) => {
+    event.preventDefault();
     const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
+    if (!form.checkValidity()) {
       event.stopPropagation();
+      setValidated(false);
+    } else {
+      // Construct the formData JSON object
+      const formData = {
+        stepTitle: stepTitle,
+        parameters: {
+          labware: selectedLabWare.map(option => option.value),
+          temperature: selectedTemperature,
+          shakeSpeed: isShakeSpeedOn,
+          rpm: isShakeSpeedOn ? selectedRPM : null,
+          timer: checkboxStates.timer ? {
+            hour: timerHour,
+            minute: timerMinute,
+            second: timerSecond
+          } : null
+        }
+      };
+
+      console.log(JSON.stringify(formData, null, 2));
+
     }
     setValidated(true);
   };
+
 
   const handleNotesClick = () => {
     setIsNotesOpen(true);
@@ -106,6 +136,7 @@ export const ThermoBlockForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                   options={options_LabWares}
                   value={selectedLabWare}
                   onChange={handleLabWareChange}
+                  required
                 />
               </CCol>
             </CRow>
@@ -183,6 +214,8 @@ export const ThermoBlockForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                     id="defaultHour"
                     required
                     placeholder="Default (h)"
+                    value={timerHour}
+                    onChange={handleTimerHourChange}
                   />
                 </CCol>
                 <CCol
@@ -194,6 +227,8 @@ export const ThermoBlockForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                     id="defaultMinute"
                     required
                     placeholder="Default (m)"
+                    value={timerMinute}
+                    onChange={handleTimerMinuteChange}
                   />
                 </CCol>
                 <CCol
@@ -205,6 +240,8 @@ export const ThermoBlockForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                     id="defaultSecond"
                     required
                     placeholder="Default (s)"
+                    value={timerSecond}
+                    onChange={handleTimerSecondChange}
                   />
                 </CCol>
               </CRow>

@@ -32,6 +32,24 @@ export const MixForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   const [isNotesOpen, setIsNotesOpen] = useState(false);
   const [currentSVG, setCurrentSVG] = useState(defaultFlow);
   const [isAspireDispenseActive, setIsAspireDispenseActive] = useState(false);
+  const [mixVolume, setMixVolume] = useState("");
+  const [repetitions, setRepetitions] = useState("");
+  const [flowRateAspirate, setFlowRateAspirate] = useState("");
+  const [tipPosition, setTipPosition] = useState("");
+  const [tipPositionNumber, setTipPositionNumber] = useState("");
+  const [flowRateDispense, setFlowRateDispense] = useState("");
+  const [touchTip, setTouchTip] = useState("");
+  const [blowout, setBlowout] = useState("");
+
+  const handleMixVolumeChange = (e) => setMixVolume(e.target.value);
+  const handleRepetitionsChange = (e) => setRepetitions(e.target.value);
+  const handleFlowRateAspirateChange = (e) => setFlowRateAspirate(e.target.value);
+  const handleTipPositionChange = (e) => setTipPosition(e.target.value);
+  const handleTipPositionNumberChange = (e) => setTipPositionNumber(e.target.value);
+  const handleFlowRateDispenseChange = (e) => setFlowRateDispense(e.target.value);
+  const handleTouchTipChange = (e) => setTouchTip(e.target.value);
+  const handleBlowoutChange = (e) => setBlowout(e.target.value);
+
   const handleSvgClick = () => {
     setCurrentSVG(currentSVG === defaultFlow ? defaultFlow : defaultFlow);
   };
@@ -71,34 +89,42 @@ export const MixForm = ({ onClose, onDelete, stepId, stepTitle }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
     const form = event.currentTarget;
-    if (form.checkValidity() === false) {
+    if (!form.checkValidity()) {
       event.stopPropagation();
-      setValidated(true);
-      return;
+      setValidated(false);
+
+    } else {
+
+      const formData = {
+        step: stepTitle,
+        parameters: {
+          pipette: selectedPipette,
+          mixVolume: mixVolume,
+          repetitions: repetitions,
+          labware: selectedLabWare,
+          wells: selectedColumn,
+          aspirate: {
+            flowRate: flowRateAspirate,
+            tipPosition: tipPosition,
+            tipPositionNumber: tipPositionNumber,
+            wellOrder: currentSVG
+          },
+          dispense: {
+            flowRate: flowRateDispense,
+            touchTip: touchTip,
+            blowout: blowout
+          },
+          changeTip: form.querySelector('#validationCustom05').value
+        }
+      };
+
+      console.log(JSON.stringify(formData, null, 2));
     }
-
-    const formData = {
-      pipette: selectedPipette,
-      mixVolume: form.querySelector('#mixVolumeInput').value,
-      repetitions: form.querySelector('#repetitionsInput').value,
-      labware: selectedLabWare,
-      wells: selectedColumn,
-      flowRateAspirate: isActive('ASPIRATE') ? form.querySelector('#flowRateAspirate').value : '',
-      tipPosition: isActive() ? form.querySelector('#tipPosition').value : '',
-      tipPositionNumber: isActive() && checkboxStates.flowRateDelay ? form.querySelector('#tipPositionNumber').value : '',
-      wellOrder: isActive() ? currentSVG : '',
-      flowRateDispense: isActive() ? form.querySelector('#flowRateDelayDispenseInput').value : '',
-      touchTip: isActive() && checkboxStates.flowRateTouchTipDispense ? form.querySelector('#flowRateTouchTipDispenseInput').value : '',
-      blowout: isActive() && checkboxStates.flowRateBlowoutDispense ? form.querySelector('#flowRateBlowoutDispenseInput').value : '',
-      changeTip: form.querySelector('#validationCustom05').value,
-    };
-
-    console.log(JSON.stringify(formData, null, 2));
-
-    // Now you have the form data in formData JSON object, and you can perform any action you want with it.
-    // If you want to send it to a server, make an API request here.
+    setValidated(true);
   };
+
   const handlePipetteChange = (event) => {
     setSelectedPipette(event.target.value);
   };
@@ -140,18 +166,18 @@ export const MixForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                   options={
                     selectedPipette === ""
                       ? [
-                          {
-                            value: "",
-                            label: "Select Pipette",
-                            disabled: true,
-                            hidden: true,
-                          },
-                          ...options_Pipettes,
-                        ]
+                        {
+                          value: "",
+                          label: "Select Pipette",
+                          disabled: true,
+                          hidden: true,
+                        },
+                        ...options_Pipettes,
+                      ]
                       : options_Pipettes
                   }
                 />
-                <CFormFeedback valid>Looks good!</CFormFeedback>
+
               </CCol>
               <CCol md={2}>
                 <CFormLabel htmlFor="mixVolumeInput">
@@ -162,6 +188,8 @@ export const MixForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                   id="mixVolumeInput"
                   required
                   placeholder="Add Volume"
+                  value={mixVolume}
+                  onChange={handleMixVolumeChange}
                 />
                 <CFormFeedback valid>Looks good!</CFormFeedback>
               </CCol>
@@ -172,6 +200,8 @@ export const MixForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                   id="repetitionsInput"
                   required
                   placeholder="Add Repetitions"
+                  value={repetitions}
+                  onChange={handleRepetitionsChange}
                 />
                 <CFormFeedback valid>Looks good!</CFormFeedback>
               </CCol>
@@ -189,18 +219,17 @@ export const MixForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                   options={
                     selectedLabWare === ""
                       ? [
-                          {
-                            value: "",
-                            label: "Select Labware",
-                            disabled: true,
-                            hidden: true,
-                          },
-                          ...options_LabWares,
-                        ]
+                        {
+                          value: "",
+                          label: "Select Labware",
+                          disabled: true,
+                          hidden: true,
+                        },
+                        ...options_LabWares,
+                      ]
                       : options_LabWares
                   }
                 />
-                <CFormFeedback valid>Looks good!</CFormFeedback>
               </CCol>
 
               {/* Column Row */}
@@ -214,18 +243,17 @@ export const MixForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                   options={
                     selectedColumn === ""
                       ? [
-                          {
-                            value: "",
-                            label: "Select Well",
-                            disabled: true,
-                            hidden: true,
-                          },
-                          ...options_Wells,
-                        ]
+                        {
+                          value: "",
+                          label: "Select Well",
+                          disabled: true,
+                          hidden: true,
+                        },
+                        ...options_Wells,
+                      ]
                       : options_Wells
                   }
                 />
-                <CFormFeedback valid>Looks good!</CFormFeedback>
               </CCol>
             </CRow>
 
@@ -301,6 +329,8 @@ export const MixForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                         type="text"
                         id="flowRateAspirate"
                         placeholder="Default (μL/s)"
+                        value={flowRateAspirate}
+                        onChange={handleFlowRateAspirateChange}
                       />
                     </>
                   )}
@@ -328,12 +358,16 @@ export const MixForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                         type="text"
                         id="tipPosition"
                         placeholder="Default (mm)"
+                        value={tipPosition}
+                        onChange={handleTipPositionChange}
                       />
                       {checkboxStates.flowRateDelay && (
                         <CFormInput
                           type="number"
                           id="tipPositionNumber"
                           placeholder="Number of (s)"
+                          value={tipPositionNumber}
+                          onChange={handleTipPositionNumberChange}
                         />
                       )}
                     </>
@@ -362,6 +396,8 @@ export const MixForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                     style={{ width: "none" }}
                     type="text"
                     placeholder="Default (μL/s)"
+                    value={flowRateDispense}
+                    onChange={handleFlowRateDispenseChange}
                   ></CFormInput>
                 )}
                 <div className="row g-2" style={{ marginTop: "4px" }}>
@@ -384,6 +420,8 @@ export const MixForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                       type="number"
                       id="flowRateDelayDispenseInput"
                       placeholder="Number of (s)"
+                      value={touchTip}
+                      onChange={handleTouchTipChange}
                     />
                   </div>
                   <div className="col-6">
@@ -405,6 +443,8 @@ export const MixForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                       type="number"
                       id="flowRateTouchTipDispenseInput"
                       placeholder="Number of tips"
+                      value={blowout}
+                      onChange={handleBlowoutChange}
                     />
                   </div>
                   <div className="col-6">
@@ -430,14 +470,14 @@ export const MixForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                       options={
                         selectedColumn === ""
                           ? [
-                              {
-                                value: "",
-                                label: "Select Blowout",
-                                disabled: true,
-                                hidden: true,
-                              },
-                              ...options_Blowout,
-                            ]
+                            {
+                              value: "",
+                              label: "Select Blowout",
+                              disabled: true,
+                              hidden: true,
+                            },
+                            ...options_Blowout,
+                          ]
                           : options_Blowout
                       }
                     />

@@ -17,11 +17,13 @@ export const TrashForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   const [isNotesOpen, setIsNotesOpen] = useState(false);
   const [validated, setValidated] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
+  const [checkboxValidationFailed, setCheckboxValidationFailed] = useState(false);
   // This will now hold the labware items and needs to be in a state to update the component when items are deleted.
   const [currentLabwareOptions, setCurrentLabwareOptions] =
     useState(labwareOptions);
 
   const [selectedLabware, setSelectedLabware] = useState(new Set());
+  const [deletedLabware, setDeletedLabware] = useState(new Set());
 
   const toggleLabwareSelection = (id) => {
     setSelectedLabware((prevSelected) => {
@@ -53,6 +55,7 @@ export const TrashForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   };
 
   const onDeleteSelection = (selectedItems) => {
+    setDeletedLabware(new Set([...deletedLabware, ...selectedItems]));
     if (selectedItems === "all") {
       // Clear all items from the state to remove them from the UI
       setCurrentLabwareOptions([]);
@@ -84,13 +87,31 @@ export const TrashForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   const handleLocalClose = () => onClose();
 
   const handleSubmit = (event) => {
+    event.preventDefault();
     const form = event.currentTarget;
+    const selectedLabwareData = currentLabwareOptions.filter(item => selectedLabware.has(item.id));
+
     if (form.checkValidity() === false) {
-      event.preventDefault();
       event.stopPropagation();
+      setValidated(false);
+    } else {
+      // Filter the currentLabwareOptions to include only those that are selected
+
+
+      // Construct the JSON object with the required data
+      const formData = {
+        stepId: stepId,
+        stepTitle: stepTitle,
+        deletedLabware: Array.from(deletedLabware)
+      };
+
+      console.log(JSON.stringify(formData, null, 2));
+
+
     }
     setValidated(true);
   };
+
 
   const handleNotesClick = () => setIsNotesOpen(true);
 

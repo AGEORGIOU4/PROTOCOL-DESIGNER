@@ -14,6 +14,7 @@ export const DelayForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   // State for managing notes visibility and form validation
   const [isNotesOpen, setIsNotesOpen] = useState(false);
   const [validated, setValidated] = useState(false);
+  const [checkboxValidationFailed, setCheckboxValidationFailed] = useState(false);
 
   // State for managing checkbox states
   const [checkboxStates, setCheckboxStates] = useState({
@@ -29,32 +30,36 @@ export const DelayForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     });
   };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const form = event.currentTarget;
-        if (form.checkValidity() === false) {
-            event.preventDefault();
-            event.stopPropagation();
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    if (!checkboxStates.pauseDelay && !checkboxStates.delay)
+      setCheckboxValidationFailed(true);
+
+    if (checkboxStates.pauseDelay || checkboxStates.delay)
+      setCheckboxValidationFailed(false)
+
+    if (form.checkValidity() === false) {
+      event.stopPropagation();
+      setValidated(false);
+    } else {
+
+
+      const formData = {
+        step: stepTitle,
+        parameters: {
+          delay_pause_action: checkboxStates.pauseDelay,
+          delay_action: checkboxStates.delay,
+          messageDisplay: form.querySelector('#messageDisplay').value,
+          dealay_hour: checkboxStates.delay ? form.querySelector('#defaultHour').value : '',
+          delay_minute: checkboxStates.delay ? form.querySelector('#defaultMinute').value : '',
+          delay_second: checkboxStates.delay ? form.querySelector('#defaultSecond').value : '',
         }
-
-        const formData = {
-            step: stepTitle,
-            parameters: {
-                delay_pause_action: checkboxStates.pauseDelay,
-                delay_action: checkboxStates.delay,
-                messageDisplay: form.querySelector('#messageDisplay').value,
-                dealay_hour: checkboxStates.delay ? form.querySelector('#defaultHour').value : '',
-                delay_minute: checkboxStates.delay ? form.querySelector('#defaultMinute').value : '',
-                delay_second: checkboxStates.delay ? form.querySelector('#defaultSecond').value : '',
-            }
-        };
-        setValidated(true);
-
-        console.log(JSON.stringify(formData, null, 2));
-
-        // Now you have the form data in formData JSON object, and you can perform any action you want with it.
-        // If you want to send it to a server, make an API request here.
-    };
+      };
+      console.log(JSON.stringify(formData, null, 2));
+    }
+    setValidated(true);
+  };
 
 
   const handleNotesClick = () => setIsNotesOpen(true);
@@ -137,9 +142,18 @@ export const DelayForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                     placeholder="Default (s)"
                   />
                 </CCol>
+
               </CRow>
             )}
-
+            {checkboxValidationFailed && (
+              <CRow className='mt-3'>
+                <CCol md={12}>
+                  <div className="alert alert-danger-custom" role="alert">
+                    At least Photo or Video must be on to save.
+                  </div>
+                </CCol>
+              </CRow>
+            )}
             {/* Control Buttons */}
             <CRow className="mt-3">
               <CCol

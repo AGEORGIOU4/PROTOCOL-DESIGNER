@@ -15,7 +15,6 @@ import {
 } from "@coreui/react-pro";
 import { Notes } from "../../Components/notes";
 import { options_LabWares, options_Temperature } from "./data";
-import { ReactComponent as ArrowSvg } from "src/assets/images/generic/grouping.svg";
 import { v4 as uuidv4 } from "uuid";
 import { ConnectionStep } from "../../Components/connectionStep";
 
@@ -43,6 +42,7 @@ export const ThermocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   });
   const [addStep, setAddStep] = useState([]);
   const [isButtonClicked, setIsButtonClicked] = useState(false);
+  const [checkboxValidationFailed, setCheckboxValidationFailed] = useState(false);
 
   // Handlers for various user interactions
   const handleCheckboxChange = (e) => {
@@ -118,13 +118,65 @@ export const ThermocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
 
   const handleLocalClose = () => onClose();
   const handleSubmit = (event) => {
+    event.preventDefault();
     const form = event.currentTarget;
+    if (checkboxStates.themorcyclerProfile && addStep.length <= 0) {
+      setCheckboxValidationFailed(true)
+    } else {
+      setCheckboxValidationFailed(false)
+    }
     if (form.checkValidity() === false) {
-      event.preventDefault();
       event.stopPropagation();
+      setValidated(false);
+    } else {
+      const formData = {
+        stepTitle: stepTitle,
+        labware: selectedLabWare.map(option => option.value),
+        checkboxStates: {
+          thermocyclerState: checkboxStates.themorcyclerState,
+          thermocyclerProfile: checkboxStates.themorcyclerProfile
+        },
+        toggleStates: {
+          thermoBlock: checkToggleStates.thermoBlock,
+          lid: checkToggleStates.lid,
+          lidPosition: checkToggleStates.lidPosition
+        },
+        temperatureSettings: {
+          thermoBlock: selectTemperature.thermoBlock,
+          lid: selectTemperature.lid
+        },
+        stepsOrCycles: addStep.map(stepOrCycle => {
+          if (stepOrCycle.isCycle) {
+            return {
+              type: "cycle",
+              uniqueId: stepOrCycle.uniqueId,
+              cycleSteps: stepOrCycle.cycleSteps.map(cycleStep => ({
+                name: cycleStep.name,
+                temperature: cycleStep.temperature,
+                timeMinutes: cycleStep.timeMinutes,
+                timeSeconds: cycleStep.timeSeconds,
+                cycleNumbers: cycleStep.cycleNumbers
+              }))
+            };
+          } else {
+            return {
+              type: "step",
+              uniqueId: stepOrCycle.uniqueId,
+              name: stepOrCycle.name,
+              temperature: stepOrCycle.temperature,
+              timeMinutes: stepOrCycle.timeMinutes,
+              timeSeconds: stepOrCycle.timeSeconds
+            };
+          }
+        })
+      };
+
+      console.log(JSON.stringify(formData, null, 2));
+
     }
     setValidated(true);
   };
+
   const handleNotesClick = () => setIsNotesOpen(true);
   const closeNotes = () => setIsNotesOpen(false);
 
@@ -222,6 +274,7 @@ export const ThermocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                       value={selectedLabWare}
                       onChange={handleLabWareChange}
                       placeholder="Select Labware"
+                      required
                     />
                   </CCol>
                 </CRow>
@@ -756,7 +809,7 @@ export const ThermocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                       label={
                         checkToggleStates.thermoBlock ? "Active" : "Deactivate"
                       }
-                      id="ThermocyclerBlockToggle2"
+                      id="thermoBlock"
                       onChange={handleTogglesChange}
                       checked={checkToggleStates.thermoBlock}
                     />
@@ -764,7 +817,7 @@ export const ThermocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                       <>
                         <CCol md={5}>
                           <CFormSelect
-                            id="thermoBlock" // Make sure the id matches the state key
+                            id="thermoBlock"
                             required
                             onChange={handleDropdownChange}
                             value={selectTemperature.thermoBlock}
@@ -829,6 +882,16 @@ export const ThermocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                   </CCol>
                 </CRow>
               </>
+            )}
+
+            {checkboxValidationFailed && (
+              <CRow className='mt-3'>
+                <CCol md={12}>
+                  <div className="alert alert-danger-custom" role="alert">
+                    At least one step must be added to save.
+                  </div>
+                </CCol>
+              </CRow>
             )}
 
             {/* Form Buttons */}

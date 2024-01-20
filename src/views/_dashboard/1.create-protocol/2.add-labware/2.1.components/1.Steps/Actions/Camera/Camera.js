@@ -20,7 +20,6 @@ export const CameraForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     const [isNotesOpen, setIsNotesOpen] = useState(false);
     const [validated, setValidated] = useState(false);
     const [selectedLabWare, setSelectedLabWare] = useState([]);
-    const [checkboxStates, setCheckboxStates] = useState({ pauseDelay: false, delay: false });
     const [isPhotoOn, setIsPhotoOn] = useState(false);
     const [isPhotoVideoOn, setIsPhotoVideoOn] = useState(false)
     const [isVideoOn, setIsVideoOn] = useState(false);
@@ -35,7 +34,6 @@ export const CameraForm = ({ onClose, onDelete, stepId, stepTitle }) => {
 
 
     // Handlers for various user interactions
-    const handleCheckboxChange = (e) => setCheckboxStates({ ...checkboxStates, [e.target.id]: e.target.checked });
     const handleLabWareChange = (selectedOptions) => setSelectedLabWare(selectedOptions);
     const handleToggleChange = (toggleId) => {
         if (toggleId === 'photo') {
@@ -58,7 +56,8 @@ export const CameraForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     const handleSubmit = (event) => {
         event.preventDefault();
         const form = event.currentTarget;
-        if (selectedLabWare.length <= 0 || !form.checkValidity() || (!isPhotoOn && !isVideoOn)) {
+        console.log(form.checkValidity())
+        if (!form.checkValidity() || (!isPhotoOn && !isVideoOn)) {
             event.stopPropagation()
             setCheckboxValidationFailed(true);
             setValidated(false);
@@ -87,13 +86,13 @@ export const CameraForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                 }
             };
             setCheckboxValidationFailed(false);
-            setValidated(true);
+
             console.log(JSON.stringify(formData, null, 2));
         }
 
 
+        setValidated(true);
 
-        // Here, you would typically send formData to your server or handle it as needed
     };
 
     const handleNotesClick = () => setIsNotesOpen(true);
@@ -103,7 +102,7 @@ export const CameraForm = ({ onClose, onDelete, stepId, stepTitle }) => {
         <>
             <CRow>
                 <CCol md={12}>
-                    <CForm className="row g-3 needs-validaiton" validated={validated} onSubmit={handleSubmit}>
+                    <CForm className="row g-3 needs-validaiton" noValidate validated={validated} onSubmit={handleSubmit}>
                         {/* Form Header */}
                         <div className='modal-header-row'>
                             <CCol md={7}>
@@ -121,6 +120,7 @@ export const CameraForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                                     value={selectedLabWare}
                                     onChange={handleLabWareChange}
                                     placeholder="Select Labware"
+                                    required
                                 />
                             </CCol>
                         </CRow>
@@ -162,7 +162,9 @@ export const CameraForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                                             required
                                             value={photoQuantity}
                                             onChange={(e) => setPhotoQuantity(e.target.value)}
-                                            placeholder='Picture Number' />
+                                            placeholder='Picture Number'
+                                        />
+
                                     </CCol>
                                 )}
 
