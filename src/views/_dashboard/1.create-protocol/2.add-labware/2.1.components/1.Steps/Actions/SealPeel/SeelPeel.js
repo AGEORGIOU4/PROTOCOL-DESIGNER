@@ -3,23 +3,21 @@ import {
   CCol,
   CForm,
   CFormCheck,
-  CTooltip,
-  CFormInput,
   CFormLabel,
   CMultiSelect,
   CRow,
   CButton,
-  CFormSwitch,
 } from "@coreui/react-pro";
 import { Notes } from "../../Components/notes";
 import { options_LabWares } from "./data";
-import { ReactComponent as InfoCircleIcon } from "src/assets/images/generic/infoCircle.svg";
+
 
 export const SeelPeelForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   // State declarations
   const [isNotesOpen, setIsNotesOpen] = useState(false);
   const [validated, setValidated] = useState(false);
   const [selectedLabWare, setSelectedLabWare] = useState([]);
+  const [checkboxValidationFailed, setCheckboxValidationFailed] = useState(false);
   const [checkboxStates, setCheckboxStates] = useState({
     pauseDelay: false,
     delay: false,
@@ -33,13 +31,34 @@ export const SeelPeelForm = ({ onClose, onDelete, stepId, stepTitle }) => {
 
   const handleLocalClose = () => onClose();
   const handleSubmit = (event) => {
+    event.preventDefault();
     const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
+    if (!checkboxStates.seal && !checkboxStates.peel)
+      setCheckboxValidationFailed(true);
+
+    if (checkboxStates.seal || checkboxStates.peel)
+      setCheckboxValidationFailed(false)
+    if (!form.checkValidity()) {
       event.stopPropagation();
+      setValidated(false);
+    } else {
+      const formData = {
+        stepTitle: stepTitle,
+        parameters: {
+          labware: selectedLabWare.map(option => option.value),
+          actions: {
+            seal: checkboxStates.seal,
+            peel: checkboxStates.peel
+          }
+        }
+      };
+
+      console.log(JSON.stringify(formData, null, 2));
+
     }
     setValidated(true);
   };
+
   const handleNotesClick = () => setIsNotesOpen(true);
   const closeNotes = () => setIsNotesOpen(false);
 
@@ -70,6 +89,7 @@ export const SeelPeelForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                   value={selectedLabWare}
                   onChange={handleLabWareChange}
                   placeholder="Select Labware"
+                  required
                 />
               </CCol>
             </CRow>
@@ -93,6 +113,15 @@ export const SeelPeelForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                 />
               </CCol>
             </CRow>
+            {checkboxValidationFailed && (
+              <CRow className='mt-3'>
+                <CCol md={12}>
+                  <div className="alert alert-danger-custom" role="alert">
+                    At least Seal or Peel must ticke on to save.
+                  </div>
+                </CCol>
+              </CRow>
+            )}
             {/* Form Buttons */}
             <CRow className="mt-3">
               <CCol

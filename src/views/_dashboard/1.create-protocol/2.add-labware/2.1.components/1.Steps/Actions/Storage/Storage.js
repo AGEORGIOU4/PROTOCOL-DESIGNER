@@ -20,6 +20,7 @@ export const StorageForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   const [isNotesOpen, setIsNotesOpen] = useState(false);
   const [validated, setValidated] = useState(false);
   const [selectedLabWare, setSelectedLabWare] = useState([]);
+  const [checkboxValidationFailed, setCheckboxValidationFailed] = useState(false);
   const [checkboxStates, setCheckboxStates] = useState({
     pauseDelay: false,
     delay: false,
@@ -42,13 +43,36 @@ export const StorageForm = ({ onClose, onDelete, stepId, stepTitle }) => {
 
   const handleLocalClose = () => onClose();
   const handleSubmit = (event) => {
+    event.preventDefault();
     const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
+    if (!checkboxStates.fridge && !checkboxStates.freezer && !checkboxStates.roomTemperature)
+      setCheckboxValidationFailed(true);
+
+    if (checkboxStates.fridge || checkboxStates.freezer || checkboxStates.roomTemperature)
+      setCheckboxValidationFailed(false)
+    if (!form.checkValidity()) {
       event.stopPropagation();
+      setValidated(false);
+    } else {
+      // Construct the formData JSON object
+      const formData = {
+        stepTitle: stepTitle,
+        parameters: {
+          labware: selectedLabWare.map(option => option.value),
+          storageConditions: {
+            fridge: checkboxStates.fridge,
+            freezer: checkboxStates.freezer,
+            roomTemperature: checkboxStates.roomTemperature
+          }
+        }
+      };
+
+      console.log(JSON.stringify(formData, null, 2));
+
     }
     setValidated(true);
   };
+
   const handleNotesClick = () => setIsNotesOpen(true);
   const closeNotes = () => setIsNotesOpen(false);
 
@@ -79,6 +103,7 @@ export const StorageForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                   value={selectedLabWare}
                   onChange={handleLabWareChange}
                   placeholder="Select Labware"
+                  required
                 />
               </CCol>
             </CRow>
@@ -112,6 +137,15 @@ export const StorageForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                 />
               </CCol>
             </CRow>
+            {checkboxValidationFailed && (
+              <CRow className='mt-3'>
+                <CCol md={12}>
+                  <div className="alert alert-danger-custom" role="alert">
+                    At least Photo or Video must be on to save.
+                  </div>
+                </CCol>
+              </CRow>
+            )}
             {/* Form Buttons */}
             <CRow className="mt-3">
               <CCol
