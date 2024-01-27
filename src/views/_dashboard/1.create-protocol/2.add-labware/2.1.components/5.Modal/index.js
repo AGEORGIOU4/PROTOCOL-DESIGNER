@@ -20,6 +20,7 @@ const AddLabwareModal = ({
   stepIndex = "",
   visible,
   handleClose,
+  fullView = false
 }) => {
   // let titleToUpper = stepTitle.toUpperCase();
   let titleToUpper = title;
@@ -30,7 +31,7 @@ const AddLabwareModal = ({
         fullscreen
         backdrop={"static"}
         className={
-          title == "Thermocycler" ? "add-labware-modal-tb" : "add-labware-modal"
+          title == "Thermocycler" || fullView ? "add-labware-modal-tb" : "add-labware-modal"
         }
         visible={visible}
         onClose={handleClose}

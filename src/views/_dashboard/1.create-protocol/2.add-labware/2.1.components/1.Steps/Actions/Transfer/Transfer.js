@@ -44,7 +44,7 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   const [selectedLiquid, setSelectedLiquid] = useState("");
   const [liquidVolume, setLiquidVolume] = useState("");
 
-  let selectedSlot = "";
+  const [selectedSlot, setSelectedSlot] = useState({});
 
   const [isNotesOpen, setIsNotesOpen] = useState(false);
 
@@ -58,25 +58,31 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
 
     let tmp_items = [];
 
-    if (items) {
-      items?.map((item, index) => {
-        if (index > 0) {
-          tmp_items.push(item);
-        }
-      });
+    try {
+      if (items.length > 1) {
+        items?.map((item, index) => {
+          if (index > 0) {
+            tmp_items.push(item);
+          }
+        });
 
-      const new_items = tmp_items.map((item) => ({
-        value: JSON.stringify(item),
-        label: item.name,
-      }));
-      setSourceItems(new_items);
-      setSelectedSource(new_items[0]);
-      setSelectedDestination(new_items[0]);
-      selectedSlot = JSON.parse(new_items[0].value);
-      console.log(selectedSlot);
+        const new_items = tmp_items.map((item) => ({
+          value: JSON.stringify(item),
+          label: item.name,
+        }));
+
+        setSourceItems(new_items);
+        setSelectedSource(new_items[0]);
+        setSelectedDestination(new_items[0]);
+        setSelectedSlot(JSON.parse(new_items[0].value));
+        console.log(selectedSlot);
+
+        handleTypeOfLabware(JSON.parse(new_items[0].value));
+      }
+    } catch (e) {
+      console.log(e)
     }
 
-    handleTypeOfLabware();
   }, []);
 
   const handleSubmit = (event) => {
@@ -111,48 +117,48 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   };
 
 
-  const handleTypeOfLabware = () => {
-    if (selectedSlot.labware_type == "tube_rack") {
-      setTubeRackSelect(selectedSlot.labware_name);
+  const handleTypeOfLabware = (selected) => {
+    if (selected.labware_type == "tube_rack") {
+      setTubeRackSelect(selected.labware_name);
       setWellPlateSelect("");
       setReservoirSelect("");
       setAluminiumBlockSelect("");
     }
 
-    if (selectedSlot.labware_type == "well_plate") {
+    if (selected.labware_type == "well_plate") {
       setTubeRackSelect("");
-      setWellPlateSelect(selectedSlot.labware_name);
+      setWellPlateSelect(selected.labware_name);
       setReservoirSelect("");
       setAluminiumBlockSelect("");
     }
 
-    if (selectedSlot.labware_type == "reservoir") {
+    if (selected.labware_type == "reservoir") {
       setTubeRackSelect("");
       setWellPlateSelect("");
-      setReservoirSelect(selectedSlot.labware_name);
+      setReservoirSelect(selected.labware_name);
       setAluminiumBlockSelect("");
     }
 
-    if (selectedSlot.labware_type == "aluminium_block") {
+    if (selected.labware_type == "aluminium_block") {
       setTubeRackSelect("");
       setWellPlateSelect("");
       setReservoirSelect("");
-      setAluminiumBlockSelect(selectedSlot.labware_name);
+      setAluminiumBlockSelect(selected.labware_name);
     }
   };
 
   const handleChangeSource = (e) => {
     setSelectedSource(e.target.value);
-    selectedSlot = JSON.parse(e.target.value);
+    setSelectedSlot(JSON.parse(e.target.value));
 
-    handleTypeOfLabware();
+    handleTypeOfLabware(JSON.parse(e.target.value));
   };
 
   const handleChangeDestination = (e) => {
     setSelectedDestination(e.target.value);
-    selectedSlot = JSON.parse(e.target.value);
+    setSelectedSlot(JSON.parse(e.target.value));
 
-    handleTypeOfLabware();
+    handleTypeOfLabware(JSON.parse(e.target.value));
   };
 
   const handleClose = () => {
@@ -378,7 +384,8 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
         handleClose={handleClose}
         title={selectedLabwareName}
         footerText={selectedLabwareName}
-        showFooter={true}
+        showFooter={false}
+        fullView={true}
       >
         {tubeRackSelect &&
           React.Children.toArray(

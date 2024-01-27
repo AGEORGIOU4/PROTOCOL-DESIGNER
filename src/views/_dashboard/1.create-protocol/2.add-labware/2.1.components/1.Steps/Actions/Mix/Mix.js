@@ -155,57 +155,57 @@ export const MixForm = ({ onClose, onDelete, stepId, stepTitle }) => {
             </div>
 
             {/* Pipette, Mix Volume, Repetitions Row */}
-            <CRow>
-              <CCol md={2}>
-                <CFormLabel htmlFor="pipetteSelect">Pipette</CFormLabel>
-                <CFormSelect
-                  id="pipetteSelect"
-                  required
-                  onChange={handlePipetteChange}
-                  value={selectedPipette}
-                  options={
-                    selectedPipette === ""
-                      ? [
-                        {
-                          value: "",
-                          label: "Select Pipette",
-                          disabled: true,
-                          hidden: true,
-                        },
-                        ...options_Pipettes,
-                      ]
-                      : options_Pipettes
-                  }
-                />
 
-              </CCol>
-              <CCol md={2}>
-                <CFormLabel htmlFor="mixVolumeInput">
-                  Mix Volume (μL)
-                </CFormLabel>
-                <CFormInput
-                  type="number"
-                  id="mixVolumeInput"
-                  required
-                  placeholder="Add Volume"
-                  value={mixVolume}
-                  onChange={handleMixVolumeChange}
-                />
-                <CFormFeedback valid>Looks good!</CFormFeedback>
-              </CCol>
-              <CCol md={2}>
-                <CFormLabel htmlFor="repetitionsInput">Repetitions</CFormLabel>
-                <CFormInput
-                  type="number"
-                  id="repetitionsInput"
-                  required
-                  placeholder="Add Repetitions"
-                  value={repetitions}
-                  onChange={handleRepetitionsChange}
-                />
-                <CFormFeedback valid>Looks good!</CFormFeedback>
-              </CCol>
-            </CRow>
+            <CCol md={2}>
+              <CFormLabel htmlFor="pipetteSelect">Pipette</CFormLabel>
+              <CFormSelect
+                id="pipetteSelect"
+                required
+                onChange={handlePipetteChange}
+                value={selectedPipette}
+                options={
+                  selectedPipette === ""
+                    ? [
+                      {
+                        value: "",
+                        label: "Select Pipette",
+                        disabled: true,
+                        hidden: true,
+                      },
+                      ...options_Pipettes,
+                    ]
+                    : options_Pipettes
+                }
+              />
+
+            </CCol>
+            <CCol md={2}>
+              <CFormLabel htmlFor="mixVolumeInput">
+                Mix Volume (μL)
+              </CFormLabel>
+              <CFormInput
+                type="number"
+                id="mixVolumeInput"
+                required
+                placeholder="Add Volume"
+                value={mixVolume}
+                onChange={handleMixVolumeChange}
+              />
+              <CFormFeedback valid>Looks good!</CFormFeedback>
+            </CCol>
+            <CCol md={2}>
+              <CFormLabel htmlFor="repetitionsInput">Repetitions</CFormLabel>
+              <CFormInput
+                type="number"
+                id="repetitionsInput"
+                required
+                placeholder="Add Repetitions"
+                value={repetitions}
+                onChange={handleRepetitionsChange}
+              />
+              <CFormFeedback valid>Looks good!</CFormFeedback>
+            </CCol>
+
 
             {/* Labware Row */}
             <CRow className="pt-3">
@@ -313,178 +313,178 @@ export const MixForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                 </CCol>
               </div>
             </CRow>
-            <CRow>
-              <CCol md={2}>
-                <CFormLabel htmlFor="flowRateAspirate">Flow Rate</CFormLabel>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "16px",
-                  }}
-                >
-                  {isActive() && (
-                    <>
+
+            <CCol md={2}>
+              <CFormLabel htmlFor="flowRateAspirate">Flow Rate</CFormLabel>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "16px",
+                }}
+              >
+                {isActive() && (
+                  <>
+                    <CFormInput
+                      type="text"
+                      id="flowRateAspirate"
+                      placeholder="Default (μL/s)"
+                      value={flowRateAspirate}
+                      onChange={handleFlowRateAspirateChange}
+                    />
+                  </>
+                )}
+                <CFormCheck
+                  id="flowRateDelay"
+                  label="Delay"
+                  onChange={handleCheckboxChange}
+                  checked={checkboxStates.flowRateDelay}
+                />
+              </div>
+            </CCol>
+
+            <CCol md={2}>
+              <CFormLabel htmlFor="tipPosition">Tip Position</CFormLabel>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "16px",
+                }}
+              >
+                {isActive() && (
+                  <>
+                    <CFormInput
+                      type="text"
+                      id="tipPosition"
+                      placeholder="Default (mm)"
+                      value={tipPosition}
+                      onChange={handleTipPositionChange}
+                    />
+                    {checkboxStates.flowRateDelay && (
                       <CFormInput
-                        type="text"
-                        id="flowRateAspirate"
-                        placeholder="Default (μL/s)"
-                        value={flowRateAspirate}
-                        onChange={handleFlowRateAspirateChange}
+                        type="number"
+                        id="tipPositionNumber"
+                        placeholder="Number of (s)"
+                        value={tipPositionNumber}
+                        onChange={handleTipPositionNumberChange}
                       />
-                    </>
-                  )}
+                    )}
+                  </>
+                )}
+              </div>
+            </CCol>
+            <CCol md={2}>
+              {isActive() && (
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <CFormLabel htmlFor="wellOrder">Well Order</CFormLabel>
+                  <img
+                    src={currentSVG}
+                    alt="Clickable icon"
+                    onClick={handleSvgClick}
+                    style={{ cursor: "pointer", alignSelf: "flex-start" }} // Add alignSelf if you want to center the icon
+                  />
+                  {/* If you have more form elements related to the Well Order, they would go here. */}
+                </div>
+              )}
+            </CCol>
+
+            <CCol md={2} className="flow-rate-col">
+              <CFormLabel htmlFor="flowRate">Flow Rate</CFormLabel>
+              {isActive() && (
+                <CFormInput
+                  style={{ width: "none" }}
+                  type="text"
+                  placeholder="Default (μL/s)"
+                  value={flowRateDispense}
+                  onChange={handleFlowRateDispenseChange}
+                ></CFormInput>
+              )}
+              <div className="row g-2" style={{ marginTop: "4px" }}>
+                <div className="col-6">
                   <CFormCheck
-                    id="flowRateDelay"
+                    id="flowRateDelayDispense"
                     label="Delay"
                     onChange={handleCheckboxChange}
-                    checked={checkboxStates.flowRateDelay}
+                    checked={checkboxStates.flowRateDelayDispense}
                   />
                 </div>
-              </CCol>
-
-              <CCol md={2}>
-                <CFormLabel htmlFor="tipPosition">Tip Position</CFormLabel>
                 <div
+                  className="col-6"
                   style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "16px",
+                    minHeight: "58px",
+                    opacity: checkboxStates.flowRateDelayDispense ? 1 : 0,
                   }}
                 >
-                  {isActive() && (
-                    <>
-                      <CFormInput
-                        type="text"
-                        id="tipPosition"
-                        placeholder="Default (mm)"
-                        value={tipPosition}
-                        onChange={handleTipPositionChange}
-                      />
-                      {checkboxStates.flowRateDelay && (
-                        <CFormInput
-                          type="number"
-                          id="tipPositionNumber"
-                          placeholder="Number of (s)"
-                          value={tipPositionNumber}
-                          onChange={handleTipPositionNumberChange}
-                        />
-                      )}
-                    </>
-                  )}
-                </div>
-              </CCol>
-              <CCol md={2}>
-                {isActive() && (
-                  <div style={{ display: "flex", flexDirection: "column" }}>
-                    <CFormLabel htmlFor="wellOrder">Well Order</CFormLabel>
-                    <img
-                      src={currentSVG}
-                      alt="Clickable icon"
-                      onClick={handleSvgClick}
-                      style={{ cursor: "pointer", alignSelf: "flex-start" }} // Add alignSelf if you want to center the icon
-                    />
-                    {/* If you have more form elements related to the Well Order, they would go here. */}
-                  </div>
-                )}
-              </CCol>
-
-              <CCol md={2} className="flow-rate-col">
-                <CFormLabel htmlFor="flowRate">Flow Rate</CFormLabel>
-                {isActive() && (
                   <CFormInput
-                    style={{ width: "none" }}
-                    type="text"
-                    placeholder="Default (μL/s)"
-                    value={flowRateDispense}
-                    onChange={handleFlowRateDispenseChange}
-                  ></CFormInput>
-                )}
-                <div className="row g-2" style={{ marginTop: "4px" }}>
-                  <div className="col-6">
-                    <CFormCheck
-                      id="flowRateDelayDispense"
-                      label="Delay"
-                      onChange={handleCheckboxChange}
-                      checked={checkboxStates.flowRateDelayDispense}
-                    />
-                  </div>
-                  <div
-                    className="col-6"
-                    style={{
-                      minHeight: "58px",
-                      opacity: checkboxStates.flowRateDelayDispense ? 1 : 0,
-                    }}
-                  >
-                    <CFormInput
-                      type="number"
-                      id="flowRateDelayDispenseInput"
-                      placeholder="Number of (s)"
-                      value={touchTip}
-                      onChange={handleTouchTipChange}
-                    />
-                  </div>
-                  <div className="col-6">
-                    <CFormCheck
-                      id="flowRateTouchTipDispense"
-                      label="Touch Tip"
-                      onChange={handleCheckboxChange}
-                      checked={checkboxStates.flowRateTouchTipDispense}
-                    />
-                  </div>
-                  <div
-                    className="col-6"
-                    style={{
-                      minHeight: "58px",
-                      opacity: checkboxStates.flowRateTouchTipDispense ? 1 : 0,
-                    }}
-                  >
-                    <CFormInput
-                      type="number"
-                      id="flowRateTouchTipDispenseInput"
-                      placeholder="Number of tips"
-                      value={blowout}
-                      onChange={handleBlowoutChange}
-                    />
-                  </div>
-                  <div className="col-6">
-                    <CFormCheck
-                      id="flowRateBlowoutDispense"
-                      label="Blowout"
-                      onChange={handleCheckboxChange}
-                      checked={checkboxStates.flowRateBlowoutDispense}
-                    />
-                  </div>
-                  <div
-                    className="col-6"
-                    style={{
-                      minHeight: "58px",
-                      opacity: checkboxStates.flowRateBlowoutDispense ? 1 : 0,
-                    }}
-                  >
-                    <CFormSelect
-                      id="flowRateBlowoutDispenseInput"
-                      required
-                      onChange={handleColumnChange}
-                      value={selectedColumn}
-                      options={
-                        selectedColumn === ""
-                          ? [
-                            {
-                              value: "",
-                              label: "Select Blowout",
-                              disabled: true,
-                              hidden: true,
-                            },
-                            ...options_Blowout,
-                          ]
-                          : options_Blowout
-                      }
-                    />
-                  </div>
+                    type="number"
+                    id="flowRateDelayDispenseInput"
+                    placeholder="Number of (s)"
+                    value={touchTip}
+                    onChange={handleTouchTipChange}
+                  />
                 </div>
-              </CCol>
-            </CRow>
+                <div className="col-6">
+                  <CFormCheck
+                    id="flowRateTouchTipDispense"
+                    label="Touch Tip"
+                    onChange={handleCheckboxChange}
+                    checked={checkboxStates.flowRateTouchTipDispense}
+                  />
+                </div>
+                <div
+                  className="col-6"
+                  style={{
+                    minHeight: "58px",
+                    opacity: checkboxStates.flowRateTouchTipDispense ? 1 : 0,
+                  }}
+                >
+                  <CFormInput
+                    type="number"
+                    id="flowRateTouchTipDispenseInput"
+                    placeholder="Number of tips"
+                    value={blowout}
+                    onChange={handleBlowoutChange}
+                  />
+                </div>
+                <div className="col-6">
+                  <CFormCheck
+                    id="flowRateBlowoutDispense"
+                    label="Blowout"
+                    onChange={handleCheckboxChange}
+                    checked={checkboxStates.flowRateBlowoutDispense}
+                  />
+                </div>
+                <div
+                  className="col-6"
+                  style={{
+                    minHeight: "58px",
+                    opacity: checkboxStates.flowRateBlowoutDispense ? 1 : 0,
+                  }}
+                >
+                  <CFormSelect
+                    id="flowRateBlowoutDispenseInput"
+                    required
+                    onChange={handleColumnChange}
+                    value={selectedColumn}
+                    options={
+                      selectedColumn === ""
+                        ? [
+                          {
+                            value: "",
+                            label: "Select Blowout",
+                            disabled: true,
+                            hidden: true,
+                          },
+                          ...options_Blowout,
+                        ]
+                        : options_Blowout
+                    }
+                  />
+                </div>
+              </div>
+            </CCol>
+
 
             {/* SPACER */}
             <CCol md={5}></CCol>

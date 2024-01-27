@@ -199,6 +199,7 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
     try {
       if (deckSlots1D[0]) {
         localStorage.setItem("slots", JSON.stringify(deckSlots1D[0]));
+        window.dispatchEvent(new Event('storage'))
       }
     } catch (e) {
       console.log(e);

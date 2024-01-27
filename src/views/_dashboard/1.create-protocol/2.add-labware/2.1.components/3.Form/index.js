@@ -92,8 +92,6 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
     disableInputFieldsOnSelect(selectedSlot, action);
   }, [selectedSlot]);
 
-  console.log(selectedSlot);
-
   const handleChangeName = (e) => {
     let text = e.target.value;
     setName(text);
@@ -318,9 +316,9 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
                 style={{ marginRight: "10px" }}
                 disabled={
                   tubeRackSelect ||
-                  wellPlateSelect ||
-                  reservoirSelect ||
-                  aluminiumBlockSelect
+                    wellPlateSelect ||
+                    reservoirSelect ||
+                    aluminiumBlockSelect
                     ? false
                     : true
                 }
@@ -340,6 +338,7 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
         handleClose={handleClose}
         title={name}
         footerText={selectedLabwareName}
+        fullView={true}
       >
         {tubeRackSelect &&
           React.Children.toArray(

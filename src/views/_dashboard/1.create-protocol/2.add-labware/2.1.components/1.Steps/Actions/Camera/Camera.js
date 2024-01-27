@@ -196,7 +196,13 @@ export const CameraForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                                     </>
                                 )}
                                 <CCol md={2}>
-                                    <CFormLabel htmlFor='timeLapseAction'>Time Lapse</CFormLabel>
+                                    <CFormLabel htmlFor='timeLapseAction'>Time Lapse
+                                        <CTooltip content="In the time lapse setting, enter the number of seconds you want between each photo; this will be the interval at which the pictures are taken."
+                                            placement='right'
+                                            className="custom-tooltip">
+                                            <InfoCircleIcon style={{ marginTop: '0', marginLeft: '20px' }} className="info-icon" />
+                                        </CTooltip>
+                                    </CFormLabel>
                                     <CFormInput
                                         min="0"
                                         type='number'
@@ -206,13 +212,7 @@ export const CameraForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                                         onChange={(e) => setTimeLapse(e.target.value)}
                                         placeholder='Default (s)' />
                                 </CCol>
-                                <CCol md={1} style={{ marginLeft: "-56px" }}>
-                                    <CTooltip style={{ marginBottom: '20px' }} content="In the time lapse setting, enter the number of seconds you want between each photo; this will be the interval at which the pictures are taken."
-                                        placement='right'
-                                        className="custom-tooltip">
-                                        <InfoCircleIcon className="info-icon mt-2" />
-                                    </CTooltip>
-                                </CCol>
+
                                 {isVideoOn && (
                                     <>
                                         <CRow>

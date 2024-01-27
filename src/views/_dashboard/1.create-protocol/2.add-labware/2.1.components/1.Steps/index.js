@@ -314,7 +314,7 @@ const LabwareSteps = ({ active }) => {
     try {
       if (selectedSteps) {
         localStorage.setItem("steps", JSON.stringify(selectedSteps));
-        console.log(selectedSteps)
+        console.log("Steps:", selectedSteps)
       }
     } catch (e) {
       console.log(e);
@@ -326,7 +326,7 @@ const LabwareSteps = ({ active }) => {
     let items = [];
     try {
       items = JSON.parse(localStorage.getItem("steps")); // Check memory
-      console.log(items)
+      console.log("Steps:", items)
     } catch (e) {
       console.log(e);
     }

@@ -19,13 +19,7 @@ import { tube_racks } from "../data";
 import CIcon from "@coreui/icons-react";
 import { cilSave } from "@coreui/icons";
 
-export default function TubeRackSelection({
-  selectedSlot,
-  selectedLabware,
-  selectedLiquid,
-  liquidVolume,
-  handleClose,
-}) {
+export default function TubeRackSelection({ selectedSlot, selectedLabware, selectedLiquid, liquidVolume, handleClose }) {
   const tubeRacksRef = useRef([]);
 
   const [selectedWells, setSelectedWells] = useState("");
@@ -88,6 +82,7 @@ export default function TubeRackSelection({
 
       try {
         let tmp_selected = selectedSlot.liquids.selected;
+
         tmp_selected?.map((selected, index) => {
           selected.wells?.map((well, index) => {
             if (well == id) {
@@ -195,7 +190,7 @@ export default function TubeRackSelection({
         for (let i = 0; i < tmp_arr.length; i++) {
           try {
             document.getElementById(tmp_arr[i]).style.background = tmp_color;
-          } catch (e) {}
+          } catch (e) { }
         }
       });
     }
@@ -278,7 +273,7 @@ export default function TubeRackSelection({
         items?.map((item, index) => {
           document.getElementById(item.key).style.background = "#EFEFEF";
         });
-      } catch (e) {}
+      } catch (e) { }
     });
   };
 
@@ -289,7 +284,7 @@ export default function TubeRackSelection({
       >
         <div
           className="tr_selection-frame"
-          // onMouseUp={(e) => console.log(e)}
+        // onMouseUp={(e) => console.log(e)}
         >
           {/*  LABEL HEADERS */}
           <CRow className="tr_label-row">
@@ -333,8 +328,9 @@ export default function TubeRackSelection({
                 elems?.map((row, index) => {
                   return (
                     <>
-                      <CRow className={"tr_rowGrid"}>
+                      <CRow className={"tr_rowGrid"} key={index}>
                         <span
+                          key={index}
                           style={{
                             userSelect: "none",
                             display: "flex",

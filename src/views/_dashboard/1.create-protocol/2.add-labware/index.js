@@ -37,7 +37,7 @@ const AddLabware = () => {
     } catch (e) {
       console.log(e);
     }
-    console.log(items);
+    console.log("Deck items:", items);
   }, []);
 
   return (
@@ -45,9 +45,9 @@ const AddLabware = () => {
       <LabwareSteps
         active={
           newLabwareSelection.tube_rack ||
-          newLabwareSelection.well_plate ||
-          newLabwareSelection.aluminium_block ||
-          newLabwareSelection.reservoir
+            newLabwareSelection.well_plate ||
+            newLabwareSelection.aluminium_block ||
+            newLabwareSelection.reservoir
             ? true
             : false
         }
