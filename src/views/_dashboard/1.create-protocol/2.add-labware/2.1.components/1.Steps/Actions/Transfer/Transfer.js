@@ -19,10 +19,12 @@ import { cidEyedropper } from "@coreui/icons-pro";
 import AddLabwareModal from "../../../5.Modal";
 import { AddLiquids } from "../../../3.Form/helpers";
 import TubeRackSelection from "../../../3.Form/Plates/TubeRack/TubeRack";
+import TubeRackTransfer from "../../../3.Form/Plates/TubeRack/TubeRackTransfer";
 import WellPlateSelection from "../../../3.Form/Plates/WellPlate/WellPlate";
 import ReservoirSelection from "../../../3.Form/Plates/Reservoir/Reservoir";
 import AluminiumBlockSelection from "../../../3.Form/Plates/AluminiumBlock/AluminiumBlock";
 import { Notes } from "../../Components/notes";
+import { useTubeRackContext } from "src/context/TubeRackContext";
 
 export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   const [visible, setVisible] = useState(false);
@@ -44,7 +46,7 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   const [selectedLiquid, setSelectedLiquid] = useState("");
   const [liquidVolume, setLiquidVolume] = useState("");
 
-  const [selectedSlot, setSelectedSlot] = useState({});
+  const { selectedSlot, setSelectedSlot } = useTubeRackContext();
 
   const [isNotesOpen, setIsNotesOpen] = useState(false);
 
@@ -71,10 +73,25 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
           label: item.name,
         }));
 
+        const jsonfyValue = JSON.parse(new_items[0].value);
+
+        jsonfyValue.liquids.selected.forEach(liquid => {
+          if (liquid.wells.length > 0) {
+            // Transform each well string into an object with id and volume
+            liquid.wells = liquid.wells.map(well => ({
+              id: well,
+              volume: liquid.volume
+            }));
+          }
+        });
+
+        console.log(jsonfyValue);
+
         setSourceItems(new_items);
         setSelectedSource(new_items[0]);
         setSelectedDestination(new_items[0]);
-        setSelectedSlot(JSON.parse(new_items[0].value));
+        setSelectedSlot(jsonfyValue);
+
         console.log(selectedSlot);
 
         handleTypeOfLabware(JSON.parse(new_items[0].value));
@@ -148,17 +165,17 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   };
 
   const handleChangeSource = (e) => {
-    setSelectedSource(e.target.value);
-    setSelectedSlot(JSON.parse(e.target.value));
+    const selected = JSON.parse(e.target.value);
+    setSelectedSlot(selected); // Update context
 
-    handleTypeOfLabware(JSON.parse(e.target.value));
+    handleTypeOfLabware(selected);
   };
 
   const handleChangeDestination = (e) => {
-    setSelectedDestination(e.target.value);
-    setSelectedSlot(JSON.parse(e.target.value));
+    const selected = JSON.parse(e.target.value);
+    setSelectedSlot(selected); // Update context
 
-    handleTypeOfLabware(JSON.parse(e.target.value));
+    handleTypeOfLabware(selected);
   };
 
   const handleClose = () => {
@@ -390,14 +407,20 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
         {tubeRackSelect &&
           React.Children.toArray(
             <>
-              <AddLiquids
+              {/* <AddLiquids
                 selectedLiquid={selectedLiquid}
                 liquidVolume={liquidVolume}
                 handleChangeSelectedLiquid={handleChangeSelectedLiquid}
                 handleChangeLiquidVolume={handleChangeLiquidVolume}
-              />
-              <TubeRackSelection
+              /> */}
+              {/* <TubeRackSelection
                 selectedSlot={selectedSlot}
+                selectedLabware={selectedLabwareName}
+                selectedLiquid={selectedLiquid}
+                liquidVolume={liquidVolume}
+                handleClose={handleClose}
+              /> */}
+              <TubeRackTransfer
                 selectedLabware={selectedLabwareName}
                 selectedLiquid={selectedLiquid}
                 liquidVolume={liquidVolume}
