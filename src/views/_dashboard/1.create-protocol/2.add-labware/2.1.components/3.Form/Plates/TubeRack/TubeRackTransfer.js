@@ -22,15 +22,19 @@ import { cilSave } from "@coreui/icons";
 import { useTubeRackContext } from "src/context/TubeRackContext";
 
 
-export default function TubeRackTransfer({ selectedLabware, selectedLiquid, liquidVolume, handleClose }) {
+export default function TubeRackTransfer({ isDestination, selectedLabware, selectedLiquid, liquidVolume, handleClose }) {
 
 
     const [selectedWells, setSelectedWells] = useState("");
     const [selectedWellsElement, setSelectedWellsElement] = useState([]);
     const [isVolumeModalOpen, setIsVolumeModalOpen] = useState(false);
     const [inputVolume, setInputVolume] = useState(0)
+    const [selectedButtonIds, setSelectedButtonIds] = useState([]);
+    const [sourceVolume, setSourceVolume] = useState(0);
+    const [sourceIds, setSourceIds] = useState([]);
+
     const selectionFrameRef = useRef(null);
-    const { selectedSlot, updateVolume } = useTubeRackContext();
+    const { selectedSlot, updateVolume, sourceSlots } = useTubeRackContext();
 
     const dsRef = useRef(null);
 
@@ -40,6 +44,38 @@ export default function TubeRackTransfer({ selectedLabware, selectedLiquid, liqu
         multiSelectMode: true,
         selectables: document.getElementsByClassName("tr_selectables"),
     };
+
+    const handleButtonClick = (id) => {
+        setSelectedButtonIds(prevIds => {
+            const isAlreadySelected = prevIds.includes(id);
+            if (isAlreadySelected) {
+                // If already selected, remove it from the array
+                return prevIds.filter(existingId => existingId !== id);
+            } else {
+                // If not selected, add it to the array
+                return [...prevIds, id];
+            }
+        });
+    };
+
+    useEffect(() => {
+        let totalVolume = 0;
+        let ids = [];
+
+        selectedButtonIds.forEach(id => {
+            // Check if the current id is in sourceSlots
+            if (sourceSlots[id]) {
+                totalVolume += sourceSlots[id].volume; // Add the volume to totalVolume
+                ids.push(sourceSlots[id].id); // Add the id to ids
+            }
+        });
+
+        // Update state with the new total volume and source IDs
+        setSourceVolume(totalVolume);
+        setSourceIds(ids);
+    }, [selectedButtonIds, sourceSlots]); // Depend on selectedButtonIds and sourceSlots
+
+
 
 
     useEffect(() => {
@@ -118,7 +154,8 @@ export default function TubeRackTransfer({ selectedLabware, selectedLiquid, liqu
         // Prepare updates array for selected wells
         const updates = selectedWellsElement.map(well => ({
             wellId: well.id,
-            newVolume: Math.max(well.volume - inputVolumeNumber, 0) // Assuming you subtract the input volume
+            newVolume: Math.max(well.volume - inputVolumeNumber, 0),
+            toTransfer: inputVolumeNumber
         }));
 
         // Call updateVolume with the updates array
@@ -127,6 +164,11 @@ export default function TubeRackTransfer({ selectedLabware, selectedLiquid, liqu
         // Close the volume modal
         setIsVolumeModalOpen(false);
     };
+
+    useEffect(() => {
+        console.log(sourceSlots);
+        // Perform any action after sourceSlots has been updated
+    }, [sourceSlots])
 
 
     // Define the volume input modal
@@ -402,13 +444,39 @@ export default function TubeRackTransfer({ selectedLabware, selectedLiquid, liqu
 
                 <h6 style={{ userSelect: "none" }}>Selected: </h6>
 
-                <CFormTextarea
-                    disabled
-                    defaultValue={selectedWells}
-                    rows={1}
-                ></CFormTextarea>
+                {!isDestination && (
+                    <>
+                        <CFormTextarea
+                            disabled
+                            defaultValue={selectedWells}
+                            rows={1}
+                        ></CFormTextarea>
 
-                <VolumeInputModal />
+                        <VolumeInputModal />
+                    </>
+                )}
+
+                {isDestination && (
+                    Object.entries(sourceSlots).map(([wellId, { id, volume }]) => (
+                        <CButton
+                            key={id}
+                            className={`m-1 ${selectedButtonIds.includes(id) ? 'btn-primary' : 'btn-secondary'}`}
+                            onClick={() => handleButtonClick(id)}
+                        >
+                            {id}: {volume} μL
+                        </CButton>
+                    ))
+
+                )}
+
+                {sourceIds.length > 0 && (
+                    <>
+                        <p>Total Volume: <strong>{sourceVolume} μL</strong></p>
+                        <p>Selected Wells: <strong>{sourceIds.join(', ')}</strong></p>
+                    </>
+                )}
+
+
 
                 <hr />
                 <div>

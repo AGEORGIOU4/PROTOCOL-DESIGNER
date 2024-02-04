@@ -46,6 +46,9 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   const [selectedLiquid, setSelectedLiquid] = useState("");
   const [liquidVolume, setLiquidVolume] = useState("");
 
+  const [isDestination, setIsDestination] = useState(false);
+
+
   const { selectedSlot, setSelectedSlot } = useTubeRackContext();
 
   const [isNotesOpen, setIsNotesOpen] = useState(false);
@@ -85,15 +88,10 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
           }
         });
 
-        console.log(jsonfyValue);
-
         setSourceItems(new_items);
         setSelectedSource(new_items[0]);
         setSelectedDestination(new_items[0]);
         setSelectedSlot(jsonfyValue);
-
-        console.log(selectedSlot);
-
         handleTypeOfLabware(JSON.parse(new_items[0].value));
       }
     } catch (e) {
@@ -206,8 +204,9 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     }
   };
 
-  const handleAddLiquids = () => {
+  const handleAddLiquids = (fromDestination) => {
     getSelectedLabware();
+    setIsDestination(fromDestination);
     setVisible(true);
   };
 
@@ -283,7 +282,7 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
               <CFormLabel htmlFor="validationCustom04">Wells</CFormLabel>
               <CFormInput
                 style={{ caretColor: "transparent" }}
-                onClick={handleAddLiquids}
+                onClick={() => handleAddLiquids(false)}
                 id="validationCustom04"
                 required
               />
@@ -310,7 +309,7 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
               <CFormLabel htmlFor="validationCustom06">Wells</CFormLabel>
               <CFormInput
                 style={{ caretColor: "transparent" }}
-                onClick={handleAddLiquids}
+                onClick={() => handleAddLiquids(true)}
                 id="validationCustom06"
                 required
               />
@@ -407,20 +406,8 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
         {tubeRackSelect &&
           React.Children.toArray(
             <>
-              {/* <AddLiquids
-                selectedLiquid={selectedLiquid}
-                liquidVolume={liquidVolume}
-                handleChangeSelectedLiquid={handleChangeSelectedLiquid}
-                handleChangeLiquidVolume={handleChangeLiquidVolume}
-              /> */}
-              {/* <TubeRackSelection
-                selectedSlot={selectedSlot}
-                selectedLabware={selectedLabwareName}
-                selectedLiquid={selectedLiquid}
-                liquidVolume={liquidVolume}
-                handleClose={handleClose}
-              /> */}
               <TubeRackTransfer
+                isDestination={isDestination}
                 selectedLabware={selectedLabwareName}
                 selectedLiquid={selectedLiquid}
                 liquidVolume={liquidVolume}
