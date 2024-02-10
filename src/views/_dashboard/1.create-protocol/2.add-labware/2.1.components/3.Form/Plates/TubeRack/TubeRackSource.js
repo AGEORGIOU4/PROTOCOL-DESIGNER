@@ -20,22 +20,16 @@ import { tube_racks } from "../data";
 import CIcon from "@coreui/icons-react";
 import { cilSave } from "@coreui/icons";
 import { useTubeRackContext } from "src/context/TubeRackContext";
+import isEqual from 'lodash/isEqual';
 
 
-export default function TubeRackTransfer({ isDestination, selectedLabware, selectedLiquid, liquidVolume, handleClose }) {
+export default function TubeRackSource({ stepId, volumePer, selectedLabware, handleClose }) {
 
+    const { selectedSlot, updateVolume } = useTubeRackContext();
 
-    const [selectedWells, setSelectedWells] = useState("");
     const [selectedWellsElement, setSelectedWellsElement] = useState([]);
-    const [isVolumeModalOpen, setIsVolumeModalOpen] = useState(false);
-    const [inputVolume, setInputVolume] = useState(0)
-    const [selectedButtonIds, setSelectedButtonIds] = useState([]);
-    const [sourceVolume, setSourceVolume] = useState(0);
-    const [sourceIds, setSourceIds] = useState([]);
 
     const selectionFrameRef = useRef(null);
-    const { selectedSlot, updateVolume, sourceSlots } = useTubeRackContext();
-
     const dsRef = useRef(null);
 
 
@@ -45,35 +39,62 @@ export default function TubeRackTransfer({ isDestination, selectedLabware, selec
         selectables: document.getElementsByClassName("tr_selectables"),
     };
 
-    const handleButtonClick = (id) => {
-        setSelectedButtonIds(prevIds => {
-            const isAlreadySelected = prevIds.includes(id);
-            if (isAlreadySelected) {
-                // If already selected, remove it from the array
-                return prevIds.filter(existingId => existingId !== id);
-            } else {
-                // If not selected, add it to the array
-                return [...prevIds, id];
+    function getFoundItemFromStorage(stepId, selectedSlotId) {
+        let foundItem;
+        let items = JSON.parse(localStorage.getItem('tubeTransfer'));
+
+        if (items) {
+            foundItem = items.find(item => item.stepId === stepId);
+            if (foundItem) {
+                foundItem.liquids = foundItem.liquids || {};
+                foundItem.liquids.selected = foundItem.source;
             }
-        });
-    };
+        } else {
+            items = JSON.parse(localStorage.getItem("slots"));
+            foundItem = items?.find(item => item.id === selectedSlotId);
+        }
+
+        return foundItem;
+    }
+
 
     useEffect(() => {
-        let totalVolume = 0;
-        let ids = [];
+        let foundItem;
+        let items;
 
-        selectedButtonIds.forEach(id => {
-            // Check if the current id is in sourceSlots
-            if (sourceSlots[id]) {
-                totalVolume += sourceSlots[id].volume; // Add the volume to totalVolume
-                ids.push(sourceSlots[id].id); // Add the id to ids
-            }
-        });
+        items = JSON.parse(localStorage.getItem('tubeTransfer'));
+        if (items) {
+            foundItem = items.find((item) => item.stepId === stepId)
+            foundItem["liquids"] = {}
+            foundItem.liquids["selected"] = foundItem.source
+        } else {
+            items = JSON.parse(localStorage.getItem("slots"));
+            foundItem = items?.find((item) => item.id === selectedSlot.id);
+            console.log(foundItem)
+            const initializeTubeTransferStep = [{
+                stepId: stepId,
+                source: foundItem.liquids.selected,
+                destination: []
+            }]
+            localStorage.setItem('tubeTransfer', JSON.stringify(initializeTubeTransferStep))
+        }
 
-        // Update state with the new total volume and source IDs
-        setSourceVolume(totalVolume);
-        setSourceIds(ids);
-    }, [selectedButtonIds, sourceSlots]); // Depend on selectedButtonIds and sourceSlots
+
+
+        if (foundItem) {
+            foundItem.liquids.selected?.map((selections, index) => {
+                let tmp_arr = selections.wells;
+                let tmp_color = selections.color;
+                for (let i = 0; i < tmp_arr.length; i++) {
+                    try {
+                        document.getElementById(tmp_arr[i]).style.background = tmp_color;
+                    } catch (e) { }
+                }
+            });
+
+        }
+    }, []);
+
 
 
 
@@ -93,46 +114,35 @@ export default function TubeRackTransfer({ isDestination, selectedLabware, selec
                         let volume = 0;
                         let liquidName = '';
 
-
-                        // Find the liquid that contains the well with the given wellId
                         const liquidContainingWell = selectedSlot.liquids.selected.find(liquid =>
                             liquid.wells.some(well => well.id === wellId)
                         );
 
                         if (liquidContainingWell) {
 
-
-                            // Find the specific well object to get its volume
                             const specificWell = liquidContainingWell.wells.find(well => well.id === wellId);
                             if (specificWell) {
-                                volume = specificWell.volume; // Use the volume from the specific well
-                                liquidName = liquidContainingWell.liquid; // Assuming liquid name is stored here
+                                volume = specificWell.volume;
+                                liquidName = liquidContainingWell.liquid;
                             }
                         }
-
-
-                        // If volume is greater than 0, include this well
                         if (volume > 0) {
                             filtered.push({ id: wellId, volume });
                         }
 
                         return filtered;
-                    }, []);  // Initialize the filtered array
+                    }, []);
 
-                    console.log(wellsFiltered);
 
                     if (wellsFiltered.length > 0) {
                         // Sort selected ASC
-                        const strAscending = wellsFiltered.sort((a, b) => a.id > b.id ? 1 : -1);
-                        let tmp_arr = strAscending.map(item => item.id);
-                        setSelectedWells(tmp_arr);
                         setSelectedWellsElement(wellsFiltered);
-                        setIsVolumeModalOpen(true);
+
                     } else {
                         // No wells with volume selected
-                        setSelectedWells([]);
+
                         setSelectedWellsElement([]);
-                        setIsVolumeModalOpen(false);
+
                     }
                 }
             });
@@ -149,8 +159,7 @@ export default function TubeRackTransfer({ isDestination, selectedLabware, selec
 
     // Handle volume submission
     const handleVolumeSubmit = () => {
-        const inputVolumeNumber = parseFloat(inputVolume);
-
+        const inputVolumeNumber = parseFloat(volumePer);
         // Prepare updates array for selected wells
         const updates = selectedWellsElement.map(well => ({
             wellId: well.id,
@@ -160,29 +169,9 @@ export default function TubeRackTransfer({ isDestination, selectedLabware, selec
 
         // Call updateVolume with the updates array
         updateVolume(updates);
-        console.log(selectedSlot)
-        // Close the volume modal
-        setIsVolumeModalOpen(false);
+        handleClose()
+
     };
-
-    useEffect(() => {
-        console.log(sourceSlots);
-        // Perform any action after sourceSlots has been updated
-    }, [sourceSlots])
-
-
-    // Define the volume input modal
-    const VolumeInputModal = () => (
-        <div className="volume-modal" style={{ display: isVolumeModalOpen ? "block" : "none" }}>
-            <div className="volume-content">
-                <h5>Enter Volume</h5>
-                <CFormInput type="number" value={inputVolume} onChange={(e) => {
-                    setInputVolume(e.target.value)
-                }} />
-                <CButton onClick={handleVolumeSubmit}>Submit</CButton>
-            </div>
-        </div>
-    );
 
     var rows = tube_racks[0].rows;
     var rows2 = tube_racks[0].rows2;
@@ -206,16 +195,22 @@ export default function TubeRackTransfer({ isDestination, selectedLabware, selec
     const renderWell = (wellId, squared) => {
         let liquidName = "";
         let volume = "";
+        let liquidContainingWell;
+        const foundItem = getFoundItemFromStorage(stepId, selectedSlot.id);
+        if (foundItem) {
+            liquidContainingWell = foundItem.source?.find(source =>
+                source.wells.some(well => well === wellId)
+            );
+        }
 
-        const liquidContainingWell = selectedSlot.liquids.selected.find(liquid =>
-            liquid.wells.some(well => well.id === wellId)
-        );
+
         if (liquidContainingWell) {
             // Find the specific well object to get its volume
-            const specificWell = liquidContainingWell.wells.find(well => well.id === wellId);
+            const specificWell = liquidContainingWell.wells.find(well => well === wellId);
+
             if (specificWell) {
-                volume = specificWell.volume; // Use the volume from the specific well
-                liquidName = liquidContainingWell.liquid; // Assuming liquid name is stored here
+                volume = liquidContainingWell.volume;
+                liquidName = liquidContainingWell.liquid;
             }
         }
 
@@ -275,70 +270,6 @@ export default function TubeRackTransfer({ isDestination, selectedLabware, selec
     const elems2 = [];
 
 
-    useEffect(() => {
-        let items = JSON.parse(localStorage.getItem("slots")); // Check memory
-        const foundItem = items?.find((item) => item.id === selectedSlot.id);
-        if (foundItem) {
-            foundItem.liquids.selected?.map((selections, index) => {
-                let tmp_arr = selections.wells;
-                let tmp_color = selections.color;
-                for (let i = 0; i < tmp_arr.length; i++) {
-                    try {
-                        document.getElementById(tmp_arr[i]).style.background = tmp_color;
-                    } catch (e) { }
-                }
-            });
-        }
-    }, []);
-
-    const handleSave = () => {
-        selectedWellsElement?.map((item, index) => {
-            document.getElementById(item.id).style.background =
-                selectedLiquid.color;
-        });
-        // 1. Get items and find specific slot
-        let items = JSON.parse(localStorage.getItem("slots")); // Check memory
-        let tmp_selectedSlot = items?.find((item) => item.id === selectedSlot.id);
-
-        if (tmp_selectedSlot?.liquids.selected.length > 0) {
-            // Check 2. (Check if any selection well belongs to exisτing array)
-
-            let selected_wells_array = tmp_selectedSlot.liquids.selected;
-
-            selected_wells_array?.map((item, index) => {
-                const filteredArray = item.wells.filter(
-                    (item) => !selectedWells.includes(item),
-                );
-                tmp_selectedSlot.liquids.selected[index].wells = filteredArray;
-            });
-            tmp_selectedSlot?.liquids.selected.push({
-                wells: selectedWells,
-                liquid: selectedLiquid.text,
-                color: selectedLiquid.color,
-                volume: liquidVolume,
-            });
-        } else {
-            // First Entry
-            tmp_selectedSlot?.liquids.selected.push({
-                wells: selectedWells,
-                liquid: selectedLiquid.text,
-                color: selectedLiquid.color,
-                volume: liquidVolume,
-            });
-        }
-
-        // 3. Find slot's index and update it on memory
-        const foundIndex = items?.findIndex(
-            (item) => item.id === selectedSlot.id,
-        );
-        if (foundIndex !== -1) {
-            items[foundIndex] = tmp_selectedSlot;
-            localStorage.setItem("slots", JSON.stringify(items));
-        }
-
-        handleClose();
-
-    };
 
     return (
         <>
@@ -444,37 +375,6 @@ export default function TubeRackTransfer({ isDestination, selectedLabware, selec
 
                 <h6 style={{ userSelect: "none" }}>Selected: </h6>
 
-                {!isDestination && (
-                    <>
-                        <CFormTextarea
-                            disabled
-                            defaultValue={selectedWells}
-                            rows={1}
-                        ></CFormTextarea>
-
-                        <VolumeInputModal />
-                    </>
-                )}
-
-                {isDestination && (
-                    Object.entries(sourceSlots).map(([wellId, { id, volume }]) => (
-                        <CButton
-                            key={id}
-                            className={`m-1 ${selectedButtonIds.includes(id) ? 'btn-primary' : 'btn-secondary'}`}
-                            onClick={() => handleButtonClick(id)}
-                        >
-                            {id}: {volume} μL
-                        </CButton>
-                    ))
-
-                )}
-
-                {sourceIds.length > 0 && (
-                    <>
-                        <p>Total Volume: <strong>{sourceVolume} μL</strong></p>
-                        <p>Selected Wells: <strong>{sourceIds.join(', ')}</strong></p>
-                    </>
-                )}
 
 
 
@@ -483,7 +383,7 @@ export default function TubeRackTransfer({ isDestination, selectedLabware, selec
                     <CButton
                         className="standard-btn float-end"
                         color="primary"
-                        onClick={handleSave}
+                        onClick={handleVolumeSubmit}
                     >
                         <CIcon size="sm" icon={cilSave} /> Transfer TO
                     </CButton>

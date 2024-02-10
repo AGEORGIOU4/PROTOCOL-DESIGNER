@@ -19,7 +19,8 @@ import { cidEyedropper } from "@coreui/icons-pro";
 import AddLabwareModal from "../../../5.Modal";
 import { AddLiquids } from "../../../3.Form/helpers";
 import TubeRackSelection from "../../../3.Form/Plates/TubeRack/TubeRack";
-import TubeRackTransfer from "../../../3.Form/Plates/TubeRack/TubeRackTransfer";
+import TubeRackSource from "../../../3.Form/Plates/TubeRack/TubeRackSource";
+import TubeRackDestination from "../../../3.Form/Plates/TubeRack/TubeRackDestination";
 import WellPlateSelection from "../../../3.Form/Plates/WellPlate/WellPlate";
 import ReservoirSelection from "../../../3.Form/Plates/Reservoir/Reservoir";
 import AluminiumBlockSelection from "../../../3.Form/Plates/AluminiumBlock/AluminiumBlock";
@@ -42,6 +43,7 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
 
   const [selectedLabwareName, setSelectedLabwareName] = useState("");
   const [selectedLabwareType, setSelectedLabwareType] = useState("");
+  const [volumePer, setVolumePer] = useState(0)
 
   const [selectedLiquid, setSelectedLiquid] = useState("");
   const [liquidVolume, setLiquidVolume] = useState("");
@@ -218,6 +220,10 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     setLiquidVolume(e.target.value);
   };
 
+  const handleChangeVolumePer = (e) => {
+    setVolumePer(e.target.value)
+  }
+
   const handleNotesClick = () => setIsNotesOpen(true);
   const closeNotes = () => setIsNotesOpen(false);
   const handleLocalClose = () => onClose();
@@ -251,7 +257,7 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
             <CCol md={1}>
               <CFormLabel htmlFor="validationCustom02">Volume Per</CFormLabel>
               <CInputGroup className="mb-3">
-                <CFormInput type="number" id="validationCustom02" required />
+                <CFormInput type="number" id="validationCustom02" value={volumePer} onChange={handleChangeVolumePer} required />
                 <CInputGroupText id="basic-addon2">μL</CInputGroupText>
               </CInputGroup>
               <CFormFeedback valid>Looks good!</CFormFeedback>
@@ -403,19 +409,30 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
         showFooter={false}
         fullView={true}
       >
-        {tubeRackSelect &&
+        {(tubeRackSelect && !isDestination) &&
           React.Children.toArray(
             <>
-              <TubeRackTransfer
-                isDestination={isDestination}
+              <TubeRackSource
+                stepId={stepId}
+                volumePer={volumePer}
                 selectedLabware={selectedLabwareName}
-                selectedLiquid={selectedLiquid}
                 liquidVolume={liquidVolume}
                 handleClose={handleClose}
               />
             </>,
           )}
-
+        {(tubeRackSelect && isDestination) &&
+          React.Children.toArray(
+            <>
+              <TubeRackDestination
+                stepId={stepId}
+                volumePer={volumePer}
+                selectedLabware={selectedLabwareName}
+                liquidVolume={liquidVolume}
+                handleClose={handleClose}
+              />
+            </>,
+          )}
         {wellPlateSelect &&
           React.Children.toArray(
             <>
