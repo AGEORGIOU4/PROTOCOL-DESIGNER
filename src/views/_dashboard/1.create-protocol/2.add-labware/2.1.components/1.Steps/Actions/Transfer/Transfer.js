@@ -49,9 +49,10 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   const [liquidVolume, setLiquidVolume] = useState("");
 
   const [isDestination, setIsDestination] = useState(false);
+  const [isSourceReady, setSourceReady] = useState(false)
 
 
-  const { selectedSlot, setSelectedSlot } = useTubeRackContext();
+  const { selectedSlot, setSelectedSlot, sourceSlots } = useTubeRackContext();
 
   const [isNotesOpen, setIsNotesOpen] = useState(false);
 
@@ -207,10 +208,31 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   };
 
   const handleAddLiquids = (fromDestination) => {
-    getSelectedLabware();
-    setIsDestination(fromDestination);
-    setVisible(true);
+    getSelectedLabware(); // Ensure the selected labware name and type are up-to-date.
+    if (volumePer <= 0)
+      alert("Please select Volume Per Above")
+    setIsDestination(fromDestination); // Set whether the modal is being opened for destination.
+
+    // Assume `setSourceReady` logic is correct and sets the flag based on whether the source is prepared.
+    const items = JSON.parse(localStorage.getItem('tubeTransfer'));
+    if (items) {
+      const foundItem = items.find(item => item.stepId === stepId);
+      const isSourcePrepared = foundItem && foundItem.source.length > 0;
+      setSourceReady(isSourcePrepared);
+      console.log(Object.keys(sourceSlots).length > 0)
+      // Only set the modal to visible if not fromDestination or if the source is prepared.
+      if (!fromDestination || (isSourcePrepared && Object.keys(sourceSlots).length > 0)) {
+        setVisible(true);
+      } else {
+        // Optional: Provide feedback to the user why they can't proceed.
+        alert("Please configure the source first.");
+      }
+    } else if (!isDestination) {
+      setVisible(true)
+    }
+
   };
+
 
   const handleChangeSelectedLiquid = (e, color) => {
     setSelectedLiquid(e);
@@ -421,7 +443,7 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
               />
             </>,
           )}
-        {(tubeRackSelect && isDestination) &&
+        {(tubeRackSelect && isDestination && isSourceReady) &&
           React.Children.toArray(
             <>
               <TubeRackDestination
