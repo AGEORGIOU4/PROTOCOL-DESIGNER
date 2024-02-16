@@ -70,7 +70,6 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
 
             for (let i = 0; i < tmp_arr.length; i++) {
                 let tempWellId = typeof tmp_arr[i] === 'object' && tmp_arr[i] !== null && 'id' in tmp_arr[i] ? tmp_arr[i].id : tmp_arr[i];
-
                 try {
                     document.getElementById(tempWellId).style.background = tmp_color;
                 } catch (e) { }
@@ -312,7 +311,6 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
         let volume = "";
         let liquidContainingWell;
         const foundItem = getFoundItemFromStorage(stepId, selectedSlot.id);
-        // debugger
         if (foundItem) {
 
             liquidContainingWell = foundItem.liquids.selected?.find(selected =>
@@ -322,14 +320,16 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
             );
         }
 
-
         if (liquidContainingWell) {
             const sourceSlotWell = sourceSlots[wellId];
             // Find the specific well object to get its volume
             const specificWell = liquidContainingWell.wells.find(well => (well.id && well.id === wellId) || well === wellId);
             if (specificWell) {
                 const sourceVolume = sourceSlotWell?.volume || 0;
-                volume = liquidContainingWell.volume - sourceVolume
+                if (specificWell.volume)
+                    volume = Number(specificWell.volume) - sourceVolume
+                else
+                    volume = liquidContainingWell.volume - sourceVolume
                 liquidName = liquidContainingWell.liquid;
             }
         }
