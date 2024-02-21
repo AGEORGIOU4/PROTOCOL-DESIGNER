@@ -47,21 +47,28 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
         selectables: document.getElementsByClassName("tr_selectables"),
     };
 
-    function getFoundItemFromStorage(stepId, selectedSlotId) {
+    function getFoundItemFromStorage(stepId) {
         let foundItem;
         let items = JSON.parse(localStorage.getItem('tubeTransfer'));
-        foundItem = items.find(item => item.stepId === stepId);
-        foundItem.liquids = foundItem.liquids || {};
-        if (foundItem.destination.length > 0)
-            foundItem.liquids.selected = foundItem.destination;
-        else
-            foundItem.liquids.selected = foundItem.source;
+
+        if (items) {
+            foundItem = items.find(item => item.stepId === stepId);
+            if (!foundItem) {
+                foundItem = items[items.length - 1];
+                foundItem["liquids"] = {}
+                foundItem.liquids["selected"] = foundItem.destination
+            } else {
+                foundItem["liquids"] = {}
+                foundItem.liquids["selected"] = foundItem.source
+            }
+        }
+
         return foundItem;
     }
 
 
     useEffect(() => {
-        const foundItem = getFoundItemFromStorage(stepId, selectedSlot)
+        const foundItem = getFoundItemFromStorage(stepId)
         foundItem.liquids.selected?.map((selections, index) => {
 
             let tmp_arr = selections.wells;
@@ -192,12 +199,12 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
         // Continue with volume submission if the selection is valid
         for (let key in sourceSlots) {
             if (sourceSlots.hasOwnProperty(key)) {
-                volumeToAdd = sourceSlots[key].volume
+                volumeToAdd = sourceSlots[key].volume * sourceLength
                 break
             }
         }
+        volumeToAdd = volumeToAdd / destinationLength
         const items = JSON.parse(localStorage.getItem("tubeTransfer"))
-        const itemIndex = items.findIndex(item => item.stepId === stepId);
 
         const foundItem = items.find(item => item.stepId === stepId);
         foundItem.liquids = foundItem.liquids || {};
@@ -208,6 +215,7 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
         for (let key in sourceSlots) {
             sourceNamesSet.add(sourceSlots[key].liquid);
         }
+        debugger
 
         // Convert the set to a string, separated by slashes
         let sourceNames = Array.from(sourceNamesSet).join("/");
@@ -310,7 +318,7 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
         let liquidName = "";
         let volume = "";
         let liquidContainingWell;
-        const foundItem = getFoundItemFromStorage(stepId, selectedSlot.id);
+        const foundItem = getFoundItemFromStorage(stepId);
         if (foundItem) {
 
             liquidContainingWell = foundItem.liquids.selected?.find(selected =>
@@ -322,6 +330,7 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
 
         if (liquidContainingWell) {
             const sourceSlotWell = sourceSlots[wellId];
+            // debugger
             // Find the specific well object to get its volume
             const specificWell = liquidContainingWell.wells.find(well => (well.id && well.id === wellId) || well === wellId);
             if (specificWell) {

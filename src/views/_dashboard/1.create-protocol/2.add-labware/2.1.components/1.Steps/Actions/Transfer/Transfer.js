@@ -216,8 +216,14 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     // Assume `setSourceReady` logic is correct and sets the flag based on whether the source is prepared.
     const items = JSON.parse(localStorage.getItem('tubeTransfer'));
     if (items) {
-      const foundItem = items.find(item => item.stepId === stepId);
-      const isSourcePrepared = foundItem && foundItem.source.length > 0;
+      let foundItem = items.find(item => item.stepId === stepId);
+      let isSourcePrepared
+      if (!foundItem) {
+        foundItem = items[items.length - 1];
+        isSourcePrepared = foundItem && foundItem.destination.length > 0;
+      } else {
+        isSourcePrepared = foundItem && foundItem.source.length > 0;
+      }
       setSourceReady(isSourcePrepared);
       console.log(Object.keys(sourceSlots).length > 0)
       // Only set the modal to visible if not fromDestination or if the source is prepared.
