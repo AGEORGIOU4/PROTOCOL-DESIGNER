@@ -177,7 +177,6 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
         const destinationLength = totalDestination;
         const sourceLength = Object.keys(sourceSlots).length
         let isValidSelection = false;
-
         // Logic to determine if the selection is valid based on your criteria
         switch (true) {
             case (sourceLength === 1 && destinationLength > 1): // One to many
@@ -204,18 +203,15 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
             }
         }
         volumeToAdd = volumeToAdd / destinationLength
-        const items = JSON.parse(localStorage.getItem("tubeTransfer"))
 
-        const foundItem = items.find(item => item.stepId === stepId);
-        foundItem.liquids = foundItem.liquids || {};
-        foundItem.liquids.selected = foundItem.source;
+        const foundItem = getFoundItemFromStorage(stepId)
+
         let sourceNamesSet = new Set();
 
         // Collect unique liquid names from sourceSlots
         for (let key in sourceSlots) {
             sourceNamesSet.add(sourceSlots[key].liquid);
         }
-        debugger
 
         // Convert the set to a string, separated by slashes
         let sourceNames = Array.from(sourceNamesSet).join("/");
@@ -249,14 +245,32 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
         // Assuming 'items' is your initial object and 'updatedDestinationSource' is the object with updates.
 
         // Step 0: Initialize 'destination' as a deep copy of 'liquids.selected' from 'source'
-        items[0].destination = JSON.parse(JSON.stringify(items[0].liquids.selected));
+        foundItem.destination = JSON.parse(JSON.stringify(foundItem.liquids.selected));
 
         // Step 1: Remove the updated wells from their original groups in 'destination'
-        items[0].destination.forEach(destinationItem => {
-            destinationItem.wells = destinationItem.wells.filter(wellId => {
-                // Check if the wellId is being updated
-                const isWellUpdated = updatedDestinationSource.some(update => update.wells.some(updatedWell => typeof wellId === 'string' && wellId === updatedWell.id));
-                return !isWellUpdated; // Keep the well in the original group if it's not updated
+        foundItem.destination.forEach(destinationItem => {
+            // First, filter wells based on whether they are being updated
+            let filteredWells = destinationItem.wells.filter(well => {
+                const wellId = typeof well === 'object' && well !== null ? well.id : well;
+                const isWellUpdated = updatedDestinationSource.some(update =>
+                    update.wells.some(updatedWell => wellId === updatedWell.id)
+                );
+                return !isWellUpdated; // Keep the well if it's not being updated
+            });
+
+            // Then, map over filtered wells to update their volume as necessary
+            destinationItem.wells = filteredWells.map(well => {
+                const wellId = typeof well === 'object' && well !== null ? well.id : well;
+                if (sourceSlots[wellId]) {
+                    // Assuming you want to adjust the volume based on the existing volume in the well
+                    // and the volume in sourceSlots
+                    const existingVolume = typeof well === 'object' && well.volume ? well.volume : 0;
+                    return {
+                        id: wellId,
+                        volume: destinationItem.volume - sourceSlots[wellId].volume,
+                    };
+                }
+                return well;
             });
         });
 
@@ -265,7 +279,7 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
             update.wells.forEach(updatedWell => {
                 const wellId = updatedWell.id;
                 const updateLiquidName = update.liquid;
-                let targetGroup = items[0].destination.find(destinationItem => destinationItem.liquid === updateLiquidName);
+                let targetGroup = foundItem.destination.find(destinationItem => destinationItem.liquid === updateLiquidName);
 
                 if (!targetGroup) {
                     targetGroup = {
@@ -274,7 +288,7 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
                         color: update.color,
                         volume: updatedWell.volume.toString()
                     };
-                    items[0].destination.push(targetGroup);
+                    foundItem.destination.push(targetGroup);
                 } else {
 
                     const existingWell = targetGroup.wells.find(w => typeof w !== 'string' && w.id === wellId);
@@ -286,6 +300,8 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
                 }
             });
         });
+        const items = JSON.parse(localStorage.getItem('tubeTransfer'));
+        items.push(foundItem)
 
         localStorage.setItem('tubeTransfer', JSON.stringify(items));
 
@@ -330,7 +346,6 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
 
         if (liquidContainingWell) {
             const sourceSlotWell = sourceSlots[wellId];
-            // debugger
             // Find the specific well object to get its volume
             const specificWell = liquidContainingWell.wells.find(well => (well.id && well.id === wellId) || well === wellId);
             if (specificWell) {
