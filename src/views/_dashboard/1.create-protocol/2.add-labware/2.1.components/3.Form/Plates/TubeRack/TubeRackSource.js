@@ -3,24 +3,19 @@ import DragSelect from "dragselect";
 import React, {
     useRef,
     useState,
-    useEffect,
-    createRef,
-    useReducer,
+    useEffect
 } from "react";
 import {
     CButton,
     CCol,
-    CFormTextarea,
     CRow,
     CTooltip,
-    CFormInput
 } from "@coreui/react-pro";
 import { GetLetter } from "src/_common/helpers";
 import { tube_racks } from "../data";
 import CIcon from "@coreui/icons-react";
 import { cilSave } from "@coreui/icons";
 import { useTubeRackContext } from "src/context/TubeRackContext";
-import isEqual from 'lodash/isEqual';
 
 
 export default function TubeRackSource({ stepId, volumePer, selectedLabware, handleClose }) {
@@ -80,7 +75,6 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
         } else {
             items = JSON.parse(localStorage.getItem("slots"));
             foundItem = items?.find((item) => item.id === selectedSlot.id);
-            console.log(foundItem)
             const initializeTubeTransferStep = [{
                 stepId: stepId,
                 source: foundItem.liquids.selected,
@@ -123,7 +117,6 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
                     const wellsFiltered = callback_object.items.reduce((filtered, item) => {
                         const wellId = item.id;
                         let volume = 0;
-                        let liquidName = '';
 
                         const liquidContainingWell = selectedSlot.liquids.selected.find(liquid =>
                             liquid.wells.some(well => well.id === wellId)
@@ -151,7 +144,6 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
 
                     } else {
                         // No wells with volume selected
-
                         setSelectedWellsElement([]);
 
                     }

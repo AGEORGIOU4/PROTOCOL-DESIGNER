@@ -24,7 +24,8 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
 
   const [selectedWells, setSelectedWells] = useState("");
   const [selectedWellsElement, setSelectedWellsElement] = useState([]);
-  const [ds, setDS] = useState(new DragSelect({ draggability: false }));
+  const selectionFrameRef = useRef(null);
+  const dsRef = useRef(null);
 
   const settings = {
     draggability: false,
@@ -33,24 +34,36 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
   };
 
   useEffect(() => {
-    ds?.setSettings(settings);
+    if (!dsRef.current) {
+      dsRef.current = new DragSelect({
+        ...settings,
+        area: selectionFrameRef.current,
+        selectables: selectionFrameRef.current.querySelectorAll('.tr_selectables')
+      });
 
-    ds.subscribe("DS:end", (callback_object) => {
-      if (callback_object.items) {
-        // Sort selected ASC
-        const strAscending = [...callback_object.items].sort((a, b) =>
-          a.id > b.id ? 1 : -1,
-        );
-        let tmp_arr = [];
-        strAscending?.map((item, index) => {
-          tmp_arr.push(item.id);
-        });
-        setSelectedWells(tmp_arr);
-        setSelectedWellsElement(strAscending);
+      dsRef.current.subscribe("DS:end", (callback_object) => {
+        if (callback_object.items) {
+          // Sort selected ASC
+          const strAscending = [...callback_object.items].sort((a, b) =>
+            a.id > b.id ? 1 : -1,
+          );
+          let tmp_arr = [];
+          strAscending?.map((item, index) => {
+            tmp_arr.push(item.id);
+          });
+          setSelectedWells(tmp_arr);
+          setSelectedWellsElement(strAscending);
+        }
+      });
+    }
+    return () => {
+      if (dsRef.current) {
+        dsRef.current.unsubscribe("DS:end");
+        dsRef.current.stop();
+        dsRef.current = null;
       }
-    });
-    return () => ds.unsubscribe("DS:end");
-  }, [ds]);
+    }
+  }, []);
 
   var rows = tube_racks[0].rows;
   var rows2 = tube_racks[0].rows2;
@@ -266,7 +279,7 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
     setSelectedWellsElement([]);
     setSelectedWells("");
 
-    ds.clearSelection();
+
 
     elems?.map((items, index) => {
       try {
@@ -283,6 +296,7 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
         style={{ display: selectedLabware.name != "N/A" ? "block" : "none" }}
       >
         <div
+          ref={selectionFrameRef}
           className="tr_selection-frame"
         // onMouseUp={(e) => console.log(e)}
         >

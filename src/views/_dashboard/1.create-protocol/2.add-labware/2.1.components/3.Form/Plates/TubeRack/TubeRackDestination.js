@@ -25,9 +25,9 @@ import { useTubeRackContext } from "src/context/TubeRackContext";
 
 export default function TubeRackDestination({ stepId, volumePer, selectedLabware, handleClose }) {
 
-    const { selectedSlot, updateVolume, sourceSlots } = useTubeRackContext();
+    const { selectedSlot, sourceSlots } = useTubeRackContext();
 
-    const [selectedWellsElement, setSelectedWellsElement] = useState([]);
+
     const [totalSelected, setTotalSelected] = useState([])
     const totalSelectedRef = useRef(totalSelected);
 
@@ -262,9 +262,6 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
             destinationItem.wells = filteredWells.map(well => {
                 const wellId = typeof well === 'object' && well !== null ? well.id : well;
                 if (sourceSlots[wellId]) {
-                    // Assuming you want to adjust the volume based on the existing volume in the well
-                    // and the volume in sourceSlots
-                    const existingVolume = typeof well === 'object' && well.volume ? well.volume : 0;
                     return {
                         id: wellId,
                         volume: destinationItem.volume - sourceSlots[wellId].volume,
@@ -304,10 +301,7 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
         items.push(foundItem)
 
         localStorage.setItem('tubeTransfer', JSON.stringify(items));
-
-
-
-        handleClose(); // Close the modal or take other closing actions
+        handleClose();
     };
 
 

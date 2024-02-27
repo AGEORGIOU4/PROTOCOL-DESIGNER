@@ -168,14 +168,14 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   const handleChangeSource = (e) => {
     const selected = JSON.parse(e.target.value);
     setSelectedSlot(selected); // Update context
-
+    setSelectedSource(e.target.value);
     handleTypeOfLabware(selected);
   };
 
   const handleChangeDestination = (e) => {
     const selected = JSON.parse(e.target.value);
     setSelectedSlot(selected); // Update context
-
+    setSelectedDestination(e.target.value)
     handleTypeOfLabware(selected);
   };
 
