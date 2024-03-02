@@ -19,10 +19,13 @@ import { cidEyedropper } from "@coreui/icons-pro";
 import AddLabwareModal from "../../../5.Modal";
 import { AddLiquids } from "../../../3.Form/helpers";
 import TubeRackSelection from "../../../3.Form/Plates/TubeRack/TubeRack";
+import TubeRackSource from "../../../3.Form/Plates/TubeRack/TubeRackSource";
+import TubeRackDestination from "../../../3.Form/Plates/TubeRack/TubeRackDestination";
 import WellPlateSelection from "../../../3.Form/Plates/WellPlate/WellPlate";
 import ReservoirSelection from "../../../3.Form/Plates/Reservoir/Reservoir";
 import AluminiumBlockSelection from "../../../3.Form/Plates/AluminiumBlock/AluminiumBlock";
 import { Notes } from "../../Components/notes";
+import { useTubeRackContext } from "src/context/TubeRackContext";
 
 export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   const [visible, setVisible] = useState(false);
@@ -40,11 +43,16 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
 
   const [selectedLabwareName, setSelectedLabwareName] = useState("");
   const [selectedLabwareType, setSelectedLabwareType] = useState("");
+  const [volumePer, setVolumePer] = useState(0)
 
   const [selectedLiquid, setSelectedLiquid] = useState("");
   const [liquidVolume, setLiquidVolume] = useState("");
 
-  const [selectedSlot, setSelectedSlot] = useState({});
+  const [isDestination, setIsDestination] = useState(false);
+  const [isSourceReady, setSourceReady] = useState(false)
+
+
+  const { selectedSlot, setSelectedSlot, sourceSlots } = useTubeRackContext();
 
   const [isNotesOpen, setIsNotesOpen] = useState(false);
 
@@ -71,12 +79,22 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
           label: item.name,
         }));
 
+        const jsonfyValue = JSON.parse(new_items[0].value);
+
+        jsonfyValue.liquids.selected.forEach(liquid => {
+          if (liquid.wells.length > 0) {
+            // Transform each well string into an object with id and volume
+            liquid.wells = liquid.wells.map(well => ({
+              id: well,
+              volume: liquid.volume
+            }));
+          }
+        });
+
         setSourceItems(new_items);
         setSelectedSource(new_items[0]);
         setSelectedDestination(new_items[0]);
-        setSelectedSlot(JSON.parse(new_items[0].value));
-        console.log(selectedSlot);
-
+        setSelectedSlot(jsonfyValue);
         handleTypeOfLabware(JSON.parse(new_items[0].value));
       }
     } catch (e) {
@@ -148,17 +166,17 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   };
 
   const handleChangeSource = (e) => {
+    const selected = JSON.parse(e.target.value);
+    setSelectedSlot(selected); // Update context
     setSelectedSource(e.target.value);
-    setSelectedSlot(JSON.parse(e.target.value));
-
-    handleTypeOfLabware(JSON.parse(e.target.value));
+    handleTypeOfLabware(selected);
   };
 
   const handleChangeDestination = (e) => {
-    setSelectedDestination(e.target.value);
-    setSelectedSlot(JSON.parse(e.target.value));
-
-    handleTypeOfLabware(JSON.parse(e.target.value));
+    const selected = JSON.parse(e.target.value);
+    setSelectedSlot(selected); // Update context
+    setSelectedDestination(e.target.value)
+    handleTypeOfLabware(selected);
   };
 
   const handleClose = () => {
@@ -189,10 +207,38 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     }
   };
 
-  const handleAddLiquids = () => {
-    getSelectedLabware();
-    setVisible(true);
+  const handleAddLiquids = (fromDestination) => {
+    getSelectedLabware(); // Ensure the selected labware name and type are up-to-date.
+    if (volumePer <= 0)
+      alert("Please select Volume Per Above")
+    setIsDestination(fromDestination); // Set whether the modal is being opened for destination.
+
+    // Assume `setSourceReady` logic is correct and sets the flag based on whether the source is prepared.
+    const items = JSON.parse(localStorage.getItem('tubeTransfer'));
+    if (items) {
+      let foundItem = items.find(item => item.stepId === stepId);
+      let isSourcePrepared
+      if (!foundItem) {
+        foundItem = items[items.length - 1];
+        isSourcePrepared = foundItem && foundItem.destination.length > 0;
+      } else {
+        isSourcePrepared = foundItem && foundItem.source.length > 0;
+      }
+      setSourceReady(isSourcePrepared);
+      console.log(Object.keys(sourceSlots).length > 0)
+      // Only set the modal to visible if not fromDestination or if the source is prepared.
+      if (!fromDestination || (isSourcePrepared && Object.keys(sourceSlots).length > 0)) {
+        setVisible(true);
+      } else {
+        // Optional: Provide feedback to the user why they can't proceed.
+        alert("Please configure the source first.");
+      }
+    } else if (!isDestination) {
+      setVisible(true)
+    }
+
   };
+
 
   const handleChangeSelectedLiquid = (e, color) => {
     setSelectedLiquid(e);
@@ -201,6 +247,10 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   const handleChangeLiquidVolume = (e) => {
     setLiquidVolume(e.target.value);
   };
+
+  const handleChangeVolumePer = (e) => {
+    setVolumePer(e.target.value)
+  }
 
   const handleNotesClick = () => setIsNotesOpen(true);
   const closeNotes = () => setIsNotesOpen(false);
@@ -235,7 +285,7 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
             <CCol md={1}>
               <CFormLabel htmlFor="validationCustom02">Volume Per</CFormLabel>
               <CInputGroup className="mb-3">
-                <CFormInput type="number" id="validationCustom02" required />
+                <CFormInput type="number" id="validationCustom02" value={volumePer} onChange={handleChangeVolumePer} required />
                 <CInputGroupText id="basic-addon2">μL</CInputGroupText>
               </CInputGroup>
               <CFormFeedback valid>Looks good!</CFormFeedback>
@@ -266,7 +316,7 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
               <CFormLabel htmlFor="validationCustom04">Wells</CFormLabel>
               <CFormInput
                 style={{ caretColor: "transparent" }}
-                onClick={handleAddLiquids}
+                onClick={() => handleAddLiquids(false)}
                 id="validationCustom04"
                 required
               />
@@ -293,7 +343,7 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
               <CFormLabel htmlFor="validationCustom06">Wells</CFormLabel>
               <CFormInput
                 style={{ caretColor: "transparent" }}
-                onClick={handleAddLiquids}
+                onClick={() => handleAddLiquids(true)}
                 id="validationCustom06"
                 required
               />
@@ -387,25 +437,30 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
         showFooter={false}
         fullView={true}
       >
-        {tubeRackSelect &&
+        {(tubeRackSelect && !isDestination) &&
           React.Children.toArray(
             <>
-              <AddLiquids
-                selectedLiquid={selectedLiquid}
-                liquidVolume={liquidVolume}
-                handleChangeSelectedLiquid={handleChangeSelectedLiquid}
-                handleChangeLiquidVolume={handleChangeLiquidVolume}
-              />
-              <TubeRackSelection
-                selectedSlot={selectedSlot}
+              <TubeRackSource
+                stepId={stepId}
+                volumePer={volumePer}
                 selectedLabware={selectedLabwareName}
-                selectedLiquid={selectedLiquid}
                 liquidVolume={liquidVolume}
                 handleClose={handleClose}
               />
             </>,
           )}
-
+        {(tubeRackSelect && isDestination && isSourceReady) &&
+          React.Children.toArray(
+            <>
+              <TubeRackDestination
+                stepId={stepId}
+                volumePer={volumePer}
+                selectedLabware={selectedLabwareName}
+                liquidVolume={liquidVolume}
+                handleClose={handleClose}
+              />
+            </>,
+          )}
         {wellPlateSelect &&
           React.Children.toArray(
             <>
