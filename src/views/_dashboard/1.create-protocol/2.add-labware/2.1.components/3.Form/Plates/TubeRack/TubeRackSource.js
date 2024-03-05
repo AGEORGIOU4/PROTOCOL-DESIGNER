@@ -46,7 +46,9 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
                 foundItem.liquids["selected"] = foundItem.destination
             } else {
                 foundItem["liquids"] = {}
-                foundItem.liquids["selected"] = foundItem.source
+                if (foundItem.destination.length <= 0) foundItem.source = selectedSlot.liquids.selected
+                foundItem.liquids["selected"] = selectedSlot.liquids.selected
+
             }
         } else {
             items = JSON.parse(localStorage.getItem("slots"));
@@ -70,6 +72,7 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
                 foundItem.liquids["selected"] = foundItem.destination
             } else {
                 foundItem["liquids"] = {}
+                if (foundItem.destination.length <= 0) foundItem.source = selectedSlot.liquids.selected
                 foundItem.liquids["selected"] = foundItem.source
             }
         } else {
@@ -78,12 +81,11 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
             const initializeTubeTransferStep = [{
                 stepId: stepId,
                 source: foundItem.liquids.selected,
-                destination: []
+                destination: [],
+                labware_name: selectedSlot.labware_name
             }]
             localStorage.setItem('tubeTransfer', JSON.stringify(initializeTubeTransferStep))
         }
-
-
 
         if (foundItem) {
             foundItem.liquids.selected?.map((selections, index) => {
@@ -101,9 +103,6 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
     }, []);
 
 
-
-
-
     useEffect(() => {
         if (!dsRef.current) {
             dsRef.current = new DragSelect({
@@ -117,6 +116,7 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
                     const wellsFiltered = callback_object.items.reduce((filtered, item) => {
                         const wellId = item.id;
                         let volume = 0;
+                        let liquidName = ""
 
                         const liquidContainingWell = selectedSlot.liquids.selected.find(liquid =>
                             liquid.wells.some(well => well.id === wellId)
@@ -136,7 +136,6 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
 
                         return filtered;
                     }, []);
-
 
                     if (wellsFiltered.length > 0) {
                         // Sort selected ASC
@@ -171,6 +170,7 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
         }));
 
         // Call updateVolume with the updates array
+        debugger
         updateVolume(updates);
         const items = JSON.parse(localStorage.getItem('tubeTransfer'));
         const foundItem = getFoundItemFromStorage(stepId, selectedSlot.id);
@@ -178,6 +178,8 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
             foundItem.source = foundItem.destination
             foundItem.destination = []
             foundItem.stepId = stepId
+            debugger
+            foundItem.labware_name = selectedSlot.labware_name
             const items = JSON.parse(localStorage.getItem('tubeTransfer'));
             items.push(foundItem)
             localStorage.setItem('tubeTransfer', JSON.stringify(items))
@@ -210,7 +212,6 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
         let volume = "";
         let liquidContainingWell;
         const foundItem = getFoundItemFromStorage(stepId, selectedSlot.id);
-        // debugger
         if (foundItem.destination?.length > 0) {
             liquidContainingWell = foundItem.destination?.find(destination =>
                 destination.wells.some(well => (well.id && well.id === wellId) || well === wellId)

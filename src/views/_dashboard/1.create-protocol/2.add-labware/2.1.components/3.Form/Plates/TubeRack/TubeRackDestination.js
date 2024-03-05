@@ -38,9 +38,6 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
     const selectionFrameRef = useRef(null);
     const dsRef = useRef(null);
 
-
-
-
     const settings = {
         draggability: false,
         multiSelectMode: true,
@@ -53,17 +50,26 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
 
         if (items) {
             foundItem = items.find(item => item.stepId === stepId);
-            if (!foundItem) {
-                foundItem = items[items.length - 1];
-                foundItem["liquids"] = {}
-                foundItem.liquids["selected"] = foundItem.destination
+            if (foundItem.labware_name === selectedSlot.labware_name) {
+                if (foundItem.destination.length <= 0) {
+                    foundItem["liquids"] = {}
+                    foundItem.liquids["selected"] = foundItem.source
+                } else {
+                    foundItem["liquids"] = {}
+                    foundItem.liquids["selected"] = foundItem.destination
+                }
             } else {
-                foundItem["liquids"] = {}
-                foundItem.liquids["selected"] = foundItem.source
+                // for (let i = items.length - 1; i >= 0; i--) {
+                //     if (items[i].labware_name === selectedSlot.labware_name) {
+                //         foundItem = items[i];
+                //         break
+                //     }
+                // }
+                // debugger
+
+                // return foundItem;
             }
         }
-
-        return foundItem;
     }
 
 
@@ -73,7 +79,6 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
 
             let tmp_arr = selections.wells;
             let tmp_color = selections.color;
-
 
             for (let i = 0; i < tmp_arr.length; i++) {
                 let tempWellId = typeof tmp_arr[i] === 'object' && tmp_arr[i] !== null && 'id' in tmp_arr[i] ? tmp_arr[i].id : tmp_arr[i];
@@ -181,7 +186,7 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
         switch (true) {
             case (sourceLength === 1 && destinationLength > 1): // One to many
             case (sourceLength > 1 && destinationLength === 1): // Many to one
-            case (sourceLength > 1 && destinationLength > 1): // Many to Many (N to N)
+            case (sourceLength === destinationLength): // Many to Many (N to N)
                 isValidSelection = true;
                 break;
             default:
@@ -298,7 +303,8 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
             });
         });
         const items = JSON.parse(localStorage.getItem('tubeTransfer'));
-        items.push(foundItem)
+        const currentStep = items.find(item => item.stepId === stepId);
+        currentStep.destination = foundItem.destination;
 
         localStorage.setItem('tubeTransfer', JSON.stringify(items));
         handleClose();
@@ -391,6 +397,7 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
 
     while (row_index < rows) {
         const row = Array.from({ length: cols }).map((_, col_index) => {
+            debugger
             const wellId = GetLetter(row_index) + (parseInt(col_index) + 1);
             return renderWell(wellId, squared);
         });
