@@ -10,14 +10,14 @@ export const TubeRackProvider = ({ children }) => {
 
     const updateVolume = (updates) => {
         if (!selectedSlot) return;
-        debugger
+
         let updatedSlot = { ...selectedSlot };
         updates.forEach(({ wellId, newVolume, toTransfer }) => {
             let liquidNames = []; // To keep track of liquid names for combining
-
             updatedSlot.liquids.selected.forEach(liquid => {
+
+                const well = liquid.wells.find(well => (well.id && well.id === wellId) || (well === wellId));
                 debugger
-                const well = liquid.wells.find(well => well.id === wellId);
                 if (well) {
                     well.volume = newVolume;
                     if (!liquidNames.includes(liquid.liquid)) {

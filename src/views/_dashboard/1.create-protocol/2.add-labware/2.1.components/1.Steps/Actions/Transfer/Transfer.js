@@ -91,7 +91,7 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
             }));
           }
         });
-        debugger
+        // debugger
         setSourceItems(new_items);
         setSelectedSource(new_items[0]);
         setSelectedDestination(new_items);
@@ -213,7 +213,7 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     if (volumePer <= 0)
       alert("Please select Volume Per Above")
     setIsDestination(fromDestination); // Set whether the modal is being opened for destination.
-    debugger
+    // debugger
     // Assume `setSourceReady` logic is correct and sets the flag based on whether the source is prepared.
     const items = JSON.parse(localStorage.getItem('tubeTransfer'));
     if (items) {
