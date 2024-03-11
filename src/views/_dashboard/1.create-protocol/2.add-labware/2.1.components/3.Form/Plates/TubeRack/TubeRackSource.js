@@ -20,7 +20,7 @@ import { useTubeRackContext } from "src/context/TubeRackContext";
 
 export default function TubeRackSource({ stepId, volumePer, selectedLabware, handleClose }) {
 
-    const { selectedSlot, updateVolume , setSelectedSlot } = useTubeRackContext();
+    const { selectedSlot, updateVolume, setSelectedSlot } = useTubeRackContext();
 
     const [selectedWellsElement, setSelectedWellsElement] = useState([]);
 
@@ -36,27 +36,45 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
 
     function getFoundItemFromStorage(stepId, selectedSlotId) {
         let foundItem;
-        let items = JSON.parse(localStorage.getItem('tubeTransfer'));
+        let items = JSON.parse(localStorage.getItem('tubeTransfer')) || [];
 
-        if (items) {
+        if (items.length > 0) {
             foundItem = items.find(item => item.stepId === stepId);
-            if (!foundItem) {
-                foundItem = items[items.length - 1];
-                foundItem["liquids"] = {}
-                foundItem.liquids["selected"] = foundItem.destination
-            } else {
-                foundItem["liquids"] = {}
-                if (foundItem.destination.length <= 0) foundItem.source = selectedSlot.liquids.selected
-                foundItem.liquids["selected"] = selectedSlot.liquids.selected
 
+            if (!foundItem) {
+                // Assuming you want to create a new item based on the last item in the array
+                // Deep copy the last item to avoid mutating the original object in the array
+                foundItem = JSON.parse(JSON.stringify(items[items.length - 1]));
+                foundItem["liquids"] = {};
+                // Assuming destination is an array and checking its existence before assigning
+                foundItem.liquids["selected"] = foundItem.destination && foundItem.destination.length ? foundItem.destination : undefined;
+            } else {
+                // Initialize liquids object for the found item
+                foundItem["liquids"] = {};
+
+                // Check the condition of the destination's length and existence of selectedSlot.liquids
+                if (foundItem.destination && foundItem.destination.length <= 0) {
+                    if (selectedSlot.liquids) {
+                        foundItem.source = selectedSlot.liquids.selected;
+                    } else {
+                        foundItem.source = selectedSlot.source;
+                    }
+                }
+
+                // Safely assign selectedSlot.liquids.selected if it exists
+                if (selectedSlot.liquids && selectedSlot.liquids.selected) {
+                    foundItem.liquids["selected"] = selectedSlot.liquids.selected;
+                }
             }
         } else {
-            items = JSON.parse(localStorage.getItem("slots"));
-            foundItem = items?.find(item => item.id === selectedSlotId);
+            // Fallback to fetching items from "slots" in local storage if "tubeTransfer" is empty or non-existent
+            items = JSON.parse(localStorage.getItem("slots")) || [];
+            foundItem = items.find(item => item.id === selectedSlotId);
         }
 
         return foundItem;
     }
+
 
 
     useEffect(() => {
@@ -74,6 +92,7 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
                 foundItem["liquids"] = {}
                 // if (foundItem.destination.length <= 0) foundItem.source = selectedSlot.liquids.selected
                 foundItem.liquids["selected"] = foundItem.source
+                setSelectedSlot(foundItem)
             }
         } else {
             items = JSON.parse(localStorage.getItem("slots"));
@@ -84,18 +103,21 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
                 destination: [],
                 labware_name: selectedSlot.name
             }]
+            setSelectedSlot(foundItem)
             localStorage.setItem('tubeTransfer', JSON.stringify(initializeTubeTransferStep))
         }
 
         if (foundItem) {
             foundItem.liquids.selected?.map((selections, index) => {
-                let tmp_arr = selections.wells;
-                let tmp_color = selections.color;
-                for (let i = 0; i < tmp_arr.length; i++) {
-                    let tempWellId = typeof tmp_arr[i] === 'object' && tmp_arr[i] !== null && 'id' in tmp_arr[i] ? tmp_arr[i].id : tmp_arr[i];
-                    try {
-                        document.getElementById(tempWellId).style.background = tmp_color;
-                    } catch (e) { }
+                if (selections.wells.length > 0) {
+                    let tmp_arr = selections.wells;
+                    let tmp_color = selections.color;
+                    for (let i = 0; i < tmp_arr.length; i++) {
+                        let tempWellId = typeof tmp_arr[i] === 'object' && tmp_arr[i] !== null && 'id' in tmp_arr[i] ? tmp_arr[i].id : tmp_arr[i];
+                        try {
+                            document.getElementById(tempWellId).style.background = tmp_color;
+                        } catch (e) { }
+                    }
                 }
             });
 
@@ -117,16 +139,19 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
                         const wellId = item.id;
                         let volume = 0;
                         let liquidName = ""
-                        debugger
-                        const liquidContainingWell = selectedSlot.liquids.selected.find(liquid =>
+                        const liquidsOrSource = selectedSlot.liquids?.selected?.length ? selectedSlot.liquids.selected : selectedSlot.source;
+                        const liquidContainingWell = liquidsOrSource.find(liquid =>
                             liquid.wells.some(well => (well.id && well.id === wellId) || well === wellId)
                         );
-
                         if (liquidContainingWell) {
 
                             const specificWell = liquidContainingWell.wells.find(well => (well.id && well.id === wellId) || well === wellId);
-                            if (specificWell) {
+                            if (specificWell.id) {
                                 volume = specificWell.volume;
+                                liquidName = liquidContainingWell.liquid;
+                            }
+                            if (specificWell) {
+                                volume = liquidContainingWell.volume
                                 liquidName = liquidContainingWell.liquid;
                             }
                         }
@@ -136,7 +161,6 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
 
                         return filtered;
                     }, []);
-                    debugger
                     if (wellsFiltered.length > 0) {
                         // Sort selected ASC
                         setSelectedWellsElement(wellsFiltered);
@@ -170,7 +194,6 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
         }));
 
         // Call updateVolume with the updates array
-        debugger
         updateVolume(updates);
         const items = JSON.parse(localStorage.getItem('tubeTransfer'));
         const foundItem = getFoundItemFromStorage(stepId, selectedSlot.id);
@@ -212,16 +235,17 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
         let liquidContainingWell;
         const foundItem = getFoundItemFromStorage(stepId, selectedSlot.id);
         if (foundItem.destination?.length > 0) {
-            liquidContainingWell = foundItem.destination?.find(destination =>
+            liquidContainingWell = foundItem.destination.find(destination =>
                 destination.wells.some(well => (well.id && well.id === wellId) || well === wellId)
             );
         } else if (foundItem.source) {
-            // This block is now an else if, checking the source if the destination isn't applicable
-            liquidContainingWell = foundItem.source?.find(source =>
+            liquidContainingWell = foundItem.source.find(source =>
                 source.wells.some(well => (well.id && well.id === wellId) || well === wellId)
             );
-        } else {
-            liquidContainingWell = foundItem.liquids.selected.find(source => source.wells.some(well => (well.id && well.id === wellId) || well === wellId))
+        } else if (Array.isArray(foundItem.liquids.selected)) { // Ensure that foundItem.liquids.selected is an array
+            liquidContainingWell = foundItem.liquids.selected.find(source =>
+                source.wells.some(well => (well.id && well.id === wellId) || well === wellId)
+            );
         }
 
 

@@ -227,6 +227,7 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
       }
       setSourceReady(isSourcePrepared);
       console.log(Object.keys(sourceSlots).length > 0)
+      debugger
       // Only set the modal to visible if not fromDestination or if the source is prepared.
       if (!fromDestination || (isSourcePrepared && Object.keys(sourceSlots).length > 0)) {
         setVisible(true);

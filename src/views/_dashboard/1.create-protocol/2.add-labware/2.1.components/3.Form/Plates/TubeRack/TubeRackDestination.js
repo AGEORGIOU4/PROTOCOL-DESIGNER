@@ -25,7 +25,7 @@ import { useTubeRackContext } from "src/context/TubeRackContext";
 
 export default function TubeRackDestination({ stepId, volumePer, selectedLabware, handleClose }) {
 
-    const { selectedSlot, sourceSlots } = useTubeRackContext();
+    const { selectedSlot, sourceSlots, setSelectedSlot } = useTubeRackContext();
 
 
     const [totalSelected, setTotalSelected] = useState([])
@@ -94,20 +94,33 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
 
 
     useEffect(() => {
-        const { foundItem, found } = getFoundItemFromStorage(stepId)
-        foundItem.liquids.selected?.map((selections, index) => {
+        const { foundItem } = getFoundItemFromStorage(stepId);
+        setSelectedSlot(foundItem);
 
-            let tmp_arr = selections.wells;
-            let tmp_color = selections.color;
+        // Determine which array to iterate over: `foundItem.liquids.selected` or `foundItem.source`
+        const liquidsOrSource = foundItem.liquids?.selected?.length ? foundItem.liquids.selected : foundItem.source;
 
-            for (let i = 0; i < tmp_arr.length; i++) {
-                let tempWellId = typeof tmp_arr[i] === 'object' && tmp_arr[i] !== null && 'id' in tmp_arr[i] ? tmp_arr[i].id : tmp_arr[i];
-                try {
-                    document.getElementById(tempWellId).style.background = tmp_color;
-                } catch (e) { }
-            }
-        });
-    }, []);
+        // Ensure that the array exists and is not empty before attempting to map over it
+        if (liquidsOrSource && liquidsOrSource.length) {
+            liquidsOrSource.forEach((selection) => {
+                const tmp_arr = selection.wells;
+                const tmp_color = selection.color;
+
+                for (let i = 0; i < tmp_arr.length; i++) {
+                    const tempWellId = typeof tmp_arr[i] === 'object' && tmp_arr[i] !== null && 'id' in tmp_arr[i] ? tmp_arr[i].id : tmp_arr[i];
+                    try {
+                        const wellElement = document.getElementById(tempWellId);
+                        if (wellElement) {
+                            wellElement.style.background = tmp_color;
+                        }
+                    } catch (e) {
+                        // Handle any errors here, e.g., logging to console or a no-op
+                    }
+                }
+            });
+        }
+    }, [stepId]); // Assuming stepId is a dependency and should trigger re-execution of useEffect when it changes
+
 
 
     useEffect(() => {
@@ -136,14 +149,22 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
 
                     callback_object.items.forEach(item => {
                         const wellId = item.id;
+                        let matchedLiquid
                         // Check if the well is already included in the updated selection
                         if (!updatedTotalSelected.some(group =>
                             group.wells.some(well => (well.id && well.id === wellId) || (well === wellId))
                         )) {
-                            let matchedLiquid = selectedSlot.liquids.selected.find(liquid =>
-                                liquid.wells.some(well => (well.id && well.id === wellId) || well === wellId)
-                            );
+                            const liquidsOrSource = selectedSlot.liquids?.selected?.length ? selectedSlot.liquids.selected : selectedSlot.source;
+                            if (liquidsOrSource && liquidsOrSource.length) {
+                                matchedLiquid = liquidsOrSource.find(liquid =>
+                                    liquid.wells.some(well => (well.id && well.id === wellId) || well === wellId)
+                                );
 
+                                // Use matchedLiquid here
+                                // Example: if (matchedLiquid) { /* Logic using matchedLiquid */ }
+                            } else {
+                                matchedLiquid = undefined
+                            }
                             if (matchedLiquid) {
                                 // If a matching liquid is found, proceed as before
                                 const newWell = { id: wellId, volume: matchedLiquid.volume };
@@ -200,7 +221,6 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
         const totalDestination = totalSelected.reduce((total, item) => {
             return total + item.wells.length;
         }, 0);
-        debugger
 
         const destinationLength = totalDestination;
         const sourceLength = Object.keys(sourceSlots).length
@@ -270,9 +290,9 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
         });
 
         // Assuming 'items' is your initial object and 'updatedDestinationSource' is the object with updates.
-
-        // Step 0: Initialize 'destination' as a deep copy of 'liquids.selected' from 'source'
-        foundItem.destination = JSON.parse(JSON.stringify(foundItem.liquids.selected));
+        const liquidsOrSource = selectedSlot.liquids?.selected?.length ? selectedSlot.liquids.selected : selectedSlot.source;
+        // Step 0: Initialize 'destination' as a deep copy of 'liquid   s.selected' from 'source'
+        foundItem.destination = JSON.parse(JSON.stringify(liquidsOrSource));
 
         // Step 1: Remove the updated wells from their original groups in 'destination'
         foundItem.destination.forEach(destinationItem => {
@@ -360,21 +380,29 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
         const { foundItem, found } = getFoundItemFromStorage(stepId);
 
         if (foundItem) {
+            if (foundItem.liquids) {
+                liquidContainingWell = foundItem.liquids.selected?.find(selected =>
+                    selected.wells.some(well =>
+                        (well.id && well.id === wellId) || well === wellId
+                    )
+                );
+            } else {
+                liquidContainingWell = foundItem.source.find(selected =>
+                    selected.wells.some(well =>
+                        (well.id && well.id === wellId) || well === wellId
+                    ))
 
-            liquidContainingWell = foundItem.liquids.selected?.find(selected =>
-                selected.wells.some(well =>
-                    (well.id && well.id === wellId) || well === wellId
-                )
-            );
+            }
         }
 
         if (liquidContainingWell) {
             const sourceSlotWell = sourceSlots[wellId];
             // Find the specific well object to get its volume
             const specificWell = liquidContainingWell.wells.find(well => (well.id && well.id === wellId) || well === wellId);
-            debugger
+
+
             if (specificWell) {
-                const sourceVolume = found && sourceSlotWell?.volume ? sourceSlotWell.volume : 0;
+                const sourceVolume = sourceSlotWell?.volume ? sourceSlotWell.volume : 0;
                 if (specificWell.volume)
                     volume = Number(specificWell.volume) - sourceVolume
                 else
