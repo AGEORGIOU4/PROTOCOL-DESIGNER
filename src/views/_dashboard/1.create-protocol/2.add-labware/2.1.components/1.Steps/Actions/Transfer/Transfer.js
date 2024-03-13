@@ -79,6 +79,7 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
           label: item.name,
         }));
 
+
         const jsonfyValue = JSON.parse(new_items[0].value);
 
         jsonfyValue.liquids.selected.forEach(liquid => {
@@ -90,10 +91,10 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
             }));
           }
         });
-
+        // debugger
         setSourceItems(new_items);
         setSelectedSource(new_items[0]);
-        setSelectedDestination(new_items[0]);
+        setSelectedDestination(new_items);
         setSelectedSlot(jsonfyValue);
         handleTypeOfLabware(JSON.parse(new_items[0].value));
       }
@@ -212,7 +213,7 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     if (volumePer <= 0)
       alert("Please select Volume Per Above")
     setIsDestination(fromDestination); // Set whether the modal is being opened for destination.
-
+    // debugger
     // Assume `setSourceReady` logic is correct and sets the flag based on whether the source is prepared.
     const items = JSON.parse(localStorage.getItem('tubeTransfer'));
     if (items) {
@@ -226,6 +227,7 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
       }
       setSourceReady(isSourcePrepared);
       console.log(Object.keys(sourceSlots).length > 0)
+      debugger
       // Only set the modal to visible if not fromDestination or if the source is prepared.
       if (!fromDestination || (isSourcePrepared && Object.keys(sourceSlots).length > 0)) {
         setVisible(true);

@@ -10,22 +10,32 @@ export const TubeRackProvider = ({ children }) => {
 
     const updateVolume = (updates) => {
         if (!selectedSlot) return;
-
         let updatedSlot = { ...selectedSlot };
+        debugger
         updates.forEach(({ wellId, newVolume, toTransfer }) => {
             let liquidNames = []; // To keep track of liquid names for combining
+            let wellFound = false; // Flag to check if the well has been found and updated
+            const liquidsOrSource = updatedSlot.liquids?.selected?.length ? updatedSlot.liquids.selected : updatedSlot.source;
+            liquidsOrSource.forEach(liquid => {
+                const wellIndex = liquid.wells.findIndex(well => (well.id && well.id === wellId) || well === wellId);
+                if (wellIndex !== -1) {
+                    wellFound = true;
+                    const well = liquid.wells[wellIndex];
+                    // Convert string to object if well is identified by a string
+                    if (typeof well === 'string') {
+                        liquid.wells[wellIndex] = { id: wellId, volume: newVolume, liquid: liquid.liquid };
+                    } else {
+                        well.volume = newVolume; // Update volume if well is already an object
+                    }
 
-            updatedSlot.liquids.selected.forEach(liquid => {
-                const well = liquid.wells.find(well => well.id === wellId);
-                if (well) {
-                    well.volume = newVolume;
                     if (!liquidNames.includes(liquid.liquid)) {
                         liquidNames.push(liquid.liquid);
                     }
-                    // Update logic for sourceSlots to keep track of changes
+
+                    // Correcting the update logic for sourceSlots
                     setSourceSlots(prevSlots => ({
                         ...prevSlots,
-                        [well.id]: {
+                        [wellId]: { // Use wellId directly to handle both cases
                             id: wellId,
                             volume: toTransfer,
                             liquid: liquidNames.join('/') // Combining liquid names
@@ -34,8 +44,8 @@ export const TubeRackProvider = ({ children }) => {
                 }
             });
 
-            // If the well is being updated but doesn't match any existing liquid
-            if (liquidNames.length === 0) {
+            // If the well wasn't found in any of the liquids, treat it as a new entry
+            if (!wellFound) {
                 setSourceSlots(prevSlots => ({
                     ...prevSlots,
                     [wellId]: {
