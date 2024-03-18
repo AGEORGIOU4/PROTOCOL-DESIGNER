@@ -22,7 +22,7 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
 
     const { selectedSlot, updateVolume, setSelectedSlot } = useTubeRackContext();
 
-    const [selectedWellsElement, setSelectedWellsElement] = useState([]);
+    const [selectedWellsElement, setSelectedWellsElement, sourceSlots] = useState([]);
 
     const selectionFrameRef = useRef(null);
     const dsRef = useRef(null);
@@ -88,6 +88,7 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
                 foundItem = items[items.length - 1];
                 foundItem["liquids"] = {}
                 foundItem.liquids["selected"] = foundItem.destination
+                setSelectedSlot(foundItem)
             } else {
                 foundItem["liquids"] = {}
                 // if (foundItem.destination.length <= 0) foundItem.source = selectedSlot.liquids.selected
@@ -149,11 +150,11 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
                             if (specificWell.id) {
                                 volume = specificWell.volume;
                                 liquidName = liquidContainingWell.liquid;
-                            }
-                            if (specificWell) {
-                                volume = liquidContainingWell.volume
-                                liquidName = liquidContainingWell.liquid;
-                            }
+                            } else
+                                if (specificWell) {
+                                    volume = liquidContainingWell.volume
+                                    liquidName = liquidContainingWell.liquid;
+                                }
                         }
                         if (volume > 0) {
                             filtered.push({ id: wellId, volume });
@@ -206,6 +207,7 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
             items.push(foundItem)
             localStorage.setItem('tubeTransfer', JSON.stringify(items))
         }
+        console.log(sourceSlots)
         handleClose()
 
     };

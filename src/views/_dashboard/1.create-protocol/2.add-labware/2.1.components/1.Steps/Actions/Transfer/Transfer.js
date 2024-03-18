@@ -52,7 +52,7 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   const [isSourceReady, setSourceReady] = useState(false)
 
 
-  const { selectedSlot, setSelectedSlot, sourceSlots } = useTubeRackContext();
+  const { selectedSlot, setSelectedSlot, sourceSlots, setSourceSlots } = useTubeRackContext();
 
   const [isNotesOpen, setIsNotesOpen] = useState(false);
 
@@ -227,7 +227,6 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
       }
       setSourceReady(isSourcePrepared);
       console.log(Object.keys(sourceSlots).length > 0)
-      debugger
       // Only set the modal to visible if not fromDestination or if the source is prepared.
       if (!fromDestination || (isSourcePrepared && Object.keys(sourceSlots).length > 0)) {
         setVisible(true);

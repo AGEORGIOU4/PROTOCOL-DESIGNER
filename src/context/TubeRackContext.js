@@ -11,7 +11,7 @@ export const TubeRackProvider = ({ children }) => {
     const updateVolume = (updates) => {
         if (!selectedSlot) return;
         let updatedSlot = { ...selectedSlot };
-        debugger
+        setSourceSlots({})
         updates.forEach(({ wellId, newVolume, toTransfer }) => {
             let liquidNames = []; // To keep track of liquid names for combining
             let wellFound = false; // Flag to check if the well has been found and updated
