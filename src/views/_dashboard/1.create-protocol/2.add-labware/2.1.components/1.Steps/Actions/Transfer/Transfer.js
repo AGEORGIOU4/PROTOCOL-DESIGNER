@@ -45,14 +45,25 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   const [selectedLabwareType, setSelectedLabwareType] = useState("");
   const [volumePer, setVolumePer] = useState(0)
 
+  const [selectedDestinationSlot, setSelectedDestinationSlot] = useState("")
+  const [selectedSourceSlot, setSelectedSourceSlot] = useState("")
+
   const [selectedLiquid, setSelectedLiquid] = useState("");
+  const [selectPipette, setSelectedPipette] = useState(options_Pipettes[0].value)
   const [liquidVolume, setLiquidVolume] = useState("");
 
   const [isDestination, setIsDestination] = useState(false);
   const [isSourceReady, setSourceReady] = useState(false)
 
+  const [selectedChangeTip, setSelectedChangeTip] = useState(options_ChangeTip[0].value)
 
-  const { selectedSlot, setSelectedSlot, sourceSlots } = useTubeRackContext();
+  const [checkboxStates, setCheckboxStates] = useState({
+    mixBefore: false,
+    mixAfter: false,
+  });
+
+
+  const { selectedSlot, setSelectedSlot, sourceSlots, setSourceSlots } = useTubeRackContext();
 
   const [isNotesOpen, setIsNotesOpen] = useState(false);
 
@@ -93,6 +104,8 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
         });
         // debugger
         setSourceItems(new_items);
+        setSelectedDestinationSlot(new_items[0])
+        setSelectedSourceSlot(new_items[0])
         setSelectedSource(new_items[0]);
         setSelectedDestination(new_items);
         setSelectedSlot(jsonfyValue);
@@ -111,23 +124,26 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
       event.stopPropagation();
       setValidated(false);
     } else {
+      const items = JSON.parse(localStorage.getItem('tubeTransfer'));
+      const currentStep = items.find(item => item.stepId === stepId);
+      if (!currentStep.source || !currentStep.destination) {
+        form.checkValidity() === false
+        event.stopPropagation()
+        setValidated(false)
+      }
       const formData = {
         stepTitle: stepTitle,
-        source: selectedSource,
-        destination: selectedDestination,
-        tubeRackSelect: tubeRackSelect,
-        wellPlateSelect: wellPlateSelect,
-        reservoirSelect: reservoirSelect,
-        aluminiumBlockSelect: aluminiumBlockSelect,
-        selectedLabware: {
-          name: selectedLabwareName,
-          type: selectedLabwareType
-        },
-        liquid: {
-          name: selectedLiquid,
-          volume: liquidVolume
-        }
+        pipette: selectPipette,
+        source: currentStep.source,
+        destination: currentStep.destination,
+        sourceTransfer: sourceSlots,
+        sourceTubeRackSelect: selectedSourceSlot,
+        destinationTubeRackSelect: selectedDestinationSlot,
+        mixBefore: checkboxStates.mixBefore,
+        mixAfter: checkboxStates.mixAfter,
+        changeTip: selectedChangeTip,
       };
+      debugger
 
       console.log(JSON.stringify(formData, null, 2));
 
@@ -135,6 +151,9 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     setValidated(true);
   };
 
+  const handleOnChangeSelectedChangeTip = (e) => {
+    setSelectedChangeTip(e.target.value)
+  }
 
   const handleTypeOfLabware = (selected) => {
     if (selected.labware_type == "tube_rack") {
@@ -168,13 +187,19 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
 
   const handleChangeSource = (e) => {
     const selected = JSON.parse(e.target.value);
+    setSelectedSourceSlot(selected)
     setSelectedSlot(selected); // Update context
     setSelectedSource(e.target.value);
     handleTypeOfLabware(selected);
   };
 
+  const handleChangePipette = (e) => {
+    setSelectedPipette(e.target.value)
+  }
+
   const handleChangeDestination = (e) => {
     const selected = JSON.parse(e.target.value);
+    setSelectedDestinationSlot(selected)
     setSelectedSlot(selected); // Update context
     setSelectedDestination(e.target.value)
     handleTypeOfLabware(selected);
@@ -208,6 +233,17 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     }
   };
 
+  const handleCheckboxChange = (e) => {
+    const { id } = e.target;
+
+
+    setCheckboxStates(currentState => ({
+      ...currentState,
+      [id]: !currentState[id],
+    }));
+  };
+
+
   const handleAddLiquids = (fromDestination) => {
     getSelectedLabware(); // Ensure the selected labware name and type are up-to-date.
     if (volumePer <= 0)
@@ -227,7 +263,6 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
       }
       setSourceReady(isSourcePrepared);
       console.log(Object.keys(sourceSlots).length > 0)
-      debugger
       // Only set the modal to visible if not fromDestination or if the source is prepared.
       if (!fromDestination || (isSourcePrepared && Object.keys(sourceSlots).length > 0)) {
         setVisible(true);
@@ -279,6 +314,7 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
               <CFormSelect
                 options={options_Pipettes}
                 id="validationCustom01"
+                onChange={handleChangePipette}
                 required
               />
               <CFormFeedback valid>Looks good!</CFormFeedback>
@@ -320,7 +356,7 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                 style={{ caretColor: "transparent" }}
                 onClick={() => handleAddLiquids(false)}
                 id="validationCustom04"
-                required
+
               />
 
               <CFormFeedback valid>Looks good!</CFormFeedback>
@@ -347,20 +383,30 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                 style={{ caretColor: "transparent" }}
                 onClick={() => handleAddLiquids(true)}
                 id="validationCustom06"
-                required
+
               />
               <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
 
             <CCol md={2}>
-              <CFormCheck id="flexCheckDefault" label="Mix Before" />
+              <CFormCheck
+                id="mixBefore"
+                label="Mix Before"
+                onChange={handleCheckboxChange}
+                checked={checkboxStates.mixBefore}
+              />
             </CCol>
 
             {/* SPACER */}
             <CCol md={5}></CCol>
 
             <CCol md={2}>
-              <CFormCheck id="flexCheckDefault" label="Mix After" />
+              <CFormCheck
+                id="mixAfter"
+                label="Mix After"
+                onChange={handleCheckboxChange}
+                checked={checkboxStates.mixAfter}
+              />
             </CCol>
 
             <div className="modal-header-row">
@@ -374,6 +420,7 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
               <CFormSelect
                 options={options_ChangeTip}
                 id="validationCustom05"
+                onChange={handleOnChangeSelectedChangeTip}
                 required
               />
               <CFormFeedback valid>Looks good!</CFormFeedback>
