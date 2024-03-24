@@ -304,7 +304,7 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
                 );
                 return !isWellUpdated; // Keep the well if it's not being updated
             });
-            debugger
+            // debugger
             // Then, map over filtered wells to update their volume as necessary
             destinationItem.wells = filteredWells.map(well => {
                 const wellId = typeof well === 'object' && well !== null ? well.id : well;

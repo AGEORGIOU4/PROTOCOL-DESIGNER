@@ -80,7 +80,7 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
     useEffect(() => {
         let foundItem;
         let items;
-
+        // debugger
         items = JSON.parse(localStorage.getItem('tubeTransfer'));
         if (items) {
             foundItem = items.find((item) => item.stepId === stepId)
