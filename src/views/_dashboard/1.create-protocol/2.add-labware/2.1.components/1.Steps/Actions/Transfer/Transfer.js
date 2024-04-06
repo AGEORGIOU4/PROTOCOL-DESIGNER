@@ -147,6 +147,11 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
 
       console.log(JSON.stringify(formData, null, 2));
 
+      const stepStates = JSON.parse(localStorage.getItem('stepStates'))
+      if (!stepStates){
+        
+      }
+
     }
     setValidated(true);
   };
