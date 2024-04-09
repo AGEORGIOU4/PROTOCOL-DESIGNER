@@ -20,6 +20,7 @@ import { tube_racks } from "../data";
 import CIcon from "@coreui/icons-react";
 import { cilSave } from "@coreui/icons";
 import { useTubeRackContext } from "src/context/TubeRackContext";
+import { updateWellsForGlobalStepTracking } from "./helpers/utils"
 
 
 
@@ -34,7 +35,6 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
     const [showErrorPopup, setShowErrorPopup] = useState(false);
     const [errorPopupMessage, setErrorPopupMessage] = useState('');
 
-
     const selectionFrameRef = useRef(null);
     const dsRef = useRef(null);
 
@@ -44,43 +44,46 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
         selectables: document.getElementsByClassName("tr_selectables"),
     };
 
+
+
+
     function getFoundItemFromStorage(stepId) {
         let foundItem;
         let found = false
         let items = JSON.parse(localStorage.getItem('tubeTransfer'));
-
-
         if (items) {
-
             foundItem = items.find(item => item.stepId === stepId);
-            if (foundItem.labware_name === selectedSlot.name) {
-                if (foundItem.destination.length <= 0) {
-                    foundItem["liquids"] = {}
-                    foundItem.liquids["selected"] = foundItem.source
+            if (foundItem.sourceLabwareName === selectedSlot.name || selectedSlot.sourceLabwareName) {
+                foundItem["liquids"] = {}
+                foundItem.liquids["selected"] = foundItem.source
+                foundItem.destination = foundItem.source
+                if (foundItem.destination.length <= 0)
+
                     found = true
-                } else {
-                    foundItem["liquids"] = {}
-                    foundItem.liquids["selected"] = foundItem.destination
+                else
                     found = false
-                }
+
                 return { foundItem, found }
             } else {
 
                 for (let i = items.length - 1; i >= 0; i--) {
 
-                    if (items[i].labware_name === selectedSlot.name) {
+                    if (items[i].destinationLabwareName === selectedSlot.name || selectedSlot.destinationLabwareName) {
                         foundItem = items[i];
                         foundItem["liquids"] = {}
                         foundItem.liquids["selected"] = foundItem.source
+                        foundItem.stepId = stepId
                         found = true
                         break
                     }
                 }
                 if (found === false) {
+
                     const originalSource = JSON.parse(localStorage.getItem('slots'))
                     for (let i = originalSource.length - 1; i >= 0; i--) {
-                        if (originalSource[i].name === selectedSlot.name) {
+                        if (originalSource[i].name === selectedSlot.name || selectedSlot.sourceLabwareName) {
                             foundItem = originalSource[i]
+                            foundItem.stepId = stepId
                             found = false
                             break
                         }
@@ -92,10 +95,53 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
         }
     }
 
+    useEffect(() => {
+        const destination = getFoundItemFromStorage(stepId).foundItem;
+        // Ensuring 'tubeTransfer' is retrieved correctly
+        const items = JSON.parse(localStorage.getItem('tubeTransfer')) || [];
+
+        const currentStep = items.find(item => item.stepId === destination.stepId);
+
+        if (currentStep.sourceLabwareName === selectedSlot.name || selectedSlot.sourceLabwareName) {
+            currentStep.destination = currentStep.source
+        } else {
+            const stepsStatus = JSON.parse(localStorage.getItem('stepsStatus'));
+            const prevStep = stepsStatus[stepsStatus.length - 1][selectedSlot.name || selectedSlot.sourceLabwareName]
+            if (prevStep.destinationWells.length > 0)
+                currentStep.destination = prevStep.destinationWells
+            else {
+                const slots = JSON.parse(localStorage.getItem("slots"))
+                slots.map(slot => {
+                    if (slot.name === selectedSlot.name || selectedSlot.sourceLabwareName)
+                        currentStep.destination = slot.liquids.selected
+                })
+            }
+        }
+        localStorage.setItem('tubeTransfer', JSON.stringify(items));
+
+    }, []);
+
+    function currentWell(wellId) {
+        const { foundItem } = getFoundItemFromStorage(stepId);
+        const liquidsOrSource = foundItem.liquids?.selected?.length ? foundItem.liquids.selected : foundItem.source;
+
+        for (const liquidGroup of liquidsOrSource) {
+            const foundWell = liquidGroup.wells.find(well => well === wellId || well.id === wellId);
+            if (foundWell) {
+                return {
+                    liquid: liquidGroup.liquid,
+                    volume: foundWell.volume || liquidGroup.volume
+                };
+            }
+        }
+        return null; // Or however you wish to handle not finding a well
+    }
+
 
     useEffect(() => {
         const { foundItem } = getFoundItemFromStorage(stepId);
         setSelectedSlot(foundItem);
+
 
         // Determine which array to iterate over: `foundItem.liquids.selected` or `foundItem.source`
         const liquidsOrSource = foundItem.liquids?.selected?.length ? foundItem.liquids.selected : foundItem.source;
@@ -122,13 +168,6 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
     }, [stepId]); // Assuming stepId is a dependency and should trigger re-execution of useEffect when it changes
 
 
-
-    useEffect(() => {
-        totalSelectedRef.current = totalSelected;
-        console.log(totalSelected)
-    }, [totalSelected]);
-
-
     useEffect(() => {
         if (!dsRef.current) {
             dsRef.current = new DragSelect({
@@ -137,7 +176,28 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
                 selectables: selectionFrameRef.current.querySelectorAll('.tr_selectables')
             });
 
+            const stepStatus = JSON.parse(localStorage.getItem("stepsStatus"))
+            if (stepStatus) {
+                const currentStep = stepStatus.find(step => step.StepId === stepId)
+
+                if (currentStep && currentStep.sourceOptions.destinationWells) {
+                    const wellDetailsArray = Object.values(currentStep.sourceOptions.destinationWells);
+                    const alreadySelectedWells = wellDetailsArray.map(well => well.id);
+
+                    const elementsToSelect = alreadySelectedWells
+                        .map(id => document.getElementById(id))
+                        .filter(el => el != null); // Ensure the element exists
+
+                    if (elementsToSelect.length > 0) {
+                        // Now, elementsToSelect is an array of DOM elements
+                        dsRef.current.setSelection(elementsToSelect);
+                    }
+
+                }
+            }
+
             dsRef.current.subscribe("DS:end", (callback_object) => {
+
                 if (callback_object.items) {
                     const currentSelectionIds = callback_object.items.map(item => item.id);
                     // First, filter out any wells not in the current selection
@@ -289,10 +349,19 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
             };
         });
 
+        const currentDestinationWells = {}
+
+        updatedDestinationSource.map((destination) => {
+            destination.wells.forEach(well => {
+                currentDestinationWells[well.id] = { id: well.id, volume: well.volume, liquid: destination.liquid }
+            })
+        })
+
         // Assuming 'items' is your initial object and 'updatedDestinationSource' is the object with updates.
         const liquidsOrSource = selectedSlot.liquids?.selected?.length ? selectedSlot.liquids.selected : selectedSlot.source;
         // Step 0: Initialize 'destination' as a deep copy of 'liquid   s.selected' from 'source'
         foundItem.destination = JSON.parse(JSON.stringify(liquidsOrSource));
+        foundItem.destination = foundItem.destination.filter(item => item.wells.length > 0)
 
         // Step 1: Remove the updated wells from their original groups in 'destination'
         foundItem.destination.forEach(destinationItem => {
@@ -304,7 +373,6 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
                 );
                 return !isWellUpdated; // Keep the well if it's not being updated
             });
-            // debugger
             // Then, map over filtered wells to update their volume as necessary
             destinationItem.wells = filteredWells.map(well => {
                 const wellId = typeof well === 'object' && well !== null ? well.id : well;
@@ -323,6 +391,13 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
                 return well;
             });
         });
+
+        const items = JSON.parse(localStorage.getItem('tubeTransfer'));
+        const currentStep = items.find(item => item.stepId === stepId);
+        currentStep.destination = foundItem.destination
+        currentStep.destinationLabwareName = selectedSlot.name || selectedSlot.sourceLabwareName
+        // localStorage.setItem('tubeTransfer', JSON.stringify(items));
+        // console.log(foundItem.destination)
 
         // Step 2: Add the updated wells to new or existing groups in 'destination'
         updatedDestinationSource.forEach(update => {
@@ -350,12 +425,34 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
                 }
             });
         });
-        const items = JSON.parse(localStorage.getItem('tubeTransfer'));
-        const currentStep = items.find(item => item.stepId === stepId);
-        currentStep.destination = foundItem.destination;
-        currentStep.destination = currentStep.destination.filter(destination => destination.wells.length > 0);
 
-        localStorage.setItem('tubeTransfer', JSON.stringify(items));
+        currentStep.destination = foundItem.destination;
+        // currentStep.destination = currentStep.destination.filter(destination => destination.wells.length > 0);
+        // currentStep.destinationLabwareName = selectedSlot.name || selectedSlot.sourceLabwareName
+        const stepsStatus = JSON.parse(localStorage.getItem('stepsStatus'))
+        const currentLabware = stepsStatus.find(step => step.StepId === stepId)
+
+        currentLabware[selectedSlot.name || selectedSlot.sourceLabwareName].destinationWells = currentStep.destination
+        stepsStatus.forEach((step) => {
+            if (step.StepId === stepId) {
+                // Directly modify properties of `step` without reassigning it
+                Object.assign(step, currentLabware); // This will copy properties from `currentLabware` to `step`
+                step.sourceOptions["destinationWells"] = currentDestinationWells;
+                step.sourceOptions.destinationTubeRack = selectedSlot.name || selectedSlot.sourceLabwareName;
+
+                Object.entries(currentLabware).forEach(([key, value]) => {
+                    if (key === 'sourceOptions' || key === "StepId" || key === step.sourceOptions.destinationTubeRack) {
+                        return;
+                    }
+                    if (key !== selectedSlot.name && key !== step.sourceOptions.destinationTubeRack)
+                        step[key].destinationWells = updateWellsForGlobalStepTracking(step[key].sourceWells, sourceSlots, false);
+                });
+            }
+        });
+
+        localStorage.setItem('stepsStatus', JSON.stringify(stepsStatus))
+
+
         handleClose();
     };
 
@@ -380,46 +477,8 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
     let row_index = 0;
 
     const renderWell = (wellId, squared) => {
-        let liquidName = "";
-        let volume = "";
-        let liquidContainingWell;
-        const { foundItem, found } = getFoundItemFromStorage(stepId);
-
-        if (foundItem) {
-            if (foundItem.liquids) {
-                liquidContainingWell = foundItem.liquids.selected?.find(selected =>
-                    selected.wells.some(well =>
-                        (well.id && well.id === wellId) || well === wellId
-                    )
-                );
-            } else {
-                liquidContainingWell = foundItem.source.find(selected =>
-                    selected.wells.some(well =>
-                        (well.id && well.id === wellId) || well === wellId
-                    ))
-
-            }
-        }
-
-        if (liquidContainingWell) {
-            const sourceSlotWell = sourceSlots[wellId];
-            // Find the specific well object to get its volume
-            const specificWell = liquidContainingWell.wells.find(well => (well.id && well.id === wellId) || well === wellId);
-
-
-            if (specificWell) {
-                const sourceVolume = sourceSlotWell?.volume ? sourceSlotWell.volume : 0;
-                if (specificWell.volume)
-                    volume = Number(specificWell.volume) - sourceVolume
-                else
-                    volume = liquidContainingWell.volume - sourceVolume
-
-                liquidName = liquidContainingWell.liquid;
-            }
-        }
-
-
-        if (liquidName) {
+        const well = currentWell(wellId)
+        if (well) {
             // Render the well with the tooltip using the updated data
             return (
                 <CTooltip
@@ -427,8 +486,8 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
                     content={
                         <>
                             <div style={{ textAlign: "left" }}>
-                                <p>Liquid: {liquidName}</p>
-                                <p>Volume: {volume}ul</p>
+                                <p>Liquid: {well.liquid}</p>
+                                <p>Volume: {well.volume}ul</p>
                             </div>
                         </>
                     }
