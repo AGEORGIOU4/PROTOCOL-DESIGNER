@@ -148,8 +148,8 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
       console.log(JSON.stringify(formData, null, 2));
 
       const stepStates = JSON.parse(localStorage.getItem('stepStates'))
-      if (!stepStates){
-        
+      if (!stepStates) {
+
       }
 
     }
@@ -325,7 +325,7 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
               <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
 
-            <CCol md={1}>
+            <CCol md={2}>
               <CFormLabel htmlFor="validationCustom02">Volume Per</CFormLabel>
               <CInputGroup className="mb-3">
                 <CFormInput type="number" id="validationCustom02" value={volumePer} onChange={handleChangeVolumePer} required />

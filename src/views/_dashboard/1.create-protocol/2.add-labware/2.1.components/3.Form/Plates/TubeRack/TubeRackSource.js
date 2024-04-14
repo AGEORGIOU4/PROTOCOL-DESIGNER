@@ -41,6 +41,8 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
     useEffect(() => {
         let foundItem;
         let items;
+        // debugger
+        console.log(selectedSlot)
         items = JSON.parse(localStorage.getItem('tubeTransfer'));
         if (items) {
             foundItem = items.find((item) => item.stepId === stepId)
@@ -61,8 +63,29 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
                 setSelectedSlot(foundItem)
             } else {
                 foundItem["liquids"] = {}
-                foundItem.source = foundItem.source
-                foundItem.liquids["selected"] = foundItem.source
+
+                const stepStatus = JSON.parse(localStorage.getItem("stepsStatus"))
+                if ((selectedSlot.name || selectedSlot.sourceLabwareName !== foundItem.sourceLabwareName)) {
+
+                    if (stepStatus) {
+                        const previousStep = stepStatus.find(step => step.StepId === stepId)
+                        const labwareOfPreviousStep = previousStep[selectedSlot.name || selectedSlot.sourceLabwareName].sourceWells
+
+                        foundItem.liquids["selected"] = labwareOfPreviousStep
+                    } else {
+
+                        const items = JSON.parse(localStorage.getItem("slots"));
+                        const slot = items.find(item => item.name === selectedSlot.name || selectedSlot.sourceLabwareName)
+                        foundItem.liquids["selected"] = slot.liquids.selected
+                        foundItem.source = slot.liquids.selected
+                    }
+                }
+                else {
+
+                    foundItem.source = foundItem.source
+                    foundItem.liquids["selected"] = foundItem.source
+                }
+
                 foundItem.destination = []
                 foundItem["sourceLabwareName"] = selectedSlot.name || selectedSlot.sourceLabwareName
                 localStorage.setItem('tubeTransfer', JSON.stringify(items))
@@ -183,6 +206,7 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
 
     useEffect(() => {
         if (submitted) {
+            const cleanSourceWells = selectedSlot.source.filter(source => source.wells.length > 0)
             const stepsStatus = JSON.parse(localStorage.getItem('stepsStatus'))
             if (!stepsStatus) {
                 const slots = JSON.parse(localStorage.getItem("slots"))
@@ -192,7 +216,8 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
                     acc[slot.name] = { sourceWells: slot.liquids.selected, destinationWells: [] };
                     return acc;
                 }, {});
-                stepsStatusObject[selectedSlot.sourceLabwareName] = { sourceWells: selectedSlot.source, destinationWells: [] }
+
+                stepsStatusObject[selectedSlot.sourceLabwareName] = { sourceWells: cleanSourceWells, destinationWells: [] }
                 stepsStatusObject["StepId"] = stepId
                 stepsStatusObject["sourceOptions"] = { sourceWells: sourceSlots, sourceTubeRack: selectedSlot.sourceLabwareName }
                 stepsStatusObject[selectedSlot.sourceLabwareName].sourceWells = updateWellsForGlobalStepTracking(stepsStatusObject[selectedSlot.sourceLabwareName].sourceWells, sourceSlots, true)
@@ -222,18 +247,47 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
                     if (stepToAppend)
                         stepsStatus.push(stepToAppend)
                 } else {
-                    currentLabware[selectedSlot.sourceLabwareName] = { sourceWells: selectedSlot.source, destinationWells: [] }
+                    if (currentLabware[selectedSlot.sourceLabwareName].destinationWells) {
+                        currentLabware[selectedSlot.sourceLabwareName].sourceWells = cleanSourceWells
+                    } else {
+                        currentLabware[selectedSlot.sourceLabwareName] = { sourceWells: cleanSourceWells, destinationWells: [] }
+                    }
+
                     stepToAppend = currentLabware
                     stepsStatus.map((step) => {
                         if (step.StepId === stepId) {
                             step = currentLabware
-                            step.sourceOptions = { sourceWells: sourceSlots, sourceTubeRack: selectedSlot.sourceLabwareName }
+                            if (step.sourceOptions.destinationWells) {
+                                step.sourceOptions.sourceWells = sourceSlots
+                                step.sourceTubeRack = selectedSlot.sourceLabwareName
+                            } else {
+                                step.sourceOptions = { sourceWells: sourceSlots, sourceTubeRack: selectedSlot.sourceLabwareName }
+                            }
+
                             step[selectedSlot.sourceLabwareName].sourceWells = updateWellsForGlobalStepTracking(step[selectedSlot.sourceLabwareName].sourceWells, sourceSlots, true)
                         }
                     })
                 }
 
+
+                debugger
                 localStorage.setItem('stepsStatus', JSON.stringify(stepsStatus))
+                const startingIndex = stepsStatus.findIndex(step => step.StepId === stepId)
+                if (stepsStatus[startingIndex].sourceOptions.destinationWells) {
+                    console.log("we have to auto update the destination info")
+                }
+                if (startingIndex + 1 !== stepsStatus.length) {
+                    const editedTubeRack = stepsStatus[startingIndex].sourceOptions.sourceTubeRack
+                    for (let i = startingIndex; i < stepsStatus.length - 1; i++) {
+                        const sourceTubeRack = stepsStatus[i + 1].sourceOptions.sourceTubeRack
+                        const destinationTubeRack = stepsStatus[i + 1].sourceOptions.destinationTubeRack
+                        if (sourceTubeRack === editedTubeRack) {
+                            console.log("Found to edit in the source")
+                        } else if (destinationTubeRack === editedTubeRack) {
+                            console.log("Found to edit in the source")
+                        }
+                    }
+                }
 
             }
             setSubmitted(false)

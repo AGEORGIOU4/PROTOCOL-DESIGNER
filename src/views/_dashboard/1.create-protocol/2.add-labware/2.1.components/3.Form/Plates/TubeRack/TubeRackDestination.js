@@ -452,6 +452,16 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
 
         localStorage.setItem('stepsStatus', JSON.stringify(stepsStatus))
 
+        // const startingIndex = stepsStatus.findIndex(step => step.StepId === stepId)
+        // for (let i = startingIndex+1; stepsStatus.length; i++){
+        //     const sourceTubeRack = stepsStatus[i].sourceOptions.sourceTubeRack
+        //     const destinationTubeRack = stepsStatus[i].sourceOptions.destinationTubeRack
+
+
+
+        // }
+
+
 
         handleClose();
     };
