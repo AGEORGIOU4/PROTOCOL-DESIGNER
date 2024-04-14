@@ -20,7 +20,7 @@ import { tube_racks } from "../data";
 import CIcon from "@coreui/icons-react";
 import { cilSave } from "@coreui/icons";
 import { useTubeRackContext } from "src/context/TubeRackContext";
-import { updateWellsForGlobalStepTracking } from "./helpers/utils"
+import { updateWellsForGlobalStepTracking, updateDestinationWells } from "./helpers/utils"
 
 
 
@@ -277,7 +277,6 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
     // Handle volume submission
     const handleVolumeSubmit = () => {
         // Assume destinationLength is defined based on the destination wells selected
-        // const filterSelection  = totalSelected.filter(item => item.liquid !== "")
         const totalDestination = totalSelected.reduce((total, item) => {
             return total + item.wells.length;
         }, 0);
@@ -302,166 +301,10 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
             setShowErrorPopup(true);
             return; // Stop execution if the selection is invalid
         }
-        let volumeToAdd
-        // Continue with volume submission if the selection is valid
-        for (let key in sourceSlots) {
-            if (sourceSlots.hasOwnProperty(key)) {
-                volumeToAdd = sourceSlots[key].volume * sourceLength
-                break
-            }
-        }
-        volumeToAdd = volumeToAdd / destinationLength
 
         const { foundItem, found } = getFoundItemFromStorage(stepId)
 
-        let sourceNamesSet = new Set();
-        // Collect unique liquid names from sourceSlots
-        for (let key in sourceSlots) {
-            sourceNamesSet.add(sourceSlots[key].liquid);
-        }
-
-        // Convert the set to a string, separated by slashes
-        let sourceNames = Array.from(sourceNamesSet).join("/");
-
-        const updatedDestinationSource = totalSelected.map(item => {
-            // Split existing item liquids into an array, filter out empty strings
-            let existingLiquids = item.liquid.split("/").filter(name => name);
-
-            item.volume = Number(item.volume) + volumeToAdd
-            item.wells.forEach(well => well.volume = Number(well.volume) + volumeToAdd);
-            // Create a set for existing liquids to ensure uniqueness
-            let liquidSet = new Set(existingLiquids);
-
-            // Add sourceNames to the set if not already present
-            sourceNames.split("/").forEach(name => {
-                if (name && !liquidSet.has(name)) {
-                    liquidSet.add(name);
-                }
-            });
-
-            // Join the updated set of liquid names
-            let updatedLiquid = Array.from(liquidSet).join("/");
-
-            // Update the item's liquid property
-            return {
-                ...item,
-                liquid: updatedLiquid
-            };
-        });
-
-        const currentDestinationWells = {}
-
-        updatedDestinationSource.map((destination) => {
-            destination.wells.forEach(well => {
-                currentDestinationWells[well.id] = { id: well.id, volume: well.volume, liquid: destination.liquid }
-            })
-        })
-
-        // Assuming 'items' is your initial object and 'updatedDestinationSource' is the object with updates.
-        const liquidsOrSource = selectedSlot.liquids?.selected?.length ? selectedSlot.liquids.selected : selectedSlot.source;
-        // Step 0: Initialize 'destination' as a deep copy of 'liquid   s.selected' from 'source'
-        foundItem.destination = JSON.parse(JSON.stringify(liquidsOrSource));
-        foundItem.destination = foundItem.destination.filter(item => item.wells.length > 0)
-
-        // Step 1: Remove the updated wells from their original groups in 'destination'
-        foundItem.destination.forEach(destinationItem => {
-            // First, filter wells based on whether they are being updated
-            let filteredWells = destinationItem.wells.filter(well => {
-                const wellId = typeof well === 'object' && well !== null ? well.id : well;
-                const isWellUpdated = updatedDestinationSource.some(update =>
-                    update.wells.some(updatedWell => wellId === updatedWell.id)
-                );
-                return !isWellUpdated; // Keep the well if it's not being updated
-            });
-            // Then, map over filtered wells to update their volume as necessary
-            destinationItem.wells = filteredWells.map(well => {
-                const wellId = typeof well === 'object' && well !== null ? well.id : well;
-                if (sourceSlots[wellId]) {
-                    let updatedNewVolume
-                    if (well.volume) {
-                        updatedNewVolume = well.volume - sourceSlots[wellId].volume
-                    } else {
-                        updatedNewVolume = destinationItem.volume - sourceSlots[wellId].volume
-                    }
-                    return {
-                        id: wellId,
-                        volume: updatedNewVolume,
-                    };
-                }
-                return well;
-            });
-        });
-
-        const items = JSON.parse(localStorage.getItem('tubeTransfer'));
-        const currentStep = items.find(item => item.stepId === stepId);
-        currentStep.destination = foundItem.destination
-        currentStep.destinationLabwareName = selectedSlot.name || selectedSlot.sourceLabwareName
-        // localStorage.setItem('tubeTransfer', JSON.stringify(items));
-        // console.log(foundItem.destination)
-
-        // Step 2: Add the updated wells to new or existing groups in 'destination'
-        updatedDestinationSource.forEach(update => {
-            update.wells.forEach(updatedWell => {
-                const wellId = updatedWell.id;
-                const updateLiquidName = update.liquid;
-                let targetGroup = foundItem.destination.find(destinationItem => destinationItem.liquid === updateLiquidName);
-
-                if (!targetGroup) {
-                    targetGroup = {
-                        wells: [{ id: wellId, volume: updatedWell.volume.toString() }],
-                        liquid: updateLiquidName,
-                        color: update.color,
-                        volume: updatedWell.volume.toString()
-                    };
-                    foundItem.destination.push(targetGroup);
-                } else {
-
-                    const existingWell = targetGroup.wells.find(w => typeof w !== 'string' && w.id === wellId);
-                    if (!existingWell) {
-                        targetGroup.wells.push({ id: wellId, volume: updatedWell.volume.toString() });
-                        // Optionally update the group's volume if needed
-                        targetGroup.volume = (parseInt(targetGroup.volume) + updatedWell.volume).toString();
-                    }
-                }
-            });
-        });
-
-        currentStep.destination = foundItem.destination;
-        // currentStep.destination = currentStep.destination.filter(destination => destination.wells.length > 0);
-        // currentStep.destinationLabwareName = selectedSlot.name || selectedSlot.sourceLabwareName
-        const stepsStatus = JSON.parse(localStorage.getItem('stepsStatus'))
-        const currentLabware = stepsStatus.find(step => step.StepId === stepId)
-
-        currentLabware[selectedSlot.name || selectedSlot.sourceLabwareName].destinationWells = currentStep.destination
-        stepsStatus.forEach((step) => {
-            if (step.StepId === stepId) {
-                // Directly modify properties of `step` without reassigning it
-                Object.assign(step, currentLabware); // This will copy properties from `currentLabware` to `step`
-                step.sourceOptions["destinationWells"] = currentDestinationWells;
-                step.sourceOptions.destinationTubeRack = selectedSlot.name || selectedSlot.sourceLabwareName;
-
-                Object.entries(currentLabware).forEach(([key, value]) => {
-                    if (key === 'sourceOptions' || key === "StepId" || key === step.sourceOptions.destinationTubeRack) {
-                        return;
-                    }
-                    if (key !== selectedSlot.name && key !== step.sourceOptions.destinationTubeRack)
-                        step[key].destinationWells = updateWellsForGlobalStepTracking(step[key].sourceWells, sourceSlots, false);
-                });
-            }
-        });
-
-        localStorage.setItem('stepsStatus', JSON.stringify(stepsStatus))
-
-        // const startingIndex = stepsStatus.findIndex(step => step.StepId === stepId)
-        // for (let i = startingIndex+1; stepsStatus.length; i++){
-        //     const sourceTubeRack = stepsStatus[i].sourceOptions.sourceTubeRack
-        //     const destinationTubeRack = stepsStatus[i].sourceOptions.destinationTubeRack
-
-
-
-        // }
-
-
+        updateDestinationWells(sourceSlots, foundItem, totalSelected, selectedSlot, stepId)
 
         handleClose();
     };

@@ -16,7 +16,8 @@ import { tube_racks } from "../data";
 import CIcon from "@coreui/icons-react";
 import { cilSave } from "@coreui/icons";
 import { useTubeRackContext } from "src/context/TubeRackContext";
-import { updateWellsForGlobalStepTracking } from "./helpers/utils"
+import { updateWellsForGlobalStepTracking, cleanWells, updateDestinationWells } from "./helpers/utils"
+import { forEach } from "lodash";
 
 
 export default function TubeRackSource({ stepId, volumePer, selectedLabware, handleClose }) {
@@ -41,8 +42,6 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
     useEffect(() => {
         let foundItem;
         let items;
-        // debugger
-        console.log(selectedSlot)
         items = JSON.parse(localStorage.getItem('tubeTransfer'));
         if (items) {
             foundItem = items.find((item) => item.stepId === stepId)
@@ -56,7 +55,7 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
                 foundItem.liquids["selected"] = previousStep.destinationWells
                 foundItem["stepId"] = stepId
                 foundItem["sourceLabwareName"] = selectedSlot.name || selectedSlot.sourceLabwareName
-                foundItem.source = previousStep.destinationWells
+                foundItem.source = cleanWells(previousStep.destinationWells)
                 foundItem.destination = []
                 items.push(foundItem)
                 localStorage.setItem('tubeTransfer', JSON.stringify(items))
@@ -77,7 +76,7 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
                         const items = JSON.parse(localStorage.getItem("slots"));
                         const slot = items.find(item => item.name === selectedSlot.name || selectedSlot.sourceLabwareName)
                         foundItem.liquids["selected"] = slot.liquids.selected
-                        foundItem.source = slot.liquids.selected
+                        foundItem.source = cleanWells(slot.liquids.selected)
                     }
                 }
                 else {
@@ -86,7 +85,7 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
                     foundItem.liquids["selected"] = foundItem.source
                 }
 
-                foundItem.destination = []
+                // foundItem.destination = []
                 foundItem["sourceLabwareName"] = selectedSlot.name || selectedSlot.sourceLabwareName
                 localStorage.setItem('tubeTransfer', JSON.stringify(items))
                 setSelectedSlot(foundItem)
@@ -96,7 +95,7 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
             foundItem = items?.find((item) => item.id === selectedSlot.id);
             const initializeTubeTransferStep = {
                 stepId: stepId,
-                source: foundItem.liquids.selected,
+                source: cleanWells(foundItem.liquids.selected),
                 destination: [],
                 sourceLabwareName: selectedSlot.name
             }
@@ -269,13 +268,53 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
                     })
                 }
 
-
-                debugger
+                const tubeTransferItems = JSON.parse(localStorage.getItem("tubeTransfer"))
+                const foundTubeTransferItems = tubeTransferItems.find(tube => tube.stepId === stepId)
                 localStorage.setItem('stepsStatus', JSON.stringify(stepsStatus))
                 const startingIndex = stepsStatus.findIndex(step => step.StepId === stepId)
-                if (stepsStatus[startingIndex].sourceOptions.destinationWells) {
-                    console.log("we have to auto update the destination info")
+                const destinationWellOptions = stepsStatus[startingIndex].sourceOptions.destinationWells
+                if (destinationWellOptions) {
+                    const matchedWells = []
+                    const wellIds = Object.values(destinationWellOptions).map(well => well.id);
+                    const findItemsInDestinationOfTubeTransfer = foundTubeTransferItems.destination;
+
+                    // Use forEach properly
+                    findItemsInDestinationOfTubeTransfer.forEach(item => {
+                        const filteredWells = item.wells.filter(well => {
+                            const index = wellIds.indexOf(well);
+                            if (index !== -1) {
+                                // Remove found well from wellIds
+                                wellIds.splice(index, 1);
+                                return true;
+                            }
+                            return false;
+                        });
+                        // debugger
+
+                        // Check if filteredWells has any elements, if yes, push the entire item or just filteredWells based on your requirement
+                        if (filteredWells.length > 0) {
+                            const wellsObjects = filteredWells.map(wellId => ({ id: wellId, volume: item.volume }))
+                            matchedWells.push({ ...item, wells: wellsObjects }); // This modifies the wells to only include matched wells
+                            // If you want to keep the entire item and just know which wells matched, you could alternatively push:
+                            // matchedWells.push({ ...item, matchedWells: filteredWells });
+                        }
+                    });
+                    if (wellIds.length > 0) {
+                        const wellsObjects = wellIds.map(wellId => ({ id: wellId, volume: 0 }));
+                        matchedWells.push({
+                            wells: wellsObjects,
+                            color: "",
+                            liquid: "",
+                            volume: 0,
+                        })
+                    }
+                    console.log(matchedWells);
+
+                    updateDestinationWells(sourceSlots, foundTubeTransferItems, matchedWells, foundTubeTransferItems, stepId)
+
+                    console.log("We have to auto update the destination info");
                 }
+
                 if (startingIndex + 1 !== stepsStatus.length) {
                     const editedTubeRack = stepsStatus[startingIndex].sourceOptions.sourceTubeRack
                     for (let i = startingIndex; i < stepsStatus.length - 1; i++) {
