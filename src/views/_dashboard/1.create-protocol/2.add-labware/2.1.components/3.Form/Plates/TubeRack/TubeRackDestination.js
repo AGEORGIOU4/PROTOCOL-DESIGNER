@@ -20,15 +20,15 @@ import { tube_racks } from "../data";
 import CIcon from "@coreui/icons-react";
 import { cilSave } from "@coreui/icons";
 import { useTubeRackContext } from "src/context/TubeRackContext";
-import { updateWellsForGlobalStepTracking, updateDestinationWells } from "./helpers/utils"
+import { updateWellsForGlobalStepTracking, updateDestinationWells, updateTubeTransferVisuals } from "./helpers/utils"
 
 
 
 export default function TubeRackDestination({ stepId, volumePer, selectedLabware, handleClose }) {
-
+    // Utilizing context to manage and access state related to tube racks.
     const { selectedSlot, sourceSlots, setSelectedSlot } = useTubeRackContext();
 
-
+    // State for tracking total selected items and whether an error popup should be shown.
     const [totalSelected, setTotalSelected] = useState([])
     const totalSelectedRef = useRef(totalSelected);
 
@@ -94,7 +94,7 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
             }
         }
     }
-
+    // Effect for initializing and managing the destination configuration based on localStorage data
     useEffect(() => {
         const destination = getFoundItemFromStorage(stepId).foundItem;
         // Ensuring 'tubeTransfer' is retrieved correctly
@@ -117,6 +117,7 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
                 })
             }
         }
+        currentStep.destinationLabwareName = selectedSlot.name || selectedSlot.sourceLabwareName
         localStorage.setItem('tubeTransfer', JSON.stringify(items));
 
     }, []);
@@ -305,6 +306,7 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
         const { foundItem, found } = getFoundItemFromStorage(stepId)
 
         updateDestinationWells(sourceSlots, foundItem, totalSelected, selectedSlot, stepId)
+        updateTubeTransferVisuals(stepId, false)
 
         handleClose();
     };

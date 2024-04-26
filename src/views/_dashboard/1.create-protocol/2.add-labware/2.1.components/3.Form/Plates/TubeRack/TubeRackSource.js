@@ -16,22 +16,22 @@ import { tube_racks } from "../data";
 import CIcon from "@coreui/icons-react";
 import { cilSave } from "@coreui/icons";
 import { useTubeRackContext } from "src/context/TubeRackContext";
-import { updateWellsForGlobalStepTracking, cleanWells, updateDestinationWells } from "./helpers/utils"
-import { forEach } from "lodash";
+import { updateWellsForGlobalStepTracking, cleanWells, updateDestinationWells, updateTubeTransferVisuals } from "./helpers/utils"
+import { forEach, includes } from "lodash";
 
-
+// Component for handling the source tube rack configuration and selection in the lab environment.
 export default function TubeRackSource({ stepId, volumePer, selectedLabware, handleClose }) {
-
+    // Context to manage state related to tube racks across the app
     const { selectedSlot, updateVolume, setSelectedSlot, sourceSlots } = useTubeRackContext();
 
+    // State to manage selected wells and their details
     const [selectedWellsElement, setSelectedWellsElement] = useState([]);
+    const [submitted, setSubmitted] = useState(false); // Tracks whether the current transaction has been submitted
 
-    const [submitted, setSubmitted] = useState(false);
+    const selectionFrameRef = useRef(null); // Ref for the container that allows drag selection
+    const dsRef = useRef(null); // Ref for the DragSelect instance
 
-    const selectionFrameRef = useRef(null);
-    const dsRef = useRef(null);
-
-
+    // Settings for the DragSelect interaction
     const settings = {
         draggability: false,
         multiSelectMode: true,
@@ -39,33 +39,38 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
     };
 
 
+    // First effect: Initialize and manage the state based on localStorage
     useEffect(() => {
+        // Initialization and setup of initial states from stored data or default setups
         let foundItem;
-        let items;
-        items = JSON.parse(localStorage.getItem('tubeTransfer'));
+        let items = JSON.parse(localStorage.getItem('tubeTransfer'));
+        // This useEffect is used to render the display of the source
+
+        // This use Effect is used to render the display of the source
         if (items) {
             foundItem = items.find((item) => item.stepId === stepId)
             if (!foundItem) {
+                // Logic to handle a situation where no matching item is found in the storage
                 const stepStatus = JSON.parse(localStorage.getItem("stepsStatus"))
-
                 const previousStep = stepStatus[stepStatus.length - 1][selectedSlot.name || selectedSlot.sourceLabwareName]
 
-                foundItem = {}
-                foundItem["liquids"] = {}
-                foundItem.liquids["selected"] = previousStep.destinationWells
-                foundItem["stepId"] = stepId
-                foundItem["sourceLabwareName"] = selectedSlot.name || selectedSlot.sourceLabwareName
-                foundItem.source = cleanWells(previousStep.destinationWells)
-                foundItem.destination = []
-                items.push(foundItem)
+                foundItem = {
+                    liquids: { selected: previousStep.destinationWells },
+                    stepId: stepId,
+                    sourceLabwareName: selectedSlot.name || selectedSlot.sourceLabwareName,
+                    source: cleanWells(previousStep.destinationWells),
+                    destination: []
+                };
+                items.push(foundItem);
                 localStorage.setItem('tubeTransfer', JSON.stringify(items))
                 setSelectedSlot(foundItem)
             } else {
-                foundItem["liquids"] = {}
+                // Updates found item with the appropriate selections based on current state
+                foundItem.liquids = {};
 
                 const stepStatus = JSON.parse(localStorage.getItem("stepsStatus"))
                 if ((selectedSlot.name || selectedSlot.sourceLabwareName !== foundItem.sourceLabwareName)) {
-
+                    // Update logic based on current selections and storage state
                     if (stepStatus) {
                         const previousStep = stepStatus.find(step => step.StepId === stepId)
                         const labwareOfPreviousStep = previousStep[selectedSlot.name || selectedSlot.sourceLabwareName].sourceWells
@@ -75,14 +80,14 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
 
                         const items = JSON.parse(localStorage.getItem("slots"));
                         const slot = items.find(item => item.name === selectedSlot.name || selectedSlot.sourceLabwareName)
-                        foundItem.liquids["selected"] = slot.liquids.selected
+                        foundItem.liquids.selected = slot.liquids.selected;
                         foundItem.source = cleanWells(slot.liquids.selected)
                     }
                 }
                 else {
 
                     foundItem.source = foundItem.source
-                    foundItem.liquids["selected"] = foundItem.source
+                    foundItem.liquids.selected = foundItem.source;
                 }
 
                 // foundItem.destination = []
@@ -91,6 +96,7 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
                 setSelectedSlot(foundItem)
             }
         } else {
+            // Initialize new tube transfer if none exist
             items = JSON.parse(localStorage.getItem("slots"));
             foundItem = items?.find((item) => item.id === selectedSlot.id);
             const initializeTubeTransferStep = {
@@ -100,13 +106,12 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
                 sourceLabwareName: selectedSlot.name
             }
             initializeTubeTransferStep.source = initializeTubeTransferStep.source.filter(item => item.wells.length > 0);
-            const tubeArray = []
-            tubeArray.push(initializeTubeTransferStep)
+            const tubeArray = [initializeTubeTransferStep];
             setSelectedSlot(foundItem)
             localStorage.setItem('tubeTransfer', JSON.stringify(tubeArray))
         }
 
-
+        // Set background color of selected wells to represent selected state visually
         if (foundItem) {
             foundItem.liquids.selected?.map((selections, index) => {
                 if (selections.wells.length > 0) {
@@ -124,7 +129,7 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
         }
     }, []);
 
-
+    // Second useEffect: Set up the DragSelect functionality and handle selection
     useEffect(() => {
         if (!dsRef.current) {
             dsRef.current = new DragSelect({
@@ -137,6 +142,7 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
                 const currentStep = stepStatus.find(step => step.StepId === stepId)
 
                 if (currentStep) {
+                    // Identifying already selected wells from the current step's status
                     const wellDetailsArray = Object.values(currentStep.sourceOptions.sourceWells);
                     const alreadySelectedWells = wellDetailsArray.map(well => well.id);
                     const elementsToSelect = alreadySelectedWells
@@ -152,7 +158,7 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
             }
             dsRef.current.subscribe("DS:end", (callback_object) => {
                 if (callback_object.items) {
-
+                    // Handle the selection of wells after drag select operation
                     const wellsFiltered = callback_object.items.reduce((filtered, item) => {
                         const wellId = item.id;
                         let volume = 0;
@@ -192,6 +198,7 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
             });
         }
         return () => {
+            // Clean up on component unmount
             if (dsRef.current) {
                 dsRef.current.unsubscribe("DS:end");
                 dsRef.current.stop();
@@ -202,12 +209,14 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
 
 
 
-
+    // Third useEffect: Handle submission states and updates to step status and selections
     useEffect(() => {
         if (submitted) {
+            // Process submission and update relevant states and storage
             const cleanSourceWells = selectedSlot.source.filter(source => source.wells.length > 0)
             const stepsStatus = JSON.parse(localStorage.getItem('stepsStatus'))
             if (!stepsStatus) {
+                // If no stepsStatus is found, initialize from slots and create a new step status entry
                 const slots = JSON.parse(localStorage.getItem("slots"))
                 const filteredSlots = slots.filter(slot => slot.name !== selectedSlot.sourceLabwareName && slot.name !== "+")
 
@@ -220,12 +229,11 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
                 stepsStatusObject["StepId"] = stepId
                 stepsStatusObject["sourceOptions"] = { sourceWells: sourceSlots, sourceTubeRack: selectedSlot.sourceLabwareName }
                 stepsStatusObject[selectedSlot.sourceLabwareName].sourceWells = updateWellsForGlobalStepTracking(stepsStatusObject[selectedSlot.sourceLabwareName].sourceWells, sourceSlots, true)
-                const stepStatusArr = []
-
-                stepStatusArr.push(stepsStatusObject)
+                const stepStatusArr = [stepsStatusObject];
                 localStorage.setItem('stepsStatus', JSON.stringify(stepStatusArr))
 
             } else {
+                // Update existing stepsStatus with current state and selections
                 const currentLabware = stepsStatus.find(step => step.StepId === stepId)
                 let stepToAppend;
                 if (!currentLabware) {
@@ -246,6 +254,7 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
                     if (stepToAppend)
                         stepsStatus.push(stepToAppend)
                 } else {
+                    // Update the current labware details in the stepsStatus
                     if (currentLabware[selectedSlot.sourceLabwareName].destinationWells) {
                         currentLabware[selectedSlot.sourceLabwareName].sourceWells = cleanSourceWells
                     } else {
@@ -278,7 +287,7 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
                     const wellIds = Object.values(destinationWellOptions).map(well => well.id);
                     const findItemsInDestinationOfTubeTransfer = foundTubeTransferItems.destination;
 
-                    // Use forEach properly
+                    // Process the wells to find matches and update visuals and selections accordingly
                     findItemsInDestinationOfTubeTransfer.forEach(item => {
                         const filteredWells = item.wells.filter(well => {
                             const index = wellIds.indexOf(well);
@@ -308,25 +317,63 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
                             volume: 0,
                         })
                     }
-                    console.log(matchedWells);
 
                     updateDestinationWells(sourceSlots, foundTubeTransferItems, matchedWells, foundTubeTransferItems, stepId)
 
-                    console.log("We have to auto update the destination info");
                 }
+                // tubeTransferItems the tubeTransferForDisplay
 
                 if (startingIndex + 1 !== stepsStatus.length) {
                     const editedTubeRack = stepsStatus[startingIndex].sourceOptions.sourceTubeRack
+                    const editedTubeRackOptions = stepsStatus[startingIndex].sourceOptions
+                    const tubeRacksToUpdate = []
                     for (let i = startingIndex; i < stepsStatus.length - 1; i++) {
                         const sourceTubeRack = stepsStatus[i + 1].sourceOptions.sourceTubeRack
+                        const sourceWells = stepsStatus[i + 1].sourceOptions.sourceWells
                         const destinationTubeRack = stepsStatus[i + 1].sourceOptions.destinationTubeRack
+                        const destinationWells = stepsStatus[i + 1].sourceOptions.destinationWells
+                        debugger
                         if (sourceTubeRack === editedTubeRack) {
                             console.log("Found to edit in the source")
+                            const wellKeys = Object.keys(sourceWells);
+                            stepsStatus[i + 1].sourceWells = stepsStatus[i - 1].sourceWells
+                            debugger
+                            stepsStatus[i + 1].sourceWells.forEach(well => {
+                                const newLiquid = well.liquid
+
+                                wellKeys.forEach(key => {
+                                    if (well.wells.includes(key)) {
+                                        const oldLiquid = sourceWells[key].liquid
+
+                                        if (newLiquid !== oldLiquid) {
+                                            sourceWells[key].liquid = newLiquid
+                                        }
+
+                                    }
+
+                                })
+
+                            })
+
+                            if (!tubeRacksToUpdate.includes(sourceTubeRack))
+                                tubeRacksToUpdate.push(sourceTubeRack)
+
                         } else if (destinationTubeRack === editedTubeRack) {
-                            console.log("Found to edit in the source")
+                            console.log("Found to edit in the destination")
                         }
                     }
+
+                    // localStorage.setItem('stepsStatus', JSON.stringify(stepsStatus))
+
                 }
+
+                // When Edited the source the TubeTransfer from localStorage will clear the old ones so will generate the new ones on click
+                // TubeTransfer is used only for display puproses and not any data struture logic therefore is okay to removed and generated again
+                // The true state is kept at the "stepsStatus"
+                debugger
+                updateTubeTransferVisuals(stepId, true)
+
+
 
             }
             setSubmitted(false)
@@ -334,7 +381,7 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
         }
     })
 
-    // Handle volume submission
+    // Function to handle volume submission for the selected wells
     const handleVolumeSubmit = () => {
         const inputVolumeNumber = parseFloat(volumePer);
         // Prepare updates array for selected wells

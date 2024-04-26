@@ -34,7 +34,6 @@ export function updateDestinationWells(sourceSlots, foundItem, totalSelected, se
     const destinationLength = totalSelected.reduce((total, item) => {
         return total + item.wells.length;
     }, 0);
-    debugger
 
     const sourceLength = Object.keys(sourceSlots).length
 
@@ -61,7 +60,6 @@ export function updateDestinationWells(sourceSlots, foundItem, totalSelected, se
     const updatedDestinationSource = totalSelected.map(item => {
         // Split existing item liquids into an array, filter out empty strings
         let existingLiquids = item.liquid.split("/").filter(name => name);
-        debugger
         item.volume = Number(item.volume) + volumeToAdd
         item.wells.forEach(well => well.volume = Number(well.volume) + volumeToAdd);
         // Create a set for existing liquids to ensure uniqueness
@@ -76,7 +74,8 @@ export function updateDestinationWells(sourceSlots, foundItem, totalSelected, se
 
         // Join the updated set of liquid names
         let updatedLiquid = Array.from(liquidSet).join("/");
-
+        if (!item.color)
+            item.color = "#000000"
         // Update the item's liquid property
         return {
             ...item,
@@ -176,7 +175,6 @@ export function updateDestinationWells(sourceSlots, foundItem, totalSelected, se
                 if (key === 'sourceOptions' || key === 'sourceTubeRack' || key === "StepId" || key === step.sourceOptions.destinationTubeRack) {
                     return;
                 }
-                // debugger
                 if (key !== selectedSlot.name && key !== step.sourceOptions.destinationTubeRack)
                     step[key].destinationWells = updateWellsForGlobalStepTracking(step[key].sourceWells, sourceSlots, false);
             });
@@ -191,4 +189,28 @@ export function updateDestinationWells(sourceSlots, foundItem, totalSelected, se
 export function cleanWells(wells) {
 
     return wells.filter(liquid => liquid.wells.length > 0)
+}
+
+
+export function updateTubeTransferVisuals(stepId, source) {
+    const stepsStatus = JSON.parse(localStorage.getItem("stepsStatus"))
+    const startingIndex = stepsStatus.findIndex(step => step.StepId === stepId)
+    const displayTubesTransfer = JSON.parse(localStorage.getItem("tubeTransfer"))
+    const displayTubesTransferCopy = displayTubesTransfer.map(tube => ({ ...tube }));
+    const startingIndexDisplayTubeTransfer = displayTubesTransfer.findIndex(tube => tube.stepId === stepId)
+    let editedTubeRack
+
+    if (startingIndexDisplayTubeTransfer + 1 !== displayTubesTransfer.length) {
+        if (source === true)
+            editedTubeRack = stepsStatus[startingIndex].sourceOptions.sourceTubeRack
+        else
+            editedTubeRack = stepsStatus[startingIndex].sourceOptions.destinationTubeRack
+        for (let i = startingIndexDisplayTubeTransfer + 1; i < displayTubesTransfer.length; i++) {
+            const sourceLabware = displayTubesTransfer[i].sourceLabwareName
+            const destinationLabware = displayTubesTransfer[i].destinationLabwareName
+            if (sourceLabware === editedTubeRack || destinationLabware === editedTubeRack)
+                displayTubesTransferCopy.splice(i, 1)
+        }
+        localStorage.setItem("tubeTransfer", JSON.stringify(displayTubesTransferCopy))
+    }
 }

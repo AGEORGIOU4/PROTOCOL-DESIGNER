@@ -1,38 +1,42 @@
 import React, { createContext, useContext, useState } from 'react';
-
+// Create a context object for managing tube rack data across the application
 const TubeRackContext = createContext();
-
+// Custom hook to provide easy access to the TubeRackContext
 export const useTubeRackContext = () => useContext(TubeRackContext);
-
+// Provider component to wrap the part of your app that needs access to this context
 export const TubeRackProvider = ({ children }) => {
+    // State to track the currently selected slot in the tube rack system
     const [selectedSlot, setSelectedSlot] = useState(null);
+    // State to keep track of slots in the source tube rack
     const [sourceSlots, setSourceSlots] = useState({});
 
+    // Function to update the volume of liquid in wells
     const updateVolume = (updates) => {
-        if (!selectedSlot) return;
+        if (!selectedSlot) return; // If no slot is selected, exit the function early
 
         // Start with a copy of the current sourceSlots to accumulate changes
-
+        // Create a new object to accumulate changes to source slots
         const newSourceSlots = {};
 
 
         updates.forEach(({ wellId, newVolume, toTransfer }) => {
-            let liquidNames = [];
+            let liquidNames = []; // Array to collect liquid names for logging or debugging
             const liquidsOrSource = selectedSlot.liquids?.selected?.length ? selectedSlot.liquids.selected : selectedSlot.source;
 
-            // This variable will help us determine if the well was found and updated
+            // Flag to check if the well was updated
             let wellFound = false;
 
+            // Iterate through each liquid or source data to find the appropriate well
             liquidsOrSource.forEach(liquid => {
                 const wellIndex = liquid.wells.findIndex(well => (well.id && well.id === wellId) || well === wellId);
                 if (wellIndex !== -1) {
                     wellFound = true;
                     const well = liquid.wells[wellIndex];
 
-                    // Assuming the need to update or create a new well entry
+                    // Update the well with new volume or create a new well entry if it doesn't exist
                     const updatedWell = typeof well === 'string' ? { id: wellId, volume: newVolume, liquid: liquid.liquid } : { ...well, volume: newVolume };
 
-                    // Update or create the entry in the newSourceSlots
+                    // Add or update the well entry in newSourceSlots
                     newSourceSlots[wellId] = {
                         ...newSourceSlots[wellId],
                         id: wellId,
@@ -40,13 +44,14 @@ export const TubeRackProvider = ({ children }) => {
                         liquid: updatedWell.liquid || liquid.liquid
                     };
 
+                    // Collect the liquid name if it's not already included
                     if (!liquidNames.includes(liquid.liquid)) {
                         liquidNames.push(liquid.liquid);
                     }
                 }
             });
 
-            // If the well wasn't found in any of the liquids, treat it as a new entry
+            // Handle the case where the well was not found in any liquids
             if (!wellFound) {
                 newSourceSlots[wellId] = {
                     ...newSourceSlots[wellId],
@@ -56,9 +61,9 @@ export const TubeRackProvider = ({ children }) => {
                 };
             }
         });
-        // Update the state once after computing all changes
+        // Set the new source slots state after all updates
         setSourceSlots(newSourceSlots);
-        // Also update selectedSlot if necessary, making sure to use a function to get the current state
+        // Update the selectedSlot to ensure components re-render with updated data
         setSelectedSlot(currentSelectedSlot => ({ ...currentSelectedSlot }));
     };
 
