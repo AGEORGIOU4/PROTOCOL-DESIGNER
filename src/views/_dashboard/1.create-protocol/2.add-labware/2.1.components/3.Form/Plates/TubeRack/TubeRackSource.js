@@ -69,13 +69,17 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
                 foundItem.liquids = {};
 
                 const stepStatus = JSON.parse(localStorage.getItem("stepsStatus"))
-                if ((selectedSlot.name || selectedSlot.sourceLabwareName !== foundItem.sourceLabwareName)) {
+                if (selectedSlot.name !== foundItem.sourceLabwareName && selectedSlot.sourceLabwareName !== foundItem.sourceLabwareName) {
                     // Update logic based on current selections and storage state
                     if (stepStatus) {
-                        const previousStep = stepStatus.find(step => step.StepId === stepId)
+                        let previousStep = stepStatus.find(step => step.StepId === stepId)
+                        if (!previousStep) {
+                            previousStep = stepStatus[stepStatus.length - 1]
+                        }
                         const labwareOfPreviousStep = previousStep[selectedSlot.name || selectedSlot.sourceLabwareName].sourceWells
 
                         foundItem.liquids["selected"] = labwareOfPreviousStep
+                        foundItem.source = labwareOfPreviousStep
                     } else {
 
                         const items = JSON.parse(localStorage.getItem("slots"));

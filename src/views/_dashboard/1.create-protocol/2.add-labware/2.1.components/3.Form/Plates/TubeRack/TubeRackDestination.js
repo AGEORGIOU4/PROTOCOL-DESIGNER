@@ -53,31 +53,44 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
         let items = JSON.parse(localStorage.getItem('tubeTransfer'));
         if (items) {
             foundItem = items.find(item => item.stepId === stepId);
-            if (foundItem.sourceLabwareName === selectedSlot.name || selectedSlot.sourceLabwareName) {
+            if (foundItem.sourceLabwareName === selectedSlot.destinationLabwareName) {
                 foundItem["liquids"] = {}
                 foundItem.liquids["selected"] = foundItem.source
                 foundItem.destination = foundItem.source
-                if (foundItem.destination.length <= 0)
+                found = foundItem.destination.length <= 0;
 
-                    found = true
-                else
-                    found = false
+                // Update the local storage with the new items array
+                localStorage.setItem('tubeTransfer', JSON.stringify(items));
 
                 return { foundItem, found }
             } else {
-
-                for (let i = items.length - 1; i >= 0; i--) {
-
-                    if (items[i].destinationLabwareName === selectedSlot.name || selectedSlot.destinationLabwareName) {
-                        foundItem = items[i];
-                        foundItem["liquids"] = {}
-                        foundItem.liquids["selected"] = foundItem.source
-                        foundItem.stepId = stepId
-                        found = true
-                        break
-                    }
+                const stepsStatus = JSON.parse(localStorage.getItem('stepsStatus'))
+                const currentStep = stepsStatus.findIndex(step => step.StepId === stepId)
+                let stepToInheriteFrom;
+                if (currentStep != -1) {
+                    stepToInheriteFrom = stepsStatus[stepsStatus.length - 2]
+                } else {
+                    stepToInheriteFrom = currentStep
                 }
-                if (found === false) {
+                console.log(stepToInheriteFrom)
+
+                const currentTubeTransterIndex = items.findIndex(item => item.stepId === stepId)
+
+
+
+                foundItem = items[currentTubeTransterIndex];
+
+                foundItem["liquids"] = {}
+                foundItem.liquids["selected"] = stepToInheriteFrom[selectedSlot.name || selectedSlot.destinationLabwareName].destinationWells
+                foundItem.destination = stepToInheriteFrom[selectedSlot.name || selectedSlot.destinationLabwareName].destinationWells
+                foundItem.stepId = stepId
+                found = true
+                // Update the local storage with the new items array
+                localStorage.setItem('tubeTransfer', JSON.stringify(items));
+
+
+
+                if (!found) {
 
                     const originalSource = JSON.parse(localStorage.getItem('slots'))
                     for (let i = originalSource.length - 1; i >= 0; i--) {
@@ -332,7 +345,9 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
     let row_index = 0;
 
     const renderWell = (wellId, squared) => {
+        debugger
         const well = currentWell(wellId)
+
         if (well) {
             // Render the well with the tooltip using the updated data
             return (
