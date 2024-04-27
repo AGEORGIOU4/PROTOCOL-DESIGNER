@@ -16,7 +16,7 @@ import { tube_racks } from "../data";
 import CIcon from "@coreui/icons-react";
 import { cilSave } from "@coreui/icons";
 import { useTubeRackContext } from "src/context/TubeRackContext";
-import { updateWellsForGlobalStepTracking, cleanWells, updateDestinationWells, updateTubeTransferVisuals } from "./helpers/utils"
+import { updateWellsForGlobalStepTracking, cleanWells, updateDestinationWells, updateTubeTransferVisuals, updateFromSourceToDestinationChain } from "./helpers/utils"
 import { forEach, includes } from "lodash";
 
 // Component for handling the source tube rack configuration and selection in the lab environment.
@@ -336,29 +336,13 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
                         const sourceWells = stepsStatus[i + 1].sourceOptions.sourceWells
                         const destinationTubeRack = stepsStatus[i + 1].sourceOptions.destinationTubeRack
                         const destinationWells = stepsStatus[i + 1].sourceOptions.destinationWells
-                        debugger
                         if (sourceTubeRack === editedTubeRack) {
                             console.log("Found to edit in the source")
-                            const wellKeys = Object.keys(sourceWells);
-                            stepsStatus[i + 1].sourceWells = stepsStatus[i - 1].sourceWells
+                            stepsStatus[i + 1][sourceTubeRack].sourceWells = stepsStatus[i][sourceTubeRack].sourceWells
+                            // Fetching the previous state to reset the logic from the beining
+                            // To deduct from the selected slots first then to update the destination
                             debugger
-                            stepsStatus[i + 1].sourceWells.forEach(well => {
-                                const newLiquid = well.liquid
-
-                                wellKeys.forEach(key => {
-                                    if (well.wells.includes(key)) {
-                                        const oldLiquid = sourceWells[key].liquid
-
-                                        if (newLiquid !== oldLiquid) {
-                                            sourceWells[key].liquid = newLiquid
-                                        }
-
-                                    }
-
-                                })
-
-                            })
-
+                            updateFromSourceToDestinationChain(stepsStatus[i + 1][sourceTubeRack].sourceWells, stepsStatus[i + 1][sourceTubeRack].destinationWells, sourceWells)
                             if (!tubeRacksToUpdate.includes(sourceTubeRack))
                                 tubeRacksToUpdate.push(sourceTubeRack)
 

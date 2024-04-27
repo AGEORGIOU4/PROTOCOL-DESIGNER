@@ -214,3 +214,23 @@ export function updateTubeTransferVisuals(stepId, source) {
         localStorage.setItem("tubeTransfer", JSON.stringify(displayTubesTransferCopy))
     }
 }
+
+
+export function updateFromSourceToDestinationChain(sourceWells, destinationWells, sourceSlots) {
+    debugger
+    const wellKeys = Object.keys(sourceSlots);
+    wellKeys.forEach(key => {
+        sourceWells.map(wells => {
+            let matchingWell = wells.wells.find(w => w.id === key)
+            if (matchingWell) {
+                if (matchingWell.volume > 0) {
+                    sourceSlots[key].liquid = matchingWell.liquid
+                }
+                else
+                    console.log("Can not auto update for this step, manual interversion is required!")
+            }
+        })
+    })
+
+
+}
