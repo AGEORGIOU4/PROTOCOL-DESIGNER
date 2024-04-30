@@ -168,7 +168,6 @@ export default function TubeRackDestination({ stepId, volumePer, selectedLabware
 
 
     useEffect(() => {
-        debugger
         const { foundItem } = getFoundItemFromStorage(stepId);
         setSelectedSlot(foundItem);
 

@@ -332,17 +332,33 @@ export default function TubeRackSource({ stepId, volumePer, selectedLabware, han
                     const editedTubeRackOptions = stepsStatus[startingIndex].sourceOptions
                     const tubeRacksToUpdate = []
                     for (let i = startingIndex; i < stepsStatus.length - 1; i++) {
-                        const sourceTubeRack = stepsStatus[i + 1].sourceOptions.sourceTubeRack
-                        const sourceWells = stepsStatus[i + 1].sourceOptions.sourceWells
-                        const destinationTubeRack = stepsStatus[i + 1].sourceOptions.destinationTubeRack
-                        const destinationWells = stepsStatus[i + 1].sourceOptions.destinationWells
+                        const sourceTubeRack = stepsStatus[i].sourceOptions.sourceTubeRack
+                        debugger
+                        const destinationTubeRack = stepsStatus[i].sourceOptions.destinationTubeRack
                         if (sourceTubeRack === editedTubeRack) {
                             console.log("Found to edit in the source")
-                            stepsStatus[i + 1][sourceTubeRack].sourceWells = stepsStatus[i][sourceTubeRack].sourceWells
+                            stepsStatus[i].sourceOptions.sourceWells = sourceSlots
+                            const currentDestinationOptionWells = stepsStatus[i].sourceOptions.destinationWells
+                            let currentsourceWells;
+                            let currentDestinationWells;
+                            if (i === 0) {
+                                currentsourceWells = stepsStatus[i][sourceTubeRack].sourceWells
+                                currentDestinationWells = stepsStatus[i][sourceTubeRack].destinationWells
+                            }
+                            else {
+                                currentsourceWells = stepsStatus[i - 1][sourceTubeRack].sourceWells
+                                currentDestinationWells = stepsStatus[i - 1][sourceTubeRack].destinationWells
+                            }
                             // Fetching the previous state to reset the logic from the beining
                             // To deduct from the selected slots first then to update the destination
+                            const { destinationWellsOptions, destinationWells } = updateFromSourceToDestinationChain(sourceSlots, currentDestinationOptionWells, currentDestinationWells)
+                            console.log(destinationWellsOptions)
+                            stepsStatus[i].sourceOptions.destinationWells = destinationWellsOptions
+                            stepsStatus[i][sourceTubeRack].destinationWells = destinationWells
+
+
                             debugger
-                            updateFromSourceToDestinationChain(stepsStatus[i + 1][sourceTubeRack].sourceWells, stepsStatus[i + 1][sourceTubeRack].destinationWells, sourceWells)
+
                             if (!tubeRacksToUpdate.includes(sourceTubeRack))
                                 tubeRacksToUpdate.push(sourceTubeRack)
 

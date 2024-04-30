@@ -215,22 +215,82 @@ export function updateTubeTransferVisuals(stepId, source) {
     }
 }
 
+function generateLiquidString(sourceWellsOptions) {
+    let uniqueLiquids = new Set();
+    Object.values(sourceWellsOptions).forEach(well => uniqueLiquids.add(well.liquid));
+    return Array.from(uniqueLiquids).sort().join('/');
+}
 
-export function updateFromSourceToDestinationChain(sourceWells, destinationWells, sourceSlots) {
-    debugger
-    const wellKeys = Object.keys(sourceSlots);
-    wellKeys.forEach(key => {
-        sourceWells.map(wells => {
-            let matchingWell = wells.wells.find(w => w.id === key)
-            if (matchingWell) {
-                if (matchingWell.volume > 0) {
-                    sourceSlots[key].liquid = matchingWell.liquid
-                }
-                else
-                    console.log("Can not auto update for this step, manual interversion is required!")
+function normalizeAndPopulateWells(destinationWells) {
+    destinationWells.forEach(wellGroup => {
+        wellGroup.wells = wellGroup.wells.map(well => {
+            if (typeof well === 'string') {
+                // If the well is a string, convert it to an object using the group's volume property
+                return { id: well, volume: wellGroup.volume };
             }
-        })
-    })
+            return well; // Return the well as is if it's already an object
+        });
+    });
+}
 
 
+export function updateFromSourceToDestinationChain(sourceWellsOptions, destinationWellsOptions, destinationWells) {
+    debugger
+    const resultLiquids = generateLiquidString(sourceWellsOptions);
+    destinationWells = destinationWells.filter(group => group.liquid != '')
+
+    normalizeAndPopulateWells(destinationWells);
+
+    // Iterate through each well in destinationWellsOptions
+    for (let key in destinationWellsOptions) {
+        let currentLiquid = destinationWellsOptions[key].liquid;
+        if (currentLiquid !== resultLiquids) { // Check if the current liquid needs to be updated
+            destinationWellsOptions[key].liquid = resultLiquids; // Update the liquid
+        }
+    }
+
+    // Create a mapping of existing liquids to their groups
+    const liquidGroupMap = {};
+    destinationWells.forEach(group => {
+        const liquidKey = group.liquid;
+        if (!liquidGroupMap[liquidKey]) {
+            liquidGroupMap[liquidKey] = [];
+        }
+        liquidGroupMap[liquidKey].push(group);
+    });
+
+    // Check each well in destinationWellsOptions and manage grouping
+    Object.entries(destinationWellsOptions).forEach(([wellId, wellOptions]) => {
+        let found = false;
+
+        // Attempt to find the well in existing groups and update it
+        destinationWells.forEach(group => {
+            group.wells.forEach(well => {
+                if (well.id === wellId) {
+                    well.liquid = wellOptions.liquid; // Update the liquid
+                    well.volume = parseInt(well.volume) + parseInt(wellOptions.volume); // Update the volume
+                    found = true;
+                }
+            });
+        });
+
+        // If well is not found, check for existing liquid group or create new one
+        if (!found) {
+            if (liquidGroupMap[wellOptions.liquid]) {
+                // Add to existing group
+                liquidGroupMap[wellOptions.liquid][0].wells.push({ id: wellId, volume: wellOptions.volume, liquid: wellOptions.liquid });
+            } else {
+                // Create a new group for this unique liquid combination
+                destinationWells.push({
+                    color: "#newcolor", // Assign a new color or derive it appropriately
+                    liquid: wellOptions.liquid,
+                    volume: wellOptions.volume.toString(),
+                    wells: [{ id: wellId, volume: wellOptions.volume, liquid: wellOptions.liquid }]
+                });
+                liquidGroupMap[wellOptions.liquid] = [destinationWells[destinationWells.length - 1]];
+            }
+        }
+    });
+
+    return { destinationWellsOptions, destinationWells };
 }
