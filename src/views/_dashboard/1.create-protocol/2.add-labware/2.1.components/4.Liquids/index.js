@@ -40,7 +40,7 @@ export const Liquids = () => {
   const [mixtureDisabled, setMixtureDisabled] = useState(false);
   const [selectedLiquids, setSelectedLiquids] = useState([]);
 
-  let items = JSON.parse(localStorage.getItem("liquids"));
+  let items = JSON.parse(localStorage.getItem("liquids")) || [];
 
   useEffect(() => {
     if (items) {
@@ -55,7 +55,7 @@ export const Liquids = () => {
   const handleAddLiquid = (e) => {
     id_iterator = Math.floor(Math.random() * 999999);
 
-    let options = items;
+    let options = items || [];
     let liquid = {
       id: id_iterator,
       value: liquidName,
