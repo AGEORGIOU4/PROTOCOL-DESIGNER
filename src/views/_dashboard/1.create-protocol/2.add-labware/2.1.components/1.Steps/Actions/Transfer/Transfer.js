@@ -148,8 +148,8 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
       console.log(JSON.stringify(formData, null, 2));
 
       const stepStates = JSON.parse(localStorage.getItem('stepStates'))
-      if (!stepStates){
-        
+      if (!stepStates) {
+
       }
 
     }
@@ -314,7 +314,7 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
               </CCol>
             </div>
 
-            <CCol md={4}>
+            <CCol md={3}>
               <CFormLabel htmlFor="validationCustom01">Pipette</CFormLabel>
               <CFormSelect
                 options={options_Pipettes}
@@ -325,7 +325,7 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
               <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
 
-            <CCol md={1}>
+            <CCol md={2}>
               <CFormLabel htmlFor="validationCustom02">Volume Per</CFormLabel>
               <CInputGroup className="mb-3">
                 <CFormInput type="number" id="validationCustom02" value={volumePer} onChange={handleChangeVolumePer} required />
@@ -358,10 +358,10 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
             <CCol md={1}>
               <CFormLabel htmlFor="validationCustom04">Wells</CFormLabel>
               <CFormInput
-                style={{ caretColor: "transparent" }}
+                style={{ caretColor: "transparent", background: '#01aab1', cursor: 'pointer', fontSize: 'smaller', borderRadius: '50px' }}
                 onClick={() => handleAddLiquids(false)}
+                placeholder="Select"
                 id="validationCustom04"
-
               />
 
               <CFormFeedback valid>Looks good!</CFormFeedback>
@@ -385,10 +385,10 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
             <CCol md={1}>
               <CFormLabel htmlFor="validationCustom06">Wells</CFormLabel>
               <CFormInput
-                style={{ caretColor: "transparent" }}
+                style={{ caretColor: "transparent", background: '#01aab1', cursor: 'pointer', fontSize: 'smaller', borderRadius: '50px' }}
                 onClick={() => handleAddLiquids(true)}
+                placeholder="Select"
                 id="validationCustom06"
-
               />
               <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
