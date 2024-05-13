@@ -185,7 +185,6 @@ export const ThermoBlockForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                 >
                   {isFirstSelection && (
                     <option value="°C" disabled>
-                      Default (°C)
                     </option>
                   )}
                   {options_Temperature.map((option) => (

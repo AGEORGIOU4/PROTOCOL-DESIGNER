@@ -376,7 +376,6 @@ export const CentrifugeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                 >
                   {isFirstSelection && (
                     <option value="°C" disabled>
-                      °C
                     </option>
                   )}
                   {options_Temperature.map((option) => (
@@ -393,7 +392,7 @@ export const CentrifugeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                   id="defaultTemperature"
                   required
                   value={defaultTemperature}
-                  onChange={handleDefaultHourChange}
+                  onChange={handleDefaultTemperatureChange}
                   placeholder=""
                 />
               </CCol>
@@ -407,7 +406,6 @@ export const CentrifugeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                 >
                   {isFirstSelectionRPM && (
                     <option value="RPM" disabled>
-                      RPM
                     </option>
                   )}
                   {options_rpm.map((option) => (

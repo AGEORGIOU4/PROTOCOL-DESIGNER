@@ -44,7 +44,9 @@ export const ThermocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   const [addStep, setAddStep] = useState([]);
   const [isButtonClicked, setIsButtonClicked] = useState(false);
   const [checkboxValidationFailed, setCheckboxValidationFailed] = useState(false);
-
+  const [defaultTemperature, setDefaultTemperature] = useState("");
+  const [defaultTemperature2, setDefaultTemperature2] = useState("");
+  const [defaultTemperature3, setDefaultTemperature3] = useState("");
   useEffect(() => {
     let items = [];
     try {
@@ -65,7 +67,7 @@ export const ThermocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
 
         const new_items = tmp_items.map((item) => ({
           value: JSON.stringify(item),
-          text: item.name,
+          label: item.name,
         }));
 
         console.log(new_items)
@@ -278,6 +280,10 @@ export const ThermocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     });
   };
 
+  const handleDefaultTemperatureChange = (e) => setDefaultTemperature(e.target.value);
+  const handleDefaultTemperatureChange2 = (e) => setDefaultTemperature2(e.target.value);
+  const handleDefaultTemperatureChange3 = (e) => setDefaultTemperature3(e.target.value);
+
   return (
     <>
       <CRow style={{ overflow: "auto", maxHeight: "100vh" }}>
@@ -301,10 +307,10 @@ export const ThermocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                 <CRow>
                   <CCol md={3} className="mt-4">
                     <CFormLabel htmlFor="labWareInput">Labware</CFormLabel>
-                    <CMultiSelect
+                    <CFormSelect
                       id="labWareInput"
                       options={labware_items}
-                      value={selectedLabWare}
+                      value={selectedLabWare || ""}
                       onChange={handleLabWareChange}
                       placeholder="Select Labware"
                       required
@@ -351,25 +357,36 @@ export const ThermocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                     />
                     {checkToggleStates.thermoBlock && (
                       <>
-                        <CCol md={5}>
-                          <CFormSelect
-                            id="thermoBlock" // Make sure the id matches the state key
-                            required
-                            onChange={handleDropdownChange}
-                            value={selectTemperature.thermoBlock}
-                          >
-                            {isFirstSelection.thermoBlock && (
-                              <option value="°C" disabled>
-                                Default (°C)
-                              </option>
-                            )}
-                            {options_Temperature.map((option) => (
-                              <option key={option.id} value={option.value}>
-                                {option.label}
-                              </option>
-                            ))}
-                          </CFormSelect>
-                        </CCol>
+                        <CRow>
+                          <CCol md={5}>
+                            <CFormSelect
+                              id="thermoBlock" // Make sure the id matches the state key
+                              required
+                              onChange={handleDropdownChange}
+                              value={selectTemperature.thermoBlock}
+                            >
+                              {isFirstSelection.thermoBlock && (
+                                <option value="°C" disabled>
+                                </option>
+                              )}
+                              {options_Temperature.map((option) => (
+                                <option key={option.id} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </CFormSelect>
+                          </CCol>
+                          <CCol md={5}>
+                            <CFormInput
+                              type="number"
+                              id="defaultTemperature"
+                              required
+                              value={defaultTemperature}
+                              onChange={handleDefaultTemperatureChange}
+                              placeholder=""
+                            />
+                          </CCol>
+                        </CRow>
                       </>
                     )}
                   </CCol>
@@ -383,28 +400,40 @@ export const ThermocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                     />
                     {checkToggleStates.lid && (
                       <>
-                        <CCol md={5}>
-                          <CFormSelect
-                            id="lid"
-                            required
-                            onChange={handleDropdownChange}
-                            value={selectTemperature.lid}
-                          >
-                            {isFirstSelection.lid && (
-                              <option value="°C" disabled>
-                                Default (°C)
-                              </option>
-                            )}
-                            {options_Temperature.map((option) => (
-                              <option key={option.id} value={option.value}>
-                                {option.label}
-                              </option>
-                            ))}
-                          </CFormSelect>
-                        </CCol>
+                        <CRow>
+                          <CCol md={5}>
+                            <CFormSelect
+                              id="lid"
+                              required
+                              onChange={handleDropdownChange}
+                              value={selectTemperature.lid}
+                            >
+                              {isFirstSelection.lid && (
+                                <option value="°C" disabled>
+                                </option>
+                              )}
+                              {options_Temperature.map((option) => (
+                                <option key={option.id} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </CFormSelect>
+                          </CCol>
+                          <CCol md={5}>
+                            <CFormInput
+                              type="number"
+                              id="defaultTemperature"
+                              required
+                              value={defaultTemperature2}
+                              onChange={handleDefaultTemperatureChange2}
+                              placeholder=""
+                            />
+                          </CCol>
+                        </CRow>
                       </>
                     )}
                   </CCol>
+
                   <CCol md={4}>
                     <CFormLabel htmlFor="LidPositionToggle1">
                       Lid Position
@@ -416,6 +445,7 @@ export const ThermocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                       checked={checkToggleStates.lidPosition}
                     />
                   </CCol>
+
                 </CRow>
               </>
             )}
@@ -857,7 +887,6 @@ export const ThermocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                           >
                             {isFirstSelection.thermoBlock && (
                               <option value="°C" disabled>
-                                Default (°C)
                               </option>
                             )}
                             {options_Temperature.map((option) => (
@@ -889,7 +918,6 @@ export const ThermocyclerForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                           >
                             {isFirstSelection.lid && (
                               <option value="°C" disabled>
-                                Default (°C)
                               </option>
                             )}
                             {options_Temperature.map((option) => (
