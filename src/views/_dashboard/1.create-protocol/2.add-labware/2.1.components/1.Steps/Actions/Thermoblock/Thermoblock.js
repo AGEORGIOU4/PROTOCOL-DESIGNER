@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   CCol,
   CForm,
@@ -15,6 +15,7 @@ import {
 import { Notes } from "../../Components/notes";
 import { options_rpm, options_Temperature, options_LabWares } from "./data";
 export const ThermoBlockForm = ({ onClose, onDelete, stepId, stepTitle }) => {
+  const [labware_items, setLabwareItems] = useState([]);
   const [isNotesOpen, setIsNotesOpen] = useState(false);
   const [validated, setValidated] = useState(false);
   const [selectedLabWare, setSelectedLabWare] = useState([]);
@@ -25,6 +26,39 @@ export const ThermoBlockForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   const [timerHour, setTimerHour] = useState('');
   const [timerMinute, setTimerMinute] = useState('');
   const [timerSecond, setTimerSecond] = useState('');
+
+
+  useEffect(() => {
+    let items = [];
+    try {
+      items = JSON.parse(localStorage.getItem("slots")); // Check memory
+    } catch (e) {
+      console.log(e);
+    }
+
+    let tmp_items = [];
+
+    try {
+      if (items.length > 1) {
+        items?.map((item, index) => {
+          if (index > 0) {
+            tmp_items.push(item);
+          }
+        });
+
+        const new_items = tmp_items.map((item) => ({
+          value: JSON.stringify(item),
+          text: item.name,
+        }));
+
+        console.log(new_items)
+        setLabwareItems(new_items);
+      }
+    } catch (e) {
+      console.log(e)
+    }
+
+  }, []);
 
   const handleTimerHourChange = (e) => setTimerHour(e.target.value);
   const handleTimerMinuteChange = (e) => setTimerMinute(e.target.value);
@@ -133,7 +167,7 @@ export const ThermoBlockForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                 <CFormLabel htmlFor="labWareInput">Labware</CFormLabel>
                 <CMultiSelect
                   id="labwareSelect"
-                  options={options_LabWares}
+                  options={labware_items}
                   value={selectedLabWare}
                   onChange={handleLabWareChange}
                   required

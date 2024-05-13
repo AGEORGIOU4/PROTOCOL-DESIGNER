@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   CCol,
   CForm,
@@ -25,6 +25,7 @@ import defaultFlow from "src/assets/images/wellOrder/defaultFlow.svg";
 export const MixForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   const [validated, setValidated] = useState(false);
   const [selectedPipette, setSelectedPipette] = useState("");
+  const [labware_items, setLabwareItems] = useState([]);
   const [selectedLabWare, setSelectedLabWare] = useState("");
   const [selectedColumn, setSelectedColumn] = useState("");
   const [activeHeader, setActiveHeader] = useState("");
@@ -49,6 +50,45 @@ export const MixForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   const handleFlowRateDispenseChange = (e) => setFlowRateDispense(e.target.value);
   const handleTouchTipChange = (e) => setTouchTip(e.target.value);
   const handleBlowoutChange = (e) => setBlowout(e.target.value);
+
+  useEffect(() => {
+    let items = [];
+    try {
+      items = JSON.parse(localStorage.getItem("slots")); // Check memory
+    } catch (e) {
+      console.log(e);
+    }
+
+    let tmp_items = [];
+
+    try {
+      if (items.length > 1) {
+        items?.map((item, index) => {
+          if (index > 0) {
+            tmp_items.push(item);
+          }
+        });
+
+        const new_items = tmp_items.map((item) => ({
+          value: JSON.stringify(item),
+          label: item.name,
+        }));
+
+        new_items.push({
+          value: "Trash",
+          label: "Trash",
+        })
+
+
+        console.log(new_items)
+        setLabwareItems(new_items);
+      }
+    } catch (e) {
+      console.log(e)
+    }
+
+  }, []);
+
 
   const handleSvgClick = () => {
     setCurrentSVG(currentSVG === defaultFlow ? defaultFlow : defaultFlow);
@@ -216,19 +256,7 @@ export const MixForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                   required
                   onChange={handleLabWareChange}
                   value={selectedLabWare}
-                  options={
-                    selectedLabWare === ""
-                      ? [
-                        {
-                          value: "",
-                          label: "Select Labware",
-                          disabled: true,
-                          hidden: true,
-                        },
-                        ...options_LabWares,
-                      ]
-                      : options_LabWares
-                  }
+                  options={labware_items}
                 />
               </CCol>
 

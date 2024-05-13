@@ -231,10 +231,10 @@ export const Liquids = () => {
               </CCol>
 
               <CRow>
-                <CCol md={4} style={{ display: "flex", alignItems: "center" }}>
+                {/* <CCol md={4} style={{ display: "flex", alignItems: "center" }}>
                   <CIcon icon={cilTrash}></CIcon>{" "}
                   <strong> Click to delete a liquid </strong>
-                </CCol>
+                </CCol> */}
                 <CCol md={8}>
                   <CButton
                     className="standard-btn float-end"

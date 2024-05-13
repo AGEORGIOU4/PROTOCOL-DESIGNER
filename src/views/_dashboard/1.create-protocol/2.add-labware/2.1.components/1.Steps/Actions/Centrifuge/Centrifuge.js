@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   CCol,
   CForm,
@@ -17,10 +17,13 @@ import { options_rpm, options_Temperature, options_LabWares } from "./data";
 
 export const CentrifugeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   // State declarations
+  const [labware_items, setLabwareItems] = useState([]);
   const [isNotesOpen, setIsNotesOpen] = useState(false);
   const [validated, setValidated] = useState(false);
   const [selectedLabWare, setSelectedLabWare] = useState([]);
   const [defaultHour, setDefaultHour] = useState("");
+  const [defaultTemperature, setDefaultTemperature] = useState("");
+  const [defaultSpeed, setDefaultSpeed] = useState("");
   const [defaultMinute, setDefaultMinute] = useState("");
   const [defaultSecond, setDefaultSecond] = useState("");
   const [selectedRPM, setSelectedRPM] = useState("RPM");
@@ -34,6 +37,8 @@ export const CentrifugeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   const [labwarePairs, setLabwarePairs] = useState([]);
 
   // Handlers for various user interactions
+  const handleDefaultTemperatureChange = (e) => setDefaultTemperature(e.target.value);
+  const handleDefaultSpeedChange = (e) => setDefaultSpeed(e.target.value);
   const handleDefaultHourChange = (e) => setDefaultHour(e.target.value);
   const handleDefaultMinuteChange = (e) => setDefaultMinute(e.target.value);
   const handleDefaultSecondChange = (e) => setDefaultSecond(e.target.value);
@@ -185,6 +190,38 @@ export const CentrifugeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   const handleNotesClick = () => setIsNotesOpen(true);
   const closeNotes = () => setIsNotesOpen(false);
 
+  useEffect(() => {
+    let items = [];
+    try {
+      items = JSON.parse(localStorage.getItem("slots")); // Check memory
+    } catch (e) {
+      console.log(e);
+    }
+
+    let tmp_items = [];
+
+    try {
+      if (items.length > 1) {
+        items?.map((item, index) => {
+          if (index > 0) {
+            tmp_items.push(item);
+          }
+        });
+
+        const new_items = tmp_items.map((item) => ({
+          value: JSON.stringify(item),
+          text: item.name,
+        }));
+
+        console.log(new_items)
+        setLabwareItems(new_items);
+      }
+    } catch (e) {
+      console.log(e)
+    }
+
+  }, []);
+
   return (
     <>
       <CRow>
@@ -208,7 +245,7 @@ export const CentrifugeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                 <CFormLabel htmlFor="labWareInput">Labware</CFormLabel>
                 <CMultiSelect
                   id="labwareSelect"
-                  options={options_LabWares}
+                  options={labware_items}
                   value={selectedLabWare}
                   onChange={handleLabWareChange}
                   placeholder="Select Labware"
@@ -329,7 +366,7 @@ export const CentrifugeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
             )}
 
             <CRow className="mt-">
-              <CCol md={2}>
+              <CCol md={1}>
                 <CFormLabel htmlFor="temperatureInput">Temperature</CFormLabel>
                 <CFormSelect
                   id="temperatureSelect"
@@ -339,7 +376,7 @@ export const CentrifugeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                 >
                   {isFirstSelection && (
                     <option value="°C" disabled>
-                      Default (°C)
+                      °C
                     </option>
                   )}
                   {options_Temperature.map((option) => (
@@ -349,7 +386,18 @@ export const CentrifugeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                   ))}
                 </CFormSelect>
               </CCol>
-              <CCol md={2}>
+              <CCol md={1}>
+                <div style={{ height: "30px" }}></div>
+                <CFormInput
+                  type="number"
+                  id="defaultTemperature"
+                  required
+                  value={defaultTemperature}
+                  onChange={handleDefaultHourChange}
+                  placeholder=""
+                />
+              </CCol>
+              <CCol md={1}>
                 <CFormLabel htmlFor="speedInput">Speed</CFormLabel>
                 <CFormSelect
                   id="temperatureSelect"
@@ -359,7 +407,7 @@ export const CentrifugeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                 >
                   {isFirstSelectionRPM && (
                     <option value="RPM" disabled>
-                      Default (RPM)
+                      RPM
                     </option>
                   )}
                   {options_rpm.map((option) => (
@@ -369,7 +417,17 @@ export const CentrifugeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                   ))}
                 </CFormSelect>
               </CCol>
-
+              <CCol md={1}>
+                <div style={{ height: "30px" }}></div>
+                <CFormInput
+                  type="number"
+                  id="defaultSpeed"
+                  required
+                  value={defaultSpeed}
+                  onChange={handleDefaultHourChange}
+                  placeholder=""
+                />
+              </CCol>
               <CCol
                 md={1}
                 style={{
@@ -389,7 +447,7 @@ export const CentrifugeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                 />
               </CCol>
               <CCol md={1} style={{ minWidth: "160px", marginRight: "-20px" }}>
-                <div style={{ height: "38px" }}></div>
+                <div style={{ height: "30px" }}></div>
                 <CFormInput
                   type="text"
                   id="defaultMinute"
@@ -400,7 +458,7 @@ export const CentrifugeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                 />
               </CCol>
               <CCol md={1} style={{ minWidth: "160px", marginRight: "-20px" }}>
-                <div style={{ height: "38px" }}></div>
+                <div style={{ height: "30px" }}></div>
                 <CFormInput
                   type="text"
                   id="defaultSecond"

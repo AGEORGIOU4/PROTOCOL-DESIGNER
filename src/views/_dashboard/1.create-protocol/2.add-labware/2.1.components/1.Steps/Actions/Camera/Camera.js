@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     CCol,
     CForm,
@@ -17,6 +17,7 @@ import { useStateManager } from "react-select";
 
 export const CameraForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     // State declarations
+    const [labware_items, setLabwareItems] = useState([]);
     const [isNotesOpen, setIsNotesOpen] = useState(false);
     const [validated, setValidated] = useState(false);
     const [selectedLabWare, setSelectedLabWare] = useState([]);
@@ -32,7 +33,37 @@ export const CameraForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     const [photoVideoQuantity, setPhotoVideoQuantity] = useState('');
     const [photoVideoTimeLapse, setPhotoVideoTimeLapse] = useState('');
 
+    useEffect(() => {
+        let items = [];
+        try {
+            items = JSON.parse(localStorage.getItem("slots")); // Check memory
+        } catch (e) {
+            console.log(e);
+        }
 
+        let tmp_items = [];
+
+        try {
+            if (items.length > 1) {
+                items?.map((item, index) => {
+                    if (index > 0) {
+                        tmp_items.push(item);
+                    }
+                });
+
+                const new_items = tmp_items.map((item) => ({
+                    value: JSON.stringify(item),
+                    text: item.name,
+                }));
+
+                console.log(new_items)
+                setLabwareItems(new_items);
+            }
+        } catch (e) {
+            console.log(e)
+        }
+
+    }, []);
     // Handlers for various user interactions
     const handleLabWareChange = (selectedOptions) => setSelectedLabWare(selectedOptions);
     const handleToggleChange = (toggleId) => {
@@ -116,7 +147,7 @@ export const CameraForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                                 <CFormLabel htmlFor="labWareInput">Labware</CFormLabel>
                                 <CMultiSelect
                                     id="labwareSelect"
-                                    options={options_LabWares}
+                                    options={labware_items}
                                     value={selectedLabWare}
                                     onChange={handleLabWareChange}
                                     placeholder="Select Labware"

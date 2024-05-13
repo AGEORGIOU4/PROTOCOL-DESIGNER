@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   CCol,
   CForm,
@@ -14,6 +14,7 @@ import { options_LabWares } from "./data";
 
 export const SeelPeelForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   // State declarations
+  const [labware_items, setLabwareItems] = useState([]);
   const [isNotesOpen, setIsNotesOpen] = useState(false);
   const [validated, setValidated] = useState(false);
   const [selectedLabWare, setSelectedLabWare] = useState([]);
@@ -22,6 +23,38 @@ export const SeelPeelForm = ({ onClose, onDelete, stepId, stepTitle }) => {
     pauseDelay: false,
     delay: false,
   });
+
+  useEffect(() => {
+    let items = [];
+    try {
+      items = JSON.parse(localStorage.getItem("slots")); // Check memory
+    } catch (e) {
+      console.log(e);
+    }
+
+    let tmp_items = [];
+
+    try {
+      if (items.length > 1) {
+        items?.map((item, index) => {
+          if (index > 0) {
+            tmp_items.push(item);
+          }
+        });
+
+        const new_items = tmp_items.map((item) => ({
+          value: JSON.stringify(item),
+          text: item.name,
+        }));
+
+        console.log(new_items)
+        setLabwareItems(new_items);
+      }
+    } catch (e) {
+      console.log(e)
+    }
+
+  }, []);
 
   // Handlers for various user interactions
   const handleCheckboxChange = (e) =>
@@ -85,7 +118,7 @@ export const SeelPeelForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                 <CFormLabel htmlFor="labWareInput">Labware</CFormLabel>
                 <CMultiSelect
                   id="labwareSelect"
-                  options={options_LabWares}
+                  options={labware_items}
                   value={selectedLabWare}
                   onChange={handleLabWareChange}
                   placeholder="Select Labware"
