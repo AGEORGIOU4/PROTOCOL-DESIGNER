@@ -84,6 +84,7 @@ export const AddLiquids = ({
   const volumeRef = useRef(null);
 
   const handleCreate = (e) => {
+
     setIsLoading(true);
     let initialLiquids = JSON.parse(localStorage.getItem("liquids")) || [];
     let id = Math.floor(Math.random() * 999999);
@@ -91,22 +92,30 @@ export const AddLiquids = ({
     initialLiquids.push(liquid);
     localStorage.setItem("liquids", JSON.stringify(initialLiquids));
 
+
+    const currentOptions = options || [];
+    console.log(currentOptions)
     setTimeout(() => {
       const newOption = createOption(id, e, selectedColor);
+
+      // Update state
       setIsLoading(false);
-      setOptions((prev) => [...prev, newOption]);
+      setOptions([...currentOptions, newOption]);
       setValue(newOption);
-      setSelectedColor(newOption.color);
+      setSelectedColor(newOption.color || "");
       handleChangeSelectedLiquid(newOption, selectedColor);
       volumeRef.current.focus();
-    }, 500);
+    },
+      200);
   };
 
   const handleSelect = (e) => {
-    setValue(e);
-    setSelectedColor(e.color);
-    handleChangeSelectedLiquid(e, selectedColor);
-    volumeRef.current.focus();
+    if (e != null) {
+      setValue(e || "");
+      setSelectedColor(e.color || "");
+      handleChangeSelectedLiquid(e, selectedColor);
+      volumeRef.current.focus();
+    }
   };
 
   return (
@@ -117,7 +126,7 @@ export const AddLiquids = ({
           <CFormInput
             value={selectedColor}
             onChange={(e) => {
-              setSelectedColor(e.target.value);
+              setSelectedColor(e.target.value || "");
             }}
             type="color"
             style={{ width: "100%", background: "white" }}
@@ -134,7 +143,7 @@ export const AddLiquids = ({
             isLoading={isLoading}
             onCreateOption={handleCreate}
             onChange={handleSelect}
-            options={options}
+            options={options || []}
             value={value}
             className="form-multi-select-selection-tags"
             styles={colourStyles}

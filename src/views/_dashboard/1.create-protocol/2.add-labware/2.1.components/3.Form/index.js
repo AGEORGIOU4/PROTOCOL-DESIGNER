@@ -197,7 +197,7 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
     setLiquidVolume("");
     setVisible(false);
 
-    // window.location.reload();
+    window.location.reload();
   };
 
   const getSelectedLabware = () => {
