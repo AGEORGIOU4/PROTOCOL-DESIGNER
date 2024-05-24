@@ -11,7 +11,9 @@ export const DraggableStep = ({
   index,
   handleViewStep,
   handleDeleteStep,
+  STEP_ID,
 }) => {
+
   return (
     <>
       <Draggable draggableId={id} index={index}>
@@ -27,7 +29,7 @@ export const DraggableStep = ({
               href="#"
               id={id}
               title={value}
-              className={`border-start-4 border-start-${getColor(value)}`}
+              className={`border-start-4 border-start-${getColor(value)} ${STEP_ID === id ? 'selected-step-green' : ''}`}
               style={{ paddingRight: "8px", cursor: "pointer" }}
               onClick={(e) => handleViewStep(e)}
             >

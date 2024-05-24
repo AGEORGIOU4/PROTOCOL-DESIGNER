@@ -264,6 +264,7 @@ const LabwareSteps = ({ active }) => {
   };
 
   const handleViewStep = (e) => {
+    console.log(e.target.id)
     STEP_ID = e.target.id;
     STEP_TITLE = e.target.title;
 
@@ -416,6 +417,7 @@ const LabwareSteps = ({ active }) => {
                               index={index}
                               handleViewStep={(e) => handleViewStep(e)}
                               handleDeleteStep={(e) => handleDeleteStep(e)}
+                              STEP_ID={STEP_ID}
                             />
                           </>
                         );

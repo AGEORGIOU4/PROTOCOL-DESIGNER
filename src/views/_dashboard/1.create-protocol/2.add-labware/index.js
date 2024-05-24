@@ -19,11 +19,17 @@ import LabwareSteps from "./2.1.components/1.Steps";
 const AddLabware = () => {
   const [activeKey, setActiveKey] = useState(1);
   const [selectedSlot, setSelectedSlot] = useState("");
+  const [openModal, setOpenModal] = useState(false);
 
   const [newLabwareSelection, setNewLabwareSelection] = useState("");
 
   const handleSelectedSlot = (selectedSlot) => {
     setSelectedSlot(selectedSlot);
+
+  };
+
+  const handleDblClick = () => {
+    setOpenModal(true);
   };
 
   const handleSubmitForm = (newData) => {
@@ -89,6 +95,7 @@ const AddLabware = () => {
                 <CCol md={6}>
                   <Deck
                     handleSelectedSlot={handleSelectedSlot}
+                    handleDblClick={handleDblClick}
                     newLabwareSelection={newLabwareSelection}
                   />
                 </CCol>
@@ -97,6 +104,8 @@ const AddLabware = () => {
                   <Form
                     selectedSlot={selectedSlot}
                     handleSubmitForm={handleSubmitForm}
+                    openModal={openModal}
+                    setOpenModal={setOpenModal}
                   />
                 </CCol>
               </CRow>

@@ -8,7 +8,7 @@ import { cidDrop } from "@coreui/icons-pro";
 
 const DECK_TOTAL_COLUMNS = 3;
 
-const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
+const Deck = ({ handleSelectedSlot, handleDblClick, newLabwareSelection }) => {
   const [isSelected, setIsSelected] = useState();
 
   const [deckSlots1D, setDeckSlots1D] = useState([]);
@@ -243,8 +243,10 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
                       <CCol key={index} md={4}>
                         <div
                           key={item.id}
-                          style={{}}
+                          style={{ cursor: 'pointer' }}
                           onClick={(e) => handleSelect(item)}
+                          onDoubleClick={handleDblClick}
+
                           id={item.id}
                           className={getSlotBtnClassName(item.id, isSelected)}
                         >

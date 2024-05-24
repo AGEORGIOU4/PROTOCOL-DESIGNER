@@ -33,7 +33,7 @@ import ReservoirSelection from "./Plates/Reservoir/Reservoir";
 import AluminiumBlockSelection from "./Plates/AluminiumBlock/AluminiumBlock";
 import { AddLiquids, disableInputFieldsOnSelect } from "./helpers";
 
-export const Form = ({ selectedSlot, handleSubmitForm }) => {
+export const Form = ({ selectedSlot, handleSubmitForm, setOpenModal, openModal }) => {
   const [loadingSave, setLoadingSave] = useState(false);
   const [loadingReset, setLoadingReset] = useState(false);
 
@@ -50,6 +50,14 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
 
   const [selectedLiquid, setSelectedLiquid] = useState("");
   const [liquidVolume, setLiquidVolume] = useState("");
+
+
+  useEffect(() => {
+    if (openModal) {
+      handleAddLiquids()
+    }
+
+  }, [openModal])
 
   useEffect(() => {
     setName(selectedSlot.name);
@@ -196,6 +204,7 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
     setSelectedLiquid("");
     setLiquidVolume("");
     setVisible(false);
+    setOpenModal(false)
 
     window.location.reload();
   };
@@ -225,6 +234,7 @@ export const Form = ({ selectedSlot, handleSubmitForm }) => {
   };
 
   const handleAddLiquids = () => {
+    console.log("handle add")
     getSelectedLabware();
     setVisible(true);
   };
