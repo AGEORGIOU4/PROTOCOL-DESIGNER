@@ -501,7 +501,7 @@ export const CentrifugeForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                 <CButton className="dial-btn-close" onClick={handleLocalClose}>
                   Close
                 </CButton>
-                <CButton className="dial-btn-save" type="submit">
+                <CButton disabled className="dial-btn-save" type="submit">
                   Save
                 </CButton>
               </CCol>

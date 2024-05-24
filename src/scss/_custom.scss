@@ -789,14 +789,21 @@ pre {
 
 .dial-btn-save {
   border-radius: 30px;
-  border: 2px solid #01aab1;
-  background-color: #01aab1;
+  border: 2px solid #000000;
+  background-color: #000000;
   min-width: 177px;
   max-height: 40px;
   color: #ffffff;
   font-style: normal;
   font-weight: 700;
   line-height: 123.4%;
+}
+
+.dial-btn-save:disabled {
+  border: 2px solid #cccccc;
+  background-color: #cccccc;
+  color: #ffffff;
+
 }
 
 // .dial-btn-save:hover {
@@ -835,5 +842,5 @@ pre {
 }
 
 .selected-step-green {
-  background: lightgreen;
+  background: #a4dbdd;
 }

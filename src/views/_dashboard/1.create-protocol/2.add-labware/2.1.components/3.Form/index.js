@@ -320,7 +320,7 @@ export const Form = ({ selectedSlot, handleSubmitForm, setOpenModal, openModal }
               </CLoadingButton>
             </CCol>
 
-            <CCol md={8} style={{ textAlign: "end" }}>
+            {/* <CCol md={8} style={{ textAlign: "end" }}>
               <CButton
                 className="standard-btn"
                 style={{ marginRight: "10px" }}
@@ -336,7 +336,7 @@ export const Form = ({ selectedSlot, handleSubmitForm, setOpenModal, openModal }
               >
                 <CIcon size="sm" icon={cidEyedropper} /> ADD LIQUIDS
               </CButton>
-            </CCol>
+            </CCol> */}
           </CRow>
         </CForm>
       </CCol>
