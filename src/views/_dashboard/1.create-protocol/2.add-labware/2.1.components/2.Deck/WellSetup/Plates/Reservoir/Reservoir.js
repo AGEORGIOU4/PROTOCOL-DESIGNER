@@ -9,18 +9,18 @@ import {
   CTooltip,
 } from "@coreui/react-pro";
 import { GetLetter } from "src/_common/helpers";
-import { aluminium_blocks } from "../data";
+import { reservoirs } from "../data";
 import CIcon from "@coreui/icons-react";
 import { cilSave } from "@coreui/icons";
 
-export default function AluminiumBlockSelection({
+export default function ReservoirSelection({
   selectedSlot,
   selectedLabware,
   selectedLiquid,
   liquidVolume,
   handleClose,
 }) {
-  const aluminiumBlocksRef = useRef([]);
+  const reservoirsRef = useRef([]);
 
   const [selectedWells, setSelectedWells] = useState("");
   const [selectedWellsElement, setSelectedWellsElement] = useState([]);
@@ -29,7 +29,7 @@ export default function AluminiumBlockSelection({
   const settings = {
     draggability: false,
     multiSelectMode: true,
-    selectables: document.getElementsByClassName("ab_selectables"),
+    selectables: document.getElementsByClassName("r_selectables"),
   };
 
   useEffect(() => {
@@ -53,14 +53,12 @@ export default function AluminiumBlockSelection({
     return () => ds.unsubscribe("DS:end");
   }, [ds]);
 
-  var rows = aluminium_blocks[0].rows;
-  var cols = aluminium_blocks[0].cols;
+  var rows = reservoirs[0].rows;
+  var cols = reservoirs[0].cols;
   var squared = false;
 
   // Set Selected Labware
-  const item = aluminium_blocks.filter(
-    (item) => item.label === selectedLabware,
-  );
+  const item = reservoirs.filter((item) => item.label === selectedLabware);
 
   rows = item[0].rows;
   cols = item[0].cols;
@@ -72,8 +70,8 @@ export default function AluminiumBlockSelection({
 
   while (row_index < rows) {
     const row = Array.from({ length: cols }).map((item, col_index) => {
-      const ab_ref = createRef();
-      aluminiumBlocksRef.current.push(ab_ref);
+      const r_ref = createRef();
+      reservoirsRef.current.push(r_ref);
       let id = GetLetter(row_index) + (parseInt(col_index) + 1);
 
       let liquid = "";
@@ -111,9 +109,9 @@ export default function AluminiumBlockSelection({
           <CCol
             key={id}
             id={id}
-            className="ab_selectables"
+            className="r_selectables"
             style={{ borderRadius: squared ? "0" : "100%" }}
-            ref={ab_ref}
+            ref={r_ref}
           ></CCol>
         </CTooltip>
       );
@@ -132,7 +130,7 @@ export default function AluminiumBlockSelection({
         for (let i = 0; i < tmp_arr.length; i++) {
           try {
             document.getElementById(tmp_arr[i]).style.background = tmp_color;
-          } catch (e) { }
+          } catch (e) {}
         }
       });
     }
@@ -190,7 +188,7 @@ export default function AluminiumBlockSelection({
         localStorage.setItem("slots", JSON.stringify(items));
       }
 
-      //handleClose();
+      handleClose();
     }
   };
 
@@ -215,7 +213,7 @@ export default function AluminiumBlockSelection({
         items?.map((item, index) => {
           document.getElementById(item.key).style.background = "#EFEFEF";
         });
-      } catch (e) { }
+      } catch (e) {}
     });
   };
 
@@ -225,17 +223,17 @@ export default function AluminiumBlockSelection({
         style={{ display: selectedLabware.name != "N/A" ? "block" : "none" }}
       >
         <div
-          className="ab_selection-frame"
-        // onMouseUp={(e) => console.log(e)}
+          className={"r_selectionFrame"}
+          // onMouseUp={(e) => console.log(e)}
         >
           {/*  LABEL HEADERS */}
-          <CRow className="ab_label-row">
+          <CRow className={"r_labelRow"}>
             {React.Children.toArray(
               elems?.map((row, index) => {
                 if (index === 0) {
                   return row?.map((col, index) => {
                     return (
-                      <CCol className="ab_label-col">
+                      <CCol className="r_label-col">
                         <span>{index + 1}</span>
                       </CCol>
                     );
@@ -246,12 +244,12 @@ export default function AluminiumBlockSelection({
           </CRow>
 
           {/*  SLOTS */}
-          <div className={rows && cols < 17 ? "ab_wells_grid" : ""}>
+          <div className={rows && cols < 17 ? "r_wells_grid" : ""}>
             {React.Children.toArray(
               elems?.map((row, index) => {
                 return (
                   <>
-                    <CRow className={"ab_rowGrid"}>
+                    <CRow className={"r_rowGrid"}>
                       <span
                         style={{
                           userSelect: "none",

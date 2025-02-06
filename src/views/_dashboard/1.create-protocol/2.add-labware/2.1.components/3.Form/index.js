@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import {
-  CButton,
   CCol,
   CForm,
   CFormFeedback,
@@ -8,24 +7,12 @@ import {
   CFormLabel,
   CFormSelect,
   CLoadingButton,
-  CModal,
-  CModalBody,
-  CModalFooter,
-  CModalHeader,
-  CModalTitle,
-  CMultiSelect,
   CRow,
 } from "@coreui/react-pro";
 import { useState } from "react";
 import CIcon from "@coreui/icons-react";
-import { cilReload, cilSave } from "@coreui/icons";
-import {
-  aluminium_blocks,
-  reservoirs,
-  tube_racks,
-  well_plates,
-} from "./Plates/data";
-import { cidEyedropper } from "@coreui/icons-pro";
+import { cilReload } from "@coreui/icons";
+import { aluminium_blocks, reservoirs, tube_racks, well_plates } from "./Plates/data";
 import WellPlateSelection from "./Plates/WellPlate/WellPlate";
 import AddLabwareModal from "../5.Modal";
 import TubeRackSelection from "./Plates/TubeRack/TubeRack";
@@ -56,7 +43,6 @@ export const Form = ({ selectedSlot, handleSubmitForm, setOpenModal, openModal }
     if (openModal) {
       handleAddLiquids()
     }
-
   }, [openModal])
 
   useEffect(() => {
@@ -251,66 +237,25 @@ export const Form = ({ selectedSlot, handleSubmitForm, setOpenModal, openModal }
     <>
       <CCol md={12}>
         <CForm>
-          <CCol md={12}>
-            <CFormLabel htmlFor="validationCustom01">Slot Name</CFormLabel>
-            <CFormInput
-              type="text"
-              id="validationCustom01"
-              value={name || ""}
-              onChange={handleChangeName}
-            />
-            <CFormFeedback valid>Looks good!</CFormFeedback>
-          </CCol>
-          <br />
-          <CCol md={12}>
-            <CFormLabel htmlFor="validationCustom02">Tube Rack</CFormLabel>
-            <CFormSelect
-              options={tube_racks}
-              id="validationCustom02"
-              value={tubeRackSelect || ""}
-              onChange={(e) => handleChangeTubeRack(e)}
-            />
-            <CFormFeedback valid>Looks good!</CFormFeedback>
-          </CCol>
-          <br />
-          <CCol md={12}>
-            <CFormLabel htmlFor="validationCustom03">Well Plate</CFormLabel>
-            <CFormSelect
-              options={well_plates}
-              id="validationCustom03"
-              value={wellPlateSelect || ""}
-              onChange={(e) => handleChangeWellPlate(e)}
-            />
-            <CFormFeedback valid>Looks good!</CFormFeedback>
-          </CCol>
-          <br />
-          <CCol md4={12}>
-            <CFormLabel htmlFor="validationCustom04">Reservoir</CFormLabel>
-            <CFormSelect
-              options={reservoirs}
-              id="validationCustom04"
-              value={reservoirSelect || ""}
-              onChange={(e) => handleChangeReservoir(e)}
-            />
-            <CFormFeedback valid>Looks good!</CFormFeedback>
-          </CCol>
-          <br />
-          <CCol md={12}>
-            <CFormLabel htmlFor="validationCustom05">
-              Aluminium Block
-            </CFormLabel>
-            <CFormSelect
-              options={aluminium_blocks}
-              id="validationCustom05"
-              value={aluminiumBlockSelect || ""}
-              onChange={(e) => handleChangeAluminiumBlock(e)}
-            />
-            <CFormFeedback valid>Looks good!</CFormFeedback>
-          </CCol>
-          <br />
           <CRow>
+            <CCol md={8}>
+              <CFormLabel htmlFor="validationCustom01">Slot Name</CFormLabel>
+              <CFormInput
+                type="text"
+                id="validationCustom01"
+                value={name || ""}
+                onChange={handleChangeName}
+              />
+              <CFormFeedback valid>Looks good!</CFormFeedback>
+            </CCol>
+
             <CCol md={4} style={{ textAlign: "start" }}>
+              <CFormLabel htmlFor="validationCustom05">
+                Clean Selections
+              </CFormLabel>
+              <br />
               <CLoadingButton
+                id="validationCustom05"
                 disabled={selectedSlot ? false : true}
                 loading={loadingReset}
                 className="standard-btn"
@@ -320,25 +265,61 @@ export const Form = ({ selectedSlot, handleSubmitForm, setOpenModal, openModal }
               </CLoadingButton>
             </CCol>
 
-            {/* <CCol md={8} style={{ textAlign: "end" }}>
-              <CButton
-                className="standard-btn"
-                style={{ marginRight: "10px" }}
-                disabled={
-                  tubeRackSelect ||
-                    wellPlateSelect ||
-                    reservoirSelect ||
-                    aluminiumBlockSelect
-                    ? false
-                    : true
-                }
-                onClick={handleAddLiquids}
-              >
-                <CIcon size="sm" icon={cidEyedropper} /> ADD LIQUIDS
-              </CButton>
-            </CCol> */}
           </CRow>
+          <br />
+
+          <CRow>
+
+            <CCol md={4}>
+              <CFormLabel htmlFor="validationCustom02">Tube Rack</CFormLabel>
+              <CFormSelect
+                options={tube_racks}
+                id="validationCustom02"
+                value={tubeRackSelect || ""}
+                onChange={(e) => handleChangeTubeRack(e)}
+              />
+              <CFormFeedback valid>Looks good!</CFormFeedback>
+            </CCol>
+
+            <CCol md={4}>
+              <CFormLabel htmlFor="validationCustom03">Well Plate</CFormLabel>
+              <CFormSelect
+                options={well_plates}
+                id="validationCustom03"
+                value={wellPlateSelect || ""}
+                onChange={(e) => handleChangeWellPlate(e)}
+              />
+              <CFormFeedback valid>Looks good!</CFormFeedback>
+            </CCol>
+
+            <CCol md={4}>
+              <CFormLabel htmlFor="validationCustom04">Reservoir</CFormLabel>
+              <CFormSelect
+                options={reservoirs}
+                id="validationCustom04"
+                value={reservoirSelect || ""}
+                onChange={(e) => handleChangeReservoir(e)}
+              />
+              <CFormFeedback valid>Looks good!</CFormFeedback>
+            </CCol>
+
+            {/* <CCol md={3}>
+              <CFormLabel htmlFor="validationCustom05">
+                Aluminium Block
+              </CFormLabel>
+              <CFormSelect
+                options={aluminium_blocks}
+                id="validationCustom05"
+                value={aluminiumBlockSelect || ""}
+                onChange={(e) => handleChangeAluminiumBlock(e)}
+              />
+              <CFormFeedback valid>Looks good!</CFormFeedback>
+            </CCol> */}
+
+          </CRow>
+
         </CForm>
+        <br />
       </CCol>
 
       <br />

@@ -9,18 +9,18 @@ import {
   CTooltip,
 } from "@coreui/react-pro";
 import { GetLetter } from "src/_common/helpers";
-import { aluminium_blocks } from "../data";
+import { well_plates } from "../data";
 import CIcon from "@coreui/icons-react";
 import { cilSave } from "@coreui/icons";
 
-export default function AluminiumBlockSelection({
+export default function WellPlateSelection({
   selectedSlot,
   selectedLabware,
   selectedLiquid,
   liquidVolume,
   handleClose,
 }) {
-  const aluminiumBlocksRef = useRef([]);
+  const wellPlatesRef = useRef([]);
 
   const [selectedWells, setSelectedWells] = useState("");
   const [selectedWellsElement, setSelectedWellsElement] = useState([]);
@@ -29,7 +29,7 @@ export default function AluminiumBlockSelection({
   const settings = {
     draggability: false,
     multiSelectMode: true,
-    selectables: document.getElementsByClassName("ab_selectables"),
+    selectables: document.getElementsByClassName("wp_selectables"),
   };
 
   useEffect(() => {
@@ -53,14 +53,12 @@ export default function AluminiumBlockSelection({
     return () => ds.unsubscribe("DS:end");
   }, [ds]);
 
-  var rows = aluminium_blocks[0].rows;
-  var cols = aluminium_blocks[0].cols;
+  var rows = well_plates[0].rows;
+  var cols = well_plates[0].cols;
   var squared = false;
 
   // Set Selected Labware
-  const item = aluminium_blocks.filter(
-    (item) => item.label === selectedLabware,
-  );
+  const item = well_plates.filter((item) => item.label === selectedLabware);
 
   rows = item[0].rows;
   cols = item[0].cols;
@@ -72,8 +70,8 @@ export default function AluminiumBlockSelection({
 
   while (row_index < rows) {
     const row = Array.from({ length: cols }).map((item, col_index) => {
-      const ab_ref = createRef();
-      aluminiumBlocksRef.current.push(ab_ref);
+      const wp_ref = createRef();
+      wellPlatesRef.current.push(wp_ref);
       let id = GetLetter(row_index) + (parseInt(col_index) + 1);
 
       let liquid = "";
@@ -111,9 +109,9 @@ export default function AluminiumBlockSelection({
           <CCol
             key={id}
             id={id}
-            className="ab_selectables"
+            className="wp_selectables"
             style={{ borderRadius: squared ? "0" : "100%" }}
-            ref={ab_ref}
+            ref={wp_ref}
           ></CCol>
         </CTooltip>
       );
@@ -132,7 +130,7 @@ export default function AluminiumBlockSelection({
         for (let i = 0; i < tmp_arr.length; i++) {
           try {
             document.getElementById(tmp_arr[i]).style.background = tmp_color;
-          } catch (e) { }
+          } catch (e) {}
         }
       });
     }
@@ -190,7 +188,7 @@ export default function AluminiumBlockSelection({
         localStorage.setItem("slots", JSON.stringify(items));
       }
 
-      //handleClose();
+      handleClose();
     }
   };
 
@@ -215,27 +213,26 @@ export default function AluminiumBlockSelection({
         items?.map((item, index) => {
           document.getElementById(item.key).style.background = "#EFEFEF";
         });
-      } catch (e) { }
+      } catch (e) {}
     });
   };
 
   return (
     <>
-      <div
-        style={{ display: selectedLabware.name != "N/A" ? "block" : "none" }}
-      >
+      <div>
         <div
-          className="ab_selection-frame"
-        // onMouseUp={(e) => console.log(e)}
+          className="wp_selection-frame"
+          id="area"
+          // onMouseUp={(e) => console.log(e)}
         >
           {/*  LABEL HEADERS */}
-          <CRow className="ab_label-row">
+          <CRow className="wp_label-row">
             {React.Children.toArray(
               elems?.map((row, index) => {
                 if (index === 0) {
                   return row?.map((col, index) => {
                     return (
-                      <CCol className="ab_label-col">
+                      <CCol className="wp_label-col">
                         <span>{index + 1}</span>
                       </CCol>
                     );
@@ -246,12 +243,12 @@ export default function AluminiumBlockSelection({
           </CRow>
 
           {/*  SLOTS */}
-          <div className={rows && cols < 17 ? "ab_wells_grid" : ""}>
+          <div className={rows && cols < 17 ? "wp_wells_grid" : ""}>
             {React.Children.toArray(
               elems?.map((row, index) => {
                 return (
                   <>
-                    <CRow className={"ab_rowGrid"}>
+                    <CRow className={"wp_rowGrid"}>
                       <span
                         style={{
                           userSelect: "none",
@@ -301,7 +298,9 @@ export default function AluminiumBlockSelection({
           </CButton>
         </div>
 
-        <span style={{ fontSize: "24px", marginTop: "26px" }}>
+        <span
+          style={{ fontSize: "24px", marginTop: "26px", userSelect: "none" }}
+        >
           <strong>{selectedLabware}</strong>
         </span>
       </div>

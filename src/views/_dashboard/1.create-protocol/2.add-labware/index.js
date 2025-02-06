@@ -11,10 +11,12 @@ import {
 
 import { Form } from "./2.1.components/3.Form";
 import Deck from "./2.1.components/2.Deck";
-import { Liquids } from "./2.1.components/4.Liquids";
 import CIcon from "@coreui/icons-react";
 import { cilBeaker, cilDrop } from "@coreui/icons";
 import LabwareSteps from "./2.1.components/1.Steps";
+import { TitleBar } from "src/_common/helpers";
+import AddLabwareModal from "./2.1.components/5.Modal";
+import WellSetup from "./2.1.components/2.Deck/WellSetup";
 
 const AddLabware = () => {
   const [activeKey, setActiveKey] = useState(1);
@@ -25,11 +27,10 @@ const AddLabware = () => {
 
   const handleSelectedSlot = (selectedSlot) => {
     setSelectedSlot(selectedSlot);
-
   };
 
   const handleDblClick = () => {
-    setOpenModal(true);
+    // setOpenModal(true);
   };
 
   const handleSubmitForm = (newData) => {
@@ -58,67 +59,37 @@ const AddLabware = () => {
             : false
         }
       />
-
       <div className="wrapper flex-column ">
         <CRow>
-          <CNav layout="justified" variant="underline">
-            <CNavItem>
-              <CNavLink
-                href="#"
-                active={activeKey === 1}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setActiveKey(1);
-                }}
-              >
-                <CIcon icon={cilBeaker} /> Labware
-              </CNavLink>
-            </CNavItem>
-
-            <CNavItem>
-              <CNavLink
-                href="#"
-                active={activeKey === 2}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setActiveKey(2);
-                }}
-              >
-                <CIcon icon={cilDrop} /> Liquids
-              </CNavLink>
-            </CNavItem>
-          </CNav>
-
-          <CTabContent>
-            <CTabPane className="p-3" visible={activeKey === 1}>
-              <CRow>
-                <CCol md={6}>
-                  <Deck
-                    handleSelectedSlot={handleSelectedSlot}
-                    handleDblClick={handleDblClick}
-                    newLabwareSelection={newLabwareSelection}
-                  />
-                </CCol>
-
-                <CCol md={6}>
-                  <Form
-                    selectedSlot={selectedSlot}
-                    handleSubmitForm={handleSubmitForm}
-                    openModal={openModal}
-                    setOpenModal={setOpenModal}
-                  />
-                </CCol>
-              </CRow>
-            </CTabPane>
-
-            <CTabPane className="p-3" visible={activeKey === 2}>
-              <CCol md={12}>
-                <Liquids />
-              </CCol>
-            </CTabPane>
-          </CTabContent>
+          <TitleBar title={"LABWARE SETUP"} />
+          <Form
+            selectedSlot={selectedSlot}
+            handleSubmitForm={handleSubmitForm}
+            openModal={openModal}
+            setOpenModal={setOpenModal}
+          />
         </CRow>
-      </div>
+
+        <CRow>
+
+          <CCol md={6}>
+            <Deck
+              handleSelectedSlot={handleSelectedSlot}
+              handleDblClick={handleDblClick}
+              newLabwareSelection={newLabwareSelection}
+            />
+          </CCol>
+
+          <CCol md={6}>
+
+            <WellSetup
+              selectedSlot={selectedSlot}
+            />
+
+          </CCol>
+
+        </CRow>
+      </div >
     </>
   );
 };

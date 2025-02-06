@@ -18,7 +18,7 @@ import { tube_racks } from "../data";
 import CIcon from "@coreui/icons-react";
 import { cilSave } from "@coreui/icons";
 
-export default function TubeRackSelection({ selectedSlot, selectedLabware, selectedLiquid, liquidVolume, handleClose }) {
+export default function TubeRackSelection({ selectedSlot, selectedLabware, selectedLiquid, liquidVolume }) {
   const tubeRacksRef = useRef([]);
 
   const [selectedWells, setSelectedWells] = useState([]);
@@ -62,7 +62,12 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
         dsRef.current = null;
       }
     }
-  }, []);
+  }, [selectedSlot]);
+
+  useEffect(() => {
+
+  }, [selectedSlot])
+
 
   var rows = tube_racks[0].rows;
   var rows2 = tube_racks[0].rows2;
@@ -94,7 +99,6 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
 
       try {
         let tmp_selected = selectedSlot.liquids.selected;
-
         tmp_selected?.map((selected, index) => {
           selected?.wells?.map((well, index) => {
             if (well == id) {
@@ -110,7 +114,7 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
       return (
         <>
           <CTooltip
-            style={{ display: liquid ? "block" : "none" }}
+            style={{ display: 0 == 0 ? "block" : "none" }}
             id={id}
             key={id}
             content={
@@ -165,6 +169,7 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
       return (
         <>
           <CTooltip
+            style={{ display: 0 == 0 ? "block" : "none" }}
             id={id}
             key={id}
             content={
@@ -207,7 +212,7 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
         }
       });
     }
-  }, []);
+  }, [selectedSlot]);
 
   const handleSave = () => {
     if (
@@ -261,9 +266,8 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
         items[foundIndex] = tmp_selectedSlot;
         localStorage.setItem("slots", JSON.stringify(items));
       }
-
-      handleClose();
     }
+    window.location.reload()
   };
 
   const clearAll = () => {
@@ -296,6 +300,15 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
       <div
         style={{ display: selectedLabware.name != "N/A" ? "block" : "none" }}
       >
+
+        <span
+          style={{ fontSize: "18px", marginTop: "26px", userSelect: "none" }}
+        >
+          <strong>{selectedLabware}</strong>
+        </span>
+        <br />
+        <br />
+
         <div
           ref={selectionFrameRef}
           className="tr_selection-frame"
@@ -410,6 +423,8 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
           >
             <CIcon size="sm" icon={cilSave} /> SAVE
           </CButton>
+          <hr />
+          <br />
           <CButton
             className="standard-btn float-end"
             color="primary"
@@ -419,12 +434,6 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
             <CIcon size="sm" icon={cilSave} /> CLEAR
           </CButton>
         </div>
-
-        <span
-          style={{ fontSize: "24px", marginTop: "26px", userSelect: "none" }}
-        >
-          <strong>{selectedLabware}</strong>
-        </span>
       </div>
     </>
   );

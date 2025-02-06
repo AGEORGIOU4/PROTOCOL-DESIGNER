@@ -1,0 +1,47 @@
+.ab_selection-frame {
+  text-align: center;
+  border: 2px solid grey;
+  border-radius: 40px;
+  width: fit-content;
+  padding: 40px 40px 40px 20px;
+  margin: auto;
+  position: relative;
+  z-index: 0;
+}
+
+.ab_label-row {
+  padding-left: 40px;
+  height: 30px;
+  user-select: none;
+}
+
+.ab_label-col {
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+  user-select: none;
+}
+
+.ab_wells_grid {
+  width: 500px;
+}
+
+.ab_selectables {
+  aspect-ratio: 1/1;
+  background: #efefef;
+  border: 2px solid gray;
+  margin: 4px;
+  padding-right: 0 !important;
+}
+
+.ds-selected {
+  border: 2px solid #01aab1;
+  outline: 3px solid #01aab1;
+  outline-offset: -1px;
+  z-index: 1;
+}
+
+.ds-selector {
+  background: #01aab1 !important;
+  border: 1px solid #00575a !important;
+  opacity: 0.05;
+}

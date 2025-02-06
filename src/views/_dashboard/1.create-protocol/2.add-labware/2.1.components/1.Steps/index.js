@@ -341,6 +341,7 @@ const LabwareSteps = ({ active }) => {
         colorScheme="light"
         placement="start"
         position="fixed"
+        size="xl"
         visible={true}
         style={{
           padding: "0 6px 6px 6px ",

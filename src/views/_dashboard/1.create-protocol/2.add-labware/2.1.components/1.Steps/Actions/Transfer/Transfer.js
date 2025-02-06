@@ -467,7 +467,7 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
                 <CButton className="dial-btn-close" onClick={handleLocalClose}>
                   Close
                 </CButton>
-                <CButton disabled className="dial-btn-save" type="submit">
+                <CButton className="dial-btn-save" type="submit">
                   Save
                 </CButton>
               </CCol>

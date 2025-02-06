@@ -208,13 +208,6 @@ const Deck = ({ handleSelectedSlot, handleDblClick, newLabwareSelection }) => {
 
   return (
     <>
-      <div
-        style={{ display: "flex", alignItems: "center", margin: "10px 0 20px" }}
-      >
-        <CCol md={8}>
-          <strong>Please create a slot and add a labware</strong>
-        </CCol>
-      </div>
 
       {React.Children.toArray(
         deckSlots2D?.map((rows, index) => {
