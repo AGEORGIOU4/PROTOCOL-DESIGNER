@@ -3,6 +3,7 @@
   border: 2px solid grey;
   border-radius: 40px;
   width: fit-content;
+  height: 400px;
   padding: 40px 40px 40px 40px;
   margin: auto;
   position: relative;
@@ -30,14 +31,6 @@
   background: #efefef;
   border: 2px solid gray;
   margin: 18px;
-  padding-right: 0 !important;
-}
-
-.tr_selectables2 {
-  aspect-ratio: 1/1;
-  background: #efefef;
-  border: 2px solid gray;
-  margin: 27px 10px !important;
   padding-right: 0 !important;
 }
 

@@ -1,29 +1,26 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
+import chroma from "chroma-js";
+
 import {
-  CButton,
   CCol,
   CFormFeedback,
   CFormInput,
   CFormLabel,
   CRow,
 } from "@coreui/react-pro";
-import { colourStyles } from "../4.Liquids/data";
 import CreatableSelect from "react-select/creatable";
 import { GetRandomColor } from "src/_common/helpers";
 
+
 export const disableInputFieldsOnSelect = (value, action) => {
+  console.log(value)
+  console.log(action)
   if (value == "" && action == "") {
     document.getElementById("validationCustom01").disabled = true;
     document.getElementById("validationCustom02").disabled = true;
     document.getElementById("validationCustom03").disabled = true;
     document.getElementById("validationCustom04").disabled = true;
 
-  } else if (value == "") {
-    // When 'select' is selected open fields again
-    document.getElementById("validationCustom01").disabled = false;
-    document.getElementById("validationCustom02").disabled = false;
-    document.getElementById("validationCustom03").disabled = false;
-    document.getElementById("validationCustom04").disabled = false;
   } else {
     document.getElementById("validationCustom01").disabled = false;
     switch (action) {
@@ -53,6 +50,60 @@ export const disableInputFieldsOnSelect = (value, action) => {
     }
   }
 };
+
+
+const dot = (color = "transparent") => ({
+  alignItems: "center",
+  display: "flex",
+
+  ":before": {
+    backgroundColor: color,
+    borderRadius: 10,
+    content: '" "',
+    display: "block",
+    marginRight: 8,
+    height: 10,
+    width: 10,
+  },
+});
+
+const colourStyles = {
+  control: (styles) => ({ ...styles, backgroundColor: "white" }),
+  option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+    const color = chroma(data.color || "#fff");
+    return {
+      ...styles,
+      backgroundColor: isDisabled
+        ? undefined
+        : isSelected
+          ? data.color
+          : isFocused
+            ? color.alpha(0.1).css()
+            : undefined,
+      color: isDisabled
+        ? "#ccc"
+        : isSelected
+          ? chroma.contrast(color, "white") > 2
+            ? "white"
+            : "black"
+          : data.color,
+      cursor: isDisabled ? "not-allowed" : "default",
+
+      ":active": {
+        ...styles[":active"],
+        backgroundColor: !isDisabled
+          ? isSelected
+            ? data.color
+            : color.alpha(0.3).css()
+          : undefined,
+      },
+    };
+  },
+  input: (styles) => ({ ...styles, ...dot() }),
+  placeholder: (styles) => ({ ...styles, ...dot("#ccc") }),
+  singleValue: (styles, { data }) => ({ ...styles, ...dot(data.color) }),
+};
+
 
 const createOption = (id, value, color) => ({
   id: id,

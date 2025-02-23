@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { truncateText } from "src/_common/helpers";
 import { getSlotBtnClassName, getSlotLabwareImage } from "./helpers";
 import { cidDrop } from "@coreui/icons-pro";
+import { disableInputFieldsOnSelect } from "../3.Form/helpers";
 
 const DECK_TOTAL_COLUMNS = 3;
 
@@ -66,6 +67,8 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
       setIsSelected(item.id);
       handleSelectedSlot(item);
     }
+    console.log(item)
+    disableInputFieldsOnSelect("", item.labware_type);
   };
 
   const handleCreate = () => {
@@ -107,6 +110,7 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
     splitBoard();
 
     handleSelect(item);
+    disableInputFieldsOnSelect("", "create");
   };
 
   const handleDuplicate = (item) => {

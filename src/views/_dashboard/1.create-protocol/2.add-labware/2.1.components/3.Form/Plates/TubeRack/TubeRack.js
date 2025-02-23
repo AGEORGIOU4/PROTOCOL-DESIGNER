@@ -65,18 +65,14 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
   }, []);
 
   var rows = tube_racks[0].rows;
-  var rows2 = tube_racks[0].rows2;
   var cols = tube_racks[0].cols;
-  var cols2 = tube_racks[0].cols2;
   var squared = false;
 
   // Set Selected Labware
   const item = tube_racks.filter((item) => item.label === selectedLabware);
 
   rows = item[0].rows;
-  rows2 = item[0].rows2;
   cols = item[0].cols;
-  cols2 = item[0].cols2;
   squared = item[0].squared;
 
   // Set Up GRID
@@ -115,7 +111,7 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
             key={id}
             content={
               <>
-                <div style={{ textAlign: "left" }}>
+                <div >
                   <p>Liquid: {liquid}</p>
                   <p>Volume: {volume}ul</p>
                 </div>
@@ -138,60 +134,7 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
     row_index++;
   }
 
-  // Set Up GRID 2
-  const elems2 = [];
-  let row_index2 = 0;
 
-  while (row_index2 < rows2) {
-    const row = Array.from({ length: cols2 }).map((item, col_index2) => {
-      const tr_ref2 = createRef();
-      tubeRacksRef.current.push(tr_ref2);
-      let id = GetLetter(row_index2) + (parseInt(col_index2) + 3);
-
-      let liquid = "";
-      let volume = "";
-
-      let tmp_selected = selectedSlot.liquids.selected;
-      console.log(tmp_selected)
-      // tmp_selected?.map((selected, index) => {
-      //   selected?.wells?.map((well, index) => {
-      //     if (well == id) {
-      //       liquid = selected.liquid;
-      //       volume = selected.volume;
-      //     }
-      //   });
-      // });
-
-      return (
-        <>
-          <CTooltip
-            id={id}
-            key={id}
-            content={
-              <>
-                <div style={{ textAlign: "left" }}>
-                  <p>Liquid: {liquid}</p>
-                  <p>Volume: {volume}ul</p>
-                </div>
-              </>
-            }
-            placement="bottom"
-          >
-            <CCol
-              key={id}
-              id={id}
-              className="tr_selectables tr_selectables2"
-              style={{ borderRadius: squared ? "0" : "100%" }}
-              ref={tr_ref2}
-            ></CCol>
-          </CTooltip>
-        </>
-      );
-    });
-
-    elems2.push(row);
-    row_index2++;
-  }
 
   useEffect(() => {
     let items = JSON.parse(localStorage.getItem("slots")); // Check memory
@@ -317,23 +260,6 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
               }),
             )}
 
-            {/*  LABEL HEADERS 2 */}
-            {React.Children.toArray(
-              elems2?.map((row, index) => {
-                if (index === 0) {
-                  return row?.map((col, index) => {
-                    return (
-                      <CCol
-                        style={{ display: rows2 ? "grid" : "none" }}
-                        className="tr_label-col"
-                      >
-                        <span>{index + 3}</span>
-                      </CCol>
-                    );
-                  });
-                }
-              }),
-            )}
           </CRow>
 
           {/*  SLOTS */}
@@ -356,32 +282,6 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
                           {GetLetter(index)}
                         </span>
                         {row}
-                      </CRow>
-                    </>
-                  );
-                }),
-              )}
-            </CCol>
-
-            <CCol
-              style={{ display: rows2 ? "grid" : "none", marginLeft: "22px" }}
-            >
-              {React.Children.toArray(
-                elems2?.map((row, index) => {
-                  return (
-                    <>
-                      <CRow className={"tr_rowGrid"}>
-                        {row}
-                        <span
-                          style={{
-                            userSelect: "none",
-                            display: "flex",
-                            alignItems: "center",
-                            width: "0px",
-                          }}
-                        >
-                          {GetLetter(index)}
-                        </span>
                       </CRow>
                     </>
                   );

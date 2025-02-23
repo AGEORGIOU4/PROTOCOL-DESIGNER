@@ -26,6 +26,8 @@ import ReservoirSelection from "../../../3.Form/Plates/Reservoir/Reservoir";
 import AluminiumBlockSelection from "../../../3.Form/Plates/AluminiumBlock/AluminiumBlock";
 import { Notes } from "../../Components/notes";
 import { useTubeRackContext } from "src/context/TubeRackContext";
+import { Setting } from "iconsax-react";
+import { cilSettings } from "@coreui/icons";
 
 export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   const [visible, setVisible] = useState(false);
@@ -308,6 +310,7 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
             validated={validated}
             onSubmit={handleSubmit}
           >
+
             <div className="modal-header-row">
               <CCol md={7} style={{ paddingTop: "12px" }}>
                 <h5 className="modal-subtitle">TRANSFER</h5>
@@ -326,7 +329,7 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
             </CCol>
 
             <CCol md={2}>
-              <CFormLabel htmlFor="validationCustom02">Volume Per</CFormLabel>
+              <CFormLabel htmlFor="validationCustom02">Mix Volume (μL)</CFormLabel>
               <CInputGroup className="mb-3">
                 <CFormInput type="number" id="validationCustom02" value={volumePer} onChange={handleChangeVolumePer} required />
                 <CInputGroupText id="basic-addon2">μL</CInputGroupText>
@@ -336,14 +339,15 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
 
             <div className="modal-header-row">
               <CCol md={7} style={{ padding: "0" }}>
-                <h5 className="modal-subtitle">ASPIRATE</h5>
+                <h5 className="modal-subtitle">ASPIRATE <CIcon icon={cilSettings} /></h5>
+
               </CCol>
               <CCol md={5} style={{ paddingLeft: "8px" }}>
-                <h5 className="modal-subtitle">DISPENSE</h5>
+                <h5 className="modal-subtitle">DISPENSE <CIcon icon={cilSettings} /></h5>
               </CCol>
             </div>
 
-            <CCol md={4}>
+            <CCol md={3}>
               <CFormLabel htmlFor="validationCustom03">Source</CFormLabel>
               <CFormSelect
                 options={sourceItems}
@@ -355,12 +359,12 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
               <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
 
-            <CCol md={1}>
+            <CCol md={2}>
               <CFormLabel htmlFor="validationCustom04">Wells</CFormLabel>
               <CFormInput
                 style={{ caretColor: "transparent", background: '#01aab1', cursor: 'pointer', fontSize: 'smaller', borderRadius: '50px' }}
                 onClick={() => handleAddLiquids(false)}
-                placeholder="Select"
+                placeholder="Select Wells"
                 id="validationCustom04"
               />
 
@@ -370,7 +374,7 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
             {/* SPACER */}
             <CCol md={2}></CCol>
 
-            <CCol md={4}>
+            <CCol md={3}>
               <CFormLabel htmlFor="validationCustom05">Destination</CFormLabel>
               <CFormSelect
                 options={sourceItems}
@@ -382,41 +386,78 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
               <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
 
-            <CCol md={1}>
+            <CCol md={2}>
               <CFormLabel htmlFor="validationCustom06">Wells</CFormLabel>
               <CFormInput
                 style={{ caretColor: "transparent", background: '#01aab1', cursor: 'pointer', fontSize: 'smaller', borderRadius: '50px' }}
                 onClick={() => handleAddLiquids(true)}
-                placeholder="Select"
+                placeholder="Select Wells"
                 id="validationCustom06"
               />
               <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
 
-            <CCol md={2}>
-              <CFormCheck
-                id="mixBefore"
-                label="Mix Before"
-                onChange={handleCheckboxChange}
-                checked={checkboxStates.mixBefore}
-              />
+            <CCol md={5}>
+
+              <input style={{ marginRight: "10px" }} type="checkbox" id="preWetTip1" name="preWetTip1" checked />
+              <label for="preWetTip1">Pre-Wet Tip</label>
+              <br />
+              <input style={{ marginRight: "10px" }} type="checkbox" id="mixBefore1" name="mixBefore1" />
+              <label for="mixBefore1">Mix Before</label>
+              <br />
+              <input style={{ marginRight: "10px" }} type="checkbox" id="delay1" name="delay1" />
+              <label for="delay1">Delay</label>
+              <br />
+              <input style={{ marginRight: "10px" }} type="checkbox" id="touchTip1" name="touchTip1" />
+              <label for="touchTip1">Touch Tip</label>
+              <br />
+              <input style={{ marginRight: "10px" }} type="checkbox" id="airGap1" name="airGap1" />
+              <label for="airGap1">Air Gap</label>
+              <br />
+              <input style={{ marginRight: "10px" }} type="checkbox" id="puncture1" name="puncture" />
+              <label for="puncture1">Puncture</label>
+
             </CCol>
 
             {/* SPACER */}
-            <CCol md={5}></CCol>
+            <CCol md={2}></CCol>
 
-            <CCol md={2}>
-              <CFormCheck
-                id="mixAfter"
-                label="Mix After"
-                onChange={handleCheckboxChange}
-                checked={checkboxStates.mixAfter}
-              />
+            <CCol md={5}>
+              <input style={{ marginRight: "10px" }} type="checkbox" id="preWetTip1" name="preWetTip1" checked />
+              <label for="preWetTip1">Pre-Wet Tip</label>
+              <br />
+              <input style={{ marginRight: "10px" }} type="checkbox" id="mixBefore1" name="mixBefore1" />
+              <label for="mixBefore1">Mix Before</label>
+              <br />
+              <input style={{ marginRight: "10px" }} type="checkbox" id="delay1" name="delay1" />
+              <label for="delay1">Delay</label>
+              <br />
+              <input style={{ marginRight: "10px" }} type="checkbox" id="touchTip1" name="touchTip1" />
+              <label for="touchTip1">Touch Tip</label>
+              <br />
+              <input style={{ marginRight: "10px" }} type="checkbox" id="airGap1" name="airGap1" />
+              <label for="airGap1">Air Gap</label>
+              <br />
+              <input style={{ marginRight: "10px" }} type="checkbox" id="puncture1" name="puncture" />
+              <label for="puncture1">Puncture</label>
+
             </CCol>
+
+
+
+
+            {/* <CFormCheck
+              id="mixBefore"
+              label="Mix Before"
+              onChange={handleCheckboxChange}
+              checked={checkboxStates.mixBefore}
+            /> */}
+
+
 
             <div className="modal-header-row">
               <CCol md={7} style={{ paddingTop: "12px" }}>
-                <h5 className="modal-subtitle">STERILITY</h5>
+                <h5 className="modal-subtitle">STERILITY AND MOTION</h5>
               </CCol>
             </div>
 
@@ -430,18 +471,15 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
               />
               <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
-            <CCol md={6}>
-              <CFormLabel htmlFor="validationPath">Path</CFormLabel>
-              {/* Missing Icons from Figma as one entity please */}
-            </CCol>
+
             {/* Control Buttons */}
-            <CRow className="mt-3">
+            <CRow className="mt-4">
               <CCol
                 md={6}
                 style={{
                   display: "flex",
                   justifyContent: "flex-start",
-                  gap: "50px",
+                  gap: "20px",
                 }}
               >
                 <CButton
@@ -473,8 +511,8 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
               </CCol>
             </CRow>
           </CForm>
-        </CCol>
-      </CRow>
+        </CCol >
+      </CRow >
 
       <br />
 

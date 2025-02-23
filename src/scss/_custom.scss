@@ -1,4 +1,9 @@
 // Here you can add other styles
+body {
+  overflow: scroll;
+  min-height: 120vh;
+}
+
 .card,
 .dropdown-menu,
 .header,
@@ -55,6 +60,10 @@
 
 .sidebar-narrow-unfoldable:not(:hover) .sidebar-toggler {
   display: none;
+}
+
+#mixBefore {
+  display: block;
 }
 
 /* item box */

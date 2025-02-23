@@ -10,15 +10,9 @@ import {
   CRow,
 } from "@coreui/react-pro";
 import { useState } from "react";
-import CIcon from "@coreui/icons-react";
-import { cilReload } from "@coreui/icons";
-import { aluminium_blocks, reservoirs, tube_racks, well_plates } from "./Plates/data";
-import WellPlateSelection from "./Plates/WellPlate/WellPlate";
-import AddLabwareModal from "../5.Modal";
-import TubeRackSelection from "./Plates/TubeRack/TubeRack";
-import ReservoirSelection from "./Plates/Reservoir/Reservoir";
-import AluminiumBlockSelection from "./Plates/AluminiumBlock/AluminiumBlock";
-import { AddLiquids, disableInputFieldsOnSelect } from "./helpers";
+
+import { reservoirs, tube_racks, well_plates } from "./Plates/data";
+import { disableInputFieldsOnSelect } from "./helpers";
 
 export const Form = ({ selectedSlot, handleSubmitForm }) => {
 
