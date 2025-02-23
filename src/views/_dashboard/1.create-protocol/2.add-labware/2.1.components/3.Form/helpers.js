@@ -17,14 +17,13 @@ export const disableInputFieldsOnSelect = (value, action) => {
     document.getElementById("validationCustom02").disabled = true;
     document.getElementById("validationCustom03").disabled = true;
     document.getElementById("validationCustom04").disabled = true;
-    document.getElementById("validationCustom05").disabled = true;
+
   } else if (value == "") {
     // When 'select' is selected open fields again
     document.getElementById("validationCustom01").disabled = false;
     document.getElementById("validationCustom02").disabled = false;
     document.getElementById("validationCustom03").disabled = false;
     document.getElementById("validationCustom04").disabled = false;
-    document.getElementById("validationCustom05").disabled = false;
   } else {
     document.getElementById("validationCustom01").disabled = false;
     switch (action) {
@@ -32,31 +31,24 @@ export const disableInputFieldsOnSelect = (value, action) => {
         document.getElementById("validationCustom02").disabled = false;
         document.getElementById("validationCustom03").disabled = true;
         document.getElementById("validationCustom04").disabled = true;
-        document.getElementById("validationCustom05").disabled = true;
+
         break;
       case "well_plate":
         document.getElementById("validationCustom02").disabled = true;
         document.getElementById("validationCustom03").disabled = false;
         document.getElementById("validationCustom04").disabled = true;
-        document.getElementById("validationCustom05").disabled = true;
+
         break;
       case "reservoir":
         document.getElementById("validationCustom02").disabled = true;
         document.getElementById("validationCustom03").disabled = true;
         document.getElementById("validationCustom04").disabled = false;
-        document.getElementById("validationCustom05").disabled = true;
         break;
-      case "aluminium_block":
-        document.getElementById("validationCustom02").disabled = true;
-        document.getElementById("validationCustom03").disabled = true;
-        document.getElementById("validationCustom04").disabled = true;
-        document.getElementById("validationCustom05").disabled = false;
-        break;
+
       default:
         document.getElementById("validationCustom02").disabled = false;
         document.getElementById("validationCustom03").disabled = false;
         document.getElementById("validationCustom04").disabled = false;
-        document.getElementById("validationCustom05").disabled = false;
         break;
     }
   }

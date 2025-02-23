@@ -19,7 +19,6 @@ import AddLabwareModal from "./2.1.components/5.Modal";
 import WellSetup from "./2.1.components/2.Deck/WellSetup";
 
 const AddLabware = () => {
-  const [activeKey, setActiveKey] = useState(1);
   const [selectedSlot, setSelectedSlot] = useState("");
   const [openModal, setOpenModal] = useState(false);
 
@@ -27,10 +26,6 @@ const AddLabware = () => {
 
   const handleSelectedSlot = (selectedSlot) => {
     setSelectedSlot(selectedSlot);
-  };
-
-  const handleDblClick = () => {
-    // setOpenModal(true);
   };
 
   const handleSubmitForm = (newData) => {
@@ -65,17 +60,16 @@ const AddLabware = () => {
           <Form
             selectedSlot={selectedSlot}
             handleSubmitForm={handleSubmitForm}
-            openModal={openModal}
-            setOpenModal={setOpenModal}
           />
         </CRow>
+
+        <hr />
 
         <CRow>
 
           <CCol md={6}>
             <Deck
               handleSelectedSlot={handleSelectedSlot}
-              handleDblClick={handleDblClick}
               newLabwareSelection={newLabwareSelection}
             />
           </CCol>
@@ -85,7 +79,6 @@ const AddLabware = () => {
             <WellSetup
               selectedSlot={selectedSlot}
             />
-
           </CCol>
 
         </CRow>

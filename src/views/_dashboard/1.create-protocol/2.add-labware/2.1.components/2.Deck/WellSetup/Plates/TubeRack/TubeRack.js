@@ -64,24 +64,15 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
     }
   }, [selectedSlot]);
 
-  useEffect(() => {
-
-  }, [selectedSlot])
-
-
   var rows = tube_racks[0].rows;
-  var rows2 = tube_racks[0].rows2;
   var cols = tube_racks[0].cols;
-  var cols2 = tube_racks[0].cols2;
   var squared = false;
 
   // Set Selected Labware
   const item = tube_racks.filter((item) => item.label === selectedLabware);
 
   rows = item[0].rows;
-  rows2 = item[0].rows2;
   cols = item[0].cols;
-  cols2 = item[0].cols2;
   squared = item[0].squared;
 
   // Set Up GRID
@@ -111,6 +102,7 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
         console.log(e);
       }
 
+
       return (
         <>
           <CTooltip
@@ -119,13 +111,13 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
             key={id}
             content={
               <>
-                <div style={{ textAlign: "left" }}>
+                <div style={{ textAlign: "left", overflow: "hidden" }}>
                   <p>Liquid: {liquid}</p>
                   <p>Volume: {volume}ul</p>
                 </div>
               </>
             }
-            placement="bottom"
+            placement="top"
           >
             <CCol
               key={id}
@@ -140,62 +132,6 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
     });
     elems.push(row);
     row_index++;
-  }
-
-  // Set Up GRID 2
-  const elems2 = [];
-  let row_index2 = 0;
-
-  while (row_index2 < rows2) {
-    const row = Array.from({ length: cols2 }).map((item, col_index2) => {
-      const tr_ref2 = createRef();
-      tubeRacksRef.current.push(tr_ref2);
-      let id = GetLetter(row_index2) + (parseInt(col_index2) + 3);
-
-      let liquid = "";
-      let volume = "";
-
-      let tmp_selected = selectedSlot.liquids.selected;
-      console.log(tmp_selected)
-      // tmp_selected?.map((selected, index) => {
-      //   selected?.wells?.map((well, index) => {
-      //     if (well == id) {
-      //       liquid = selected.liquid;
-      //       volume = selected.volume;
-      //     }
-      //   });
-      // });
-
-      return (
-        <>
-          <CTooltip
-            style={{ display: 0 == 0 ? "block" : "none" }}
-            id={id}
-            key={id}
-            content={
-              <>
-                <div style={{ textAlign: "left" }}>
-                  <p>Liquid: {liquid}</p>
-                  <p>Volume: {volume}ul</p>
-                </div>
-              </>
-            }
-            placement="bottom"
-          >
-            <CCol
-              key={id}
-              id={id}
-              className="tr_selectables tr_selectables2"
-              style={{ borderRadius: squared ? "0" : "100%" }}
-              ref={tr_ref2}
-            ></CCol>
-          </CTooltip>
-        </>
-      );
-    });
-
-    elems2.push(row);
-    row_index2++;
   }
 
   useEffect(() => {
@@ -291,16 +227,16 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
         items?.map((item, index) => {
           document.getElementById(item.key).style.background = "#EFEFEF";
         });
+        console.log("hello")
       } catch (e) { }
     });
+
+
   };
 
   return (
     <>
-      <div
-        style={{ display: selectedLabware.name != "N/A" ? "block" : "none" }}
-      >
-
+      <div style={{ display: selectedLabware.name != "N/A" ? "block" : "none" }}>
         <span
           style={{ fontSize: "18px", marginTop: "26px", userSelect: "none" }}
         >
@@ -330,23 +266,7 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
               }),
             )}
 
-            {/*  LABEL HEADERS 2 */}
-            {React.Children.toArray(
-              elems2?.map((row, index) => {
-                if (index === 0) {
-                  return row?.map((col, index) => {
-                    return (
-                      <CCol
-                        style={{ display: rows2 ? "grid" : "none" }}
-                        className="tr_label-col"
-                      >
-                        <span>{index + 3}</span>
-                      </CCol>
-                    );
-                  });
-                }
-              }),
-            )}
+
           </CRow>
 
           {/*  SLOTS */}
@@ -376,35 +296,34 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
               )}
             </CCol>
 
-            <CCol
-              style={{ display: rows2 ? "grid" : "none", marginLeft: "22px" }}
-            >
-              {React.Children.toArray(
-                elems2?.map((row, index) => {
-                  return (
-                    <>
-                      <CRow className={"tr_rowGrid"}>
-                        {row}
-                        <span
-                          style={{
-                            userSelect: "none",
-                            display: "flex",
-                            alignItems: "center",
-                            width: "0px",
-                          }}
-                        >
-                          {GetLetter(index)}
-                        </span>
-                      </CRow>
-                    </>
-                  );
-                }),
-              )}
-            </CCol>
+
           </CRow>
         </div>
 
         <br style={{ userSelect: "none" }} />
+
+        <CRow>
+          <CCol>
+            <CButton
+              className="standard-btn"
+              color="primary"
+              onClick={handleSave}
+            >
+              <CIcon size="sm" icon={cilSave} /> SAVE
+            </CButton>
+
+          </CCol>
+          <CCol>
+            <CButton
+              className="standard-btn"
+              color="primary"
+              onClick={clearAll}
+            >
+              <CIcon size="sm" icon={cilSave} /> CLEAR
+            </CButton>
+          </CCol>
+        </CRow>
+        <hr />
 
         <h6 style={{ userSelect: "none" }}>Selected: </h6>
 
@@ -415,25 +334,9 @@ export default function TubeRackSelection({ selectedSlot, selectedLabware, selec
         ></CFormTextarea>
 
         <hr />
-        <div>
-          <CButton
-            className="standard-btn float-end"
-            color="primary"
-            onClick={handleSave}
-          >
-            <CIcon size="sm" icon={cilSave} /> SAVE
-          </CButton>
-          <hr />
-          <br />
-          <CButton
-            className="standard-btn float-end"
-            color="primary"
-            style={{ marginRight: "10px" }}
-            onClick={clearAll}
-          >
-            <CIcon size="sm" icon={cilSave} /> CLEAR
-          </CButton>
-        </div>
+
+        <br />
+        <br />
       </div>
     </>
   );

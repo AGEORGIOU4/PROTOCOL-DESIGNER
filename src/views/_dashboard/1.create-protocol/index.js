@@ -23,26 +23,26 @@ const CreateProtocol = () => {
   const [validated, setValidated] = useState(false);
   const [categories, setCategories] = useState([]);
 
-  useEffect(() => {
-    async function fetchCategories() {
-      const res_categories = await API_Services.RestApi(
-        "/categories/read",
-        "GET",
-      );
-      if (res_categories && res_categories.debug.status === "ok") {
-        let tmp_categories = [];
+  // useEffect(() => {
+  //   async function fetchCategories() {
+  //     const res_categories = await API_Services.RestApi(
+  //       "/categories/read",
+  //       "GET",
+  //     );
+  //     if (res_categories && res_categories.debug.status === "ok") {
+  //       let tmp_categories = [];
 
-        res_categories._data?.map((category, index) => {
-          tmp_categories[index] = {
-            label: category.name,
-            value: category.name,
-          };
-        });
-        setCategories(tmp_categories);
-      }
-    }
-    fetchCategories();
-  }, []);
+  //       res_categories._data?.map((category, index) => {
+  //         tmp_categories[index] = {
+  //           label: category.name,
+  //           value: category.name,
+  //         };
+  //       });
+  //       setCategories(tmp_categories);
+  //     }
+  //   }
+  //   fetchCategories();
+  // }, []);
 
   const handleSubmit = (event) => {
     const form = event.currentTarget;
@@ -109,15 +109,18 @@ const CreateProtocol = () => {
             </CCol>
             <CCol xs={12}>
               <CFormCheck
-                type="checkbox"
-                id="consentCheck"
+
+
                 defaultChecked={true}
                 label="I authorize Efevre Tech LTD to publish this protocol in the Protocol Library"
                 required
-              />
+              ></CFormCheck>
               <CFormFeedback invalid>
                 You must agree before submitting.
               </CFormFeedback>
+            </CCol>
+            <CCol xs={12}>
+              test
             </CCol>
             <CCol xs={12}>
               {/* <CButton color="primary" className='mt-3 basic-btn' type="submit"><CIcon icon={cilPlus} /> Create</CButton> */}
