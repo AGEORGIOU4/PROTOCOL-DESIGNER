@@ -1,15 +1,13 @@
 import React, { Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { CContainer, CSpinner } from "@coreui/react-pro";
+import routes from "src/routes";
 
 // routes config
-import routes from "../routes";
-import AppBreadcrumb from "./AppBreadcrumb";
 
 const AppContent = () => {
   return (
     <CContainer fluid style={{ padding: "0" }}>
-      <AppBreadcrumb />
       <Suspense fallback={<CSpinner color="primary" />}>
         <Routes>
           {routes.map((route, idx) => {

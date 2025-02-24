@@ -3,14 +3,8 @@ import {
   CButton,
   CContainer,
   CHeader,
-  CHeaderBrand,
-  CLink,
-  CNavItem,
-  CNavLink,
 } from "@coreui/react-pro";
 import CIcon from "@coreui/icons-react";
-import { logo } from "src/assets/brand/logo";
-import { cilArrowLeft } from "@coreui/icons";
 import { useNavigate } from "react-router";
 import { cisChevronLeftAlt } from "@coreui/icons-pro";
 
