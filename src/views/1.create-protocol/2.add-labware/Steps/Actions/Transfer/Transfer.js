@@ -8,12 +8,13 @@ import {
   CFormInput,
   CFormLabel,
   CFormSelect,
+  CFormSwitch,
   CInputGroup,
   CInputGroupText,
   CRow,
 } from "@coreui/react-pro";
 import { useState } from "react";
-import { options_ChangeTip, options_Pipettes } from "./data";
+import { options_ChangeTip, options_LiquidDetection, options_LiquidType, options_Pipettes, options_PressureDetection } from "./data";
 import CIcon from "@coreui/icons-react";
 import { cidEyedropper } from "@coreui/icons-pro";
 import AddLabwareModal from "../../../Modal";
@@ -26,8 +27,7 @@ import ReservoirSelection from "../../../Form/Plates/Reservoir/Reservoir";
 import AluminiumBlockSelection from "../../../Form/Plates/AluminiumBlock/AluminiumBlock";
 import { Notes } from "../../Components/notes";
 import { useTubeRackContext } from "src/context/TubeRackContext";
-import { Setting } from "iconsax-react";
-import { cilSettings } from "@coreui/icons";
+import { cilInfo, cilSettings } from "@coreui/icons";
 
 export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   const [visible, setVisible] = useState(false);
@@ -284,6 +284,9 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
   };
 
 
+
+  const [isPressureAIEnabled, setIsPressureAIEnabled] = useState(false);
+
   const handleChangeSelectedLiquid = (e, color) => {
     setSelectedLiquid(e);
   };
@@ -311,44 +314,99 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
             onSubmit={handleSubmit}
           >
 
-            <div className="modal-header-row">
-              <CCol md={7} style={{ paddingTop: "12px" }}>
-                <h5 className="modal-subtitle">TRANSFER</h5>
-              </CCol>
-            </div>
+            {/* TODO */}
+            <CCol md={5}>
+              <CFormLabel htmlFor="validationCustom01" style={{ width: "100%" }}>
+                <p>
+                  Volume (μL)
+                </p>
+              </CFormLabel>
+              <CInputGroup className="mb-3">
+                <CFormInput type="number" id="validationCustom02" value={volumePer} onChange={handleChangeVolumePer} required />
+                <CInputGroupText id="basic-addon2">μL</CInputGroupText>
+              </CInputGroup>
 
-            <CCol md={3}>
-              <CFormLabel htmlFor="validationCustom01">Pipette</CFormLabel>
+              <CFormFeedback valid>Looks good!</CFormFeedback>
+            </CCol>
+
+
+            {/* SPACER */}
+            <CCol md={2}></CCol>
+
+            {/* TODO */}
+            <CCol md={5}>
+              <CFormLabel htmlFor="validationCustom02" style={{ width: "100%" }}>
+                <p>
+                  Tips
+                  <span className="float-end">
+                    <CIcon
+                      size="sm"
+                      icon={cilInfo}
+                      style={{
+                        color: "black",
+                        cursor: "pointer",
+                      }}
+                    />
+                  </span>
+
+                </p>
+              </CFormLabel>
               <CFormSelect
                 options={options_Pipettes}
                 id="validationCustom01"
                 onChange={handleChangePipette}
                 required
               />
-              <CFormFeedback valid>Looks good!</CFormFeedback>
             </CCol>
 
-            <CCol md={2}>
-              <CFormLabel htmlFor="validationCustom02">Mix Volume (μL)</CFormLabel>
-              <CInputGroup className="mb-3">
-                <CFormInput type="number" id="validationCustom02" value={volumePer} onChange={handleChangeVolumePer} required />
-                <CInputGroupText id="basic-addon2">μL</CInputGroupText>
-              </CInputGroup>
-              <CFormFeedback valid>Looks good!</CFormFeedback>
+            {/* Aspirate, Dispense */}
+            <CCol
+              md={5}
+              style={{
+                borderBottom: `2px solid black`,
+              }}
+            >
+              <h5
+                className="modal-subtitle"
+                style={{ color: "black" }}
+              >
+                ASPIRATE
+              </h5>
             </CCol>
 
-            <div className="modal-header-row">
-              <CCol md={7} style={{ padding: "0" }}>
-                <h5 className="modal-subtitle">ASPIRATE</h5>
+            {/* SPACER */}
+            <CCol md={2}></CCol>
 
-              </CCol>
-              <CCol md={5} style={{ paddingLeft: "8px" }}>
-                <h5 className="modal-subtitle">DISPENSE</h5>
-              </CCol>
-            </div>
+            <CCol
+              md={5}
+              style={{
+                borderBottom: `2px solid black`,
+              }}
+            >
+              <h5
+                className="modal-subtitle"
+                style={{ color: "black" }}
+              >
+                DISPENSE
+              </h5>
+
+            </CCol>
+
 
             <CCol md={3}>
-              <CFormLabel htmlFor="validationCustom03">Source</CFormLabel>
+              <CFormLabel htmlFor="validationCustom03" style={{ width: "100%" }}>
+                Source
+                <span className="float-end">
+                  <CIcon
+                    size="sm"
+                    icon={cilInfo}
+                    style={{
+                      color: "black",
+                      cursor: "pointer",
+                    }}
+                  />
+                </span>
+              </CFormLabel>
               <CFormSelect
                 options={sourceItems}
                 id="validationCustom03"
@@ -360,9 +418,20 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
             </CCol>
 
             <CCol md={2}>
-              <CFormLabel htmlFor="validationCustom04">Wells</CFormLabel>
+              <CFormLabel htmlFor="validationCustom04" style={{ width: "100%" }}>Wells
+                <span className="float-end">
+                  <CIcon
+                    size="sm"
+                    icon={cilInfo}
+                    style={{
+                      color: "black",
+                      cursor: "pointer",
+                    }}
+                  />
+                </span>
+              </CFormLabel>
               <CFormInput
-                style={{ caretColor: "transparent", background: '#01aab1', cursor: 'pointer', fontSize: 'smaller', borderRadius: '50px' }}
+                style={{ caretColor: "transparent" }}
                 onClick={() => handleAddLiquids(false)}
                 placeholder="Select Wells"
                 id="validationCustom04"
@@ -375,7 +444,18 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
             <CCol md={2}></CCol>
 
             <CCol md={3}>
-              <CFormLabel htmlFor="validationCustom05">Destination</CFormLabel>
+              <CFormLabel htmlFor="validationCustom05" style={{ width: "100%" }}>Destination
+                <span className="float-end">
+                  <CIcon
+                    size="sm"
+                    icon={cilInfo}
+                    style={{
+                      color: "black",
+                      cursor: "pointer",
+                    }}
+                  />
+                </span>
+              </CFormLabel>
               <CFormSelect
                 options={sourceItems}
                 id="validationCustom05"
@@ -387,9 +467,20 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
             </CCol>
 
             <CCol md={2}>
-              <CFormLabel htmlFor="validationCustom06">Wells</CFormLabel>
+              <CFormLabel htmlFor="validationCustom06" style={{ width: "100%" }}>Wells
+                <span className="float-end">
+                  <CIcon
+                    size="sm"
+                    icon={cilInfo}
+                    style={{
+                      color: "black",
+                      cursor: "pointer",
+                    }}
+                  />
+                </span>
+              </CFormLabel>
               <CFormInput
-                style={{ caretColor: "transparent", background: '#01aab1', cursor: 'pointer', fontSize: 'smaller', borderRadius: '50px' }}
+                style={{ caretColor: "transparent" }}
                 onClick={() => handleAddLiquids(true)}
                 placeholder="Select Wells"
                 id="validationCustom06"
@@ -401,19 +492,19 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
 
 
               <input style={{ marginRight: "10px" }} type="checkbox" id="mixBefore1" name="mixBefore1" />
-              <label for="mixBefore1">Mix Before</label>
+              <label for="mixBefore1">Mix Before Aspiration</label>
               <br />
               <input style={{ marginRight: "10px" }} type="checkbox" id="delay1" name="delay1" />
-              <label for="delay1">Delay</label>
+              <label for="delay1">Air Gap</label>
               <br />
               <input style={{ marginRight: "10px" }} type="checkbox" id="touchTip1" name="touchTip1" />
-              <label for="touchTip1">Touch Tip</label>
+              <label for="touchTip1">Delay Before</label>
               <br />
               <input style={{ marginRight: "10px" }} type="checkbox" id="airGap1" name="airGap1" />
-              <label for="airGap1">Air Gap</label>
+              <label for="airGap1">Delay After</label>
               <br />
               <input style={{ marginRight: "10px" }} type="checkbox" id="puncture1" name="puncture" />
-              <label for="puncture1">Puncture</label>
+              <label for="puncture1">Slow Aspirate</label>
 
             </CCol>
 
@@ -423,98 +514,366 @@ export const TransferForm = ({ onClose, onDelete, stepId, stepTitle }) => {
             <CCol md={5}>
 
               <input style={{ marginRight: "10px" }} type="checkbox" id="mixBefore1" name="mixBefore1" />
-              <label for="mixBefore1">Mix Before</label>
+              <label for="mixBefore1">Mix After Dispense</label>
               <br />
               <input style={{ marginRight: "10px" }} type="checkbox" id="delay1" name="delay1" />
-              <label for="delay1">Delay</label>
+              <label for="delay1">Air Gap</label>
               <br />
               <input style={{ marginRight: "10px" }} type="checkbox" id="touchTip1" name="touchTip1" />
-              <label for="touchTip1">Touch Tip</label>
+              <label for="touchTip1">Delay Before</label>
               <br />
               <input style={{ marginRight: "10px" }} type="checkbox" id="airGap1" name="airGap1" />
-              <label for="airGap1">Air Gap</label>
+              <label for="airGap1">Delay After</label>
               <br />
               <input style={{ marginRight: "10px" }} type="checkbox" id="puncture1" name="puncture" />
-              <label for="puncture1">Puncture</label>
+              <label for="puncture1">Slow Dispense</label>
+              <br />
+              <input style={{ marginRight: "10px" }} type="checkbox" id="puncture1" name="puncture" />
+              <label for="puncture1">Blowout</label>
 
             </CCol>
 
 
+            <CCol>
+              <CFormLabel htmlFor="validationCustom010" style={{ width: "100%" }}>
+                Change tip
+              </CFormLabel>
+              <CFormSelect
+                options={options_ChangeTip}
+                id="validationCustom010"
+                value={selectedSource || ""}
+                required
+              />
+            </CCol>
 
-
-            {/* <CFormCheck
-              id="mixBefore"
-              label="Mix Before"
-              onChange={handleCheckboxChange}
-              checked={checkboxStates.mixBefore}
-            /> */}
 
 
 
             <div className="modal-header-row">
-              <CCol md={7} style={{ paddingTop: "12px" }}>
-                <h5 className="modal-subtitle">STERILITY AND MOTION</h5>
+              <CCol md={12} style={{ paddingTop: "12px", }}>
+                <h5 className="modal-subtitle">PIPETTING SETTINGS</h5>
+                <span className="float-end">
+                  <CIcon
+                    size="sm"
+                    icon={cilSettings}
+                    style={{
+                      color: "black",
+                      cursor: "pointer",
+                    }}
+                  />
+                </span>
               </CCol>
             </div>
 
-            <CCol md={6}>
-              <CFormLabel htmlFor="validationCustom05">Change Tip</CFormLabel>
-              <CFormSelect
-                options={options_ChangeTip}
-                id="validationCustom05"
-                onChange={handleOnChangeSelectedChangeTip}
-                required
-              />
-              <CFormFeedback valid>Looks good!</CFormFeedback>
-            </CCol>
 
-            {/* Control Buttons */}
-            <CRow className="mt-4">
-              <CCol
-                md={6}
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-start",
-                  gap: "20px",
-                }}
-              >
-                <CButton
-                  className="dial-btn-left"
-                  onClick={() =>
-                    onDelete({ target: { id: stepId, value: stepTitle } })
-                  }
-                >
-                  Delete
-                </CButton>
-                <CButton className="dial-btn-left" onClick={handleNotesClick}>
-                  Notes
-                </CButton>
+            <CRow className="align-items-center">
+              <CCol>
+                <p className="mb-0">Pressure Monitored Pipetting AI</p>
               </CCol>
-              <CCol
-                md={6}
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  gap: "50px",
-                }}
-              >
-                <CButton className="dial-btn-close" onClick={handleLocalClose}>
-                  Close
-                </CButton>
-                <CButton className="dial-btn-save" type="submit">
-                  Save
-                </CButton>
+              <CCol xs="auto">
+                <CFormSwitch
+                  id="pressurePipettingAI"
+                  label=""
+                  checked={isPressureAIEnabled}
+                  onChange={() => setIsPressureAIEnabled(!isPressureAIEnabled)}
+                />
               </CCol>
             </CRow>
+
+
+            <div style={{ marginBottom: "20px" }}></div>
+            <CRow>
+              <CCol md={5}>
+                <CFormLabel htmlFor="validationCustom05">Liquid Type</CFormLabel>
+                <CFormSelect
+                  options={options_LiquidType}
+                  id="validationCustom05"
+                  // onChange={handleOnChangeSelectedChangeTip}
+                  required
+                />
+                <CFormFeedback valid>Looks good!</CFormFeedback>
+              </CCol>
+            </CRow>
+
+            <div style={{ marginBottom: "10px" }}></div>
+
+            <CRow>
+              <CCol md={5}>
+                <CFormLabel htmlFor="validationCustom06">Liquid Detection</CFormLabel>
+                <CFormSelect
+                  options={options_LiquidDetection}
+                  id="validationCustom06"
+                  // onChange={handleOnChangeSelectedChangeTip}
+                  required
+                />
+                <CFormFeedback valid>Looks good!</CFormFeedback>
+              </CCol>
+            </CRow>
+
+            <div style={{ marginBottom: "10px" }}></div>
+
+            <CRow>
+              <CCol md={5}>
+                <CFormLabel htmlFor="validationCustom07">Pressure Detection Mode</CFormLabel>
+                <CFormSelect
+                  options={options_PressureDetection}
+                  id="validationCustom07"
+                  // onChange={handleOnChangeSelectedChangeTip}
+                  required
+                />
+                <CFormFeedback valid>Looks good!</CFormFeedback>
+              </CCol>
+            </CRow>
+
+            {/* Aspirate, Dispense */}
+            <CCol
+              md={5}
+              style={{
+                borderBottom: `2px solid black`,
+              }}
+            >
+              <h5
+                className="modal-subtitle"
+                style={{ color: "black" }}
+              >
+                ASPIRATE
+              </h5>
+            </CCol>
+
+            {/* SPACER */}
+            <CCol md={2}></CCol>
+
+            <CCol
+              md={5}
+              style={{
+                borderBottom: `2px solid black`,
+              }}
+            >
+              <h5
+                className="modal-subtitle"
+                style={{ color: "black" }}
+              >
+                DISPENSE
+              </h5>
+
+            </CCol>
+
+            <div style={{ marginBottom: "10px" }}></div>
+
+            <CRow>
+
+              <CCol md={3} style={{ marginBottom: "10px" }}>
+                <CFormLabel htmlFor="validationCustom03" style={{ width: "100%" }}>Aspirate Position
+
+                  <span className="float-end">
+                    <CIcon
+                      size="sm"
+                      icon={cilInfo}
+                      style={{
+                        color: "black",
+                        cursor: "pointer",
+                      }}
+                    />
+                  </span>
+                </CFormLabel>
+                <CFormSelect
+                  options={sourceItems}
+                  id="validationCustom03"
+                  value={selectedSource || ""}
+                  onChange={(e) => handleChangeSource(e)}
+                  required
+                />
+                <CFormFeedback valid>Looks good!</CFormFeedback>
+              </CCol>
+
+              <CCol md={2}>
+                <CFormLabel htmlFor="validationCustom03"
+                  style={{ width: "100%" }}>Offset
+                  <span className="float-end">
+                    <CIcon
+                      size="sm"
+                      icon={cilInfo}
+                      style={{
+                        color: "black",
+                        cursor: "pointer",
+                      }}
+                    />
+                  </span>
+                </CFormLabel>
+                <CFormSelect
+                  options={sourceItems}
+                  id="validationCustom03"
+                  value={selectedSource || ""}
+                  onChange={(e) => handleChangeSource(e)}
+                  required
+                />
+                <CFormFeedback valid>Looks good!</CFormFeedback>
+              </CCol>
+
+
+              {/* SPACER */}
+              <CCol md={2}></CCol>
+
+              <CCol md={3}>
+                <CFormLabel htmlFor="validationCustom03" style={{ width: "100%" }}>Dispense Mode
+                  <span className="float-end">
+                    <CIcon
+                      size="sm"
+                      icon={cilInfo}
+                      style={{
+                        color: "black",
+                        cursor: "pointer",
+                      }}
+                    />
+                  </span>
+
+                </CFormLabel>
+                <CFormSelect
+                  options={sourceItems}
+                  id="validationCustom03"
+                  value={selectedSource || ""}
+                  onChange={(e) => handleChangeSource(e)}
+                  required
+                />
+                <CFormFeedback valid>Looks good!</CFormFeedback>
+              </CCol>
+
+              <CCol md={2}>
+                <CFormLabel htmlFor="validationCustom03" style={{ width: "100%" }}>Offset
+                  <span className="float-end">
+                    <CIcon
+                      size="sm"
+                      icon={cilInfo}
+                      style={{
+                        color: "black",
+                        cursor: "pointer",
+                      }}
+                    />
+                  </span>
+                </CFormLabel>
+                <CFormSelect
+                  options={sourceItems}
+                  id="validationCustom03"
+                  value={selectedSource || ""}
+                  onChange={(e) => handleChangeSource(e)}
+                  required
+                />
+                <CFormFeedback valid>Looks good!</CFormFeedback>
+              </CCol>
+
+              <div style={{ marginBottom: "10px" }}></div>
+
+              <CCol md={5}>
+                <CFormLabel htmlFor="validationCustom03" style={{ width: "100%" }}>Sensitivity
+                  <span className="float-end">
+                    <CIcon
+                      size="sm"
+                      icon={cilInfo}
+                      style={{
+                        color: "black",
+                        cursor: "pointer",
+                      }}
+                    />
+                  </span>
+                </CFormLabel>
+                <CFormSelect
+                  options={sourceItems}
+                  id="validationCustom03"
+                  value={selectedSource || ""}
+                  onChange={(e) => handleChangeSource(e)}
+                  required
+                />
+                <CFormFeedback valid>Looks good!</CFormFeedback>
+              </CCol>
+
+              {/* SPACER */}
+              <CCol md={2}></CCol>
+
+              <CCol md={5}>
+                <CFormLabel htmlFor="validationCustom03" style={{ width: "100%" }}>Sensitivity
+                  <span className="float-end">
+                    <CIcon
+                      size="sm"
+                      icon={cilInfo}
+                      style={{
+                        color: "black",
+                        cursor: "pointer",
+                      }}
+                    />
+                  </span>
+                </CFormLabel>
+                <CFormSelect
+                  options={sourceItems}
+                  id="validationCustom03"
+                  value={selectedSource || ""}
+                  onChange={(e) => handleChangeSource(e)}
+                  required
+                />
+                <CFormFeedback valid>Looks good!</CFormFeedback>
+              </CCol>
+
+
+
+              <div style={{ marginBottom: "10px" }}></div>
+
+            </CRow>
+
+            <p>Allow Empty Cavity
+              <label class="switch" style={{ marginLeft: "10px" }}>
+                <input type="checkbox" />
+                <span class="slider round"></span>
+              </label>
+            </p>
+
           </CForm>
         </CCol >
+
+
       </CRow >
 
       <br />
-
+      {/* Buttons */}
+      <CRow className="mt-3" style={{ position: 'sticky', bottom: 0 }}>
+        <CCol
+          md={6}
+          style={{
+            display: "flex",
+            justifyContent: "flex-start",
+            gap: "50px",
+          }}
+        >
+          <CButton
+            className="dial-btn-left"
+            onClick={() =>
+              onDelete({ target: { id: stepId, value: stepTitle } })
+            }
+          >
+            Delete
+          </CButton>
+          <CButton className="dial-btn-left" onClick={handleNotesClick}>
+            Notes
+          </CButton>
+        </CCol>
+        <CCol
+          md={6}
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            gap: "50px",
+          }}
+        >
+          <CButton className="dial-btn-close" onClick={handleLocalClose}>
+            Close
+          </CButton>
+          <CButton disabled className="dial-btn-save" type="submit">
+            Save
+          </CButton>
+        </CCol>
+      </CRow>
 
 
       {/* Notes Component */}
+
       <Notes isNotesOpen={isNotesOpen} onClose={closeNotes} />
 
       <AddLabwareModal

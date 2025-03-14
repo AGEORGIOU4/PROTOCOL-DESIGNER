@@ -145,16 +145,6 @@ const Deck = ({ handleSelectedSlot, newLabwareSelection }) => {
   };
 
   const handleEdit = () => {
-    if (deckSlots1D.length > 0) {
-      let tmp_arr = deckSlots1D;
-      let index = tmp_arr[0].findIndex(
-        (item) => item.id == newLabwareSelection.id,
-      );
-      tmp_arr[0][index] = newLabwareSelection;
-      setDeckSlots1D(tmp_arr);
-
-      splitBoard();
-    }
   };
 
   const handleDelete = (id, name) => {

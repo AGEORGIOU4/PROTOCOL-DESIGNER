@@ -54,13 +54,13 @@ const AddLabwareModal = ({
           </CModalHeader>
         )}
         <CModalBody>{children}</CModalBody>
-        {showFooter &&
+        {/* {showFooter &&
           <CModalFooter style={{ justifyContent: 'start', fontSize: 'large' }}>
             <strong>
               Step {stepIndex + 1} ({stepID})
             </strong>
           </CModalFooter>
-        }
+        } */}
       </CModal>
     </>
   );
