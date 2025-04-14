@@ -1,20 +1,22 @@
-import React from 'react'
-import { AppAside, AppContent, AppSidebar, AppFooter, AppHeader } from '../components/index'
+import React from "react";
+import { AppContent } from "../components/index";
 
 const DefaultLayout = () => {
   return (
     <>
       {/* <AppSidebar /> */}
+      {/* {currentHash.includes('add-labware') && <LabwareSteps />} */}
+
       <div className="wrapper d-flex flex-column min-vh-100 ">
-        {/* <AppHeader /> */}
         <div className="body flex-grow-1 px-3">
+          {/* <AppHeader /> */}
           <AppContent />
         </div>
         {/* <AppFooter /> */}
       </div>
-      <AppAside />
+      {/* <AppAside /> */}
     </>
-  )
-}
+  );
+};
 
-export default DefaultLayout
+export default DefaultLayout;

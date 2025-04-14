@@ -1,13 +1,23 @@
 // Here you can add other styles
+body {
+  overflow: scroll;
+  min-height: 120vh;
+}
+
 .card,
 .dropdown-menu,
 .header,
 .sidebar {
-  box-shadow: rgb(50 50 93 / 2%) 0 2px 5px -1px, rgb(0 0 0 / 5%) 0 1px 3px -1px;
+  box-shadow:
+    rgb(50 50 93 / 2%) 0 2px 5px -1px,
+    rgb(0 0 0 / 5%) 0 1px 3px -1px;
 }
 
 .sidebar-overlaid {
-  box-shadow: rgb(50 50 93 / 2%) 0 2px 5px -1px, rgb(0 0 0 / 5%) 0 1px 3px -1px, 0 5px 6px -3px rgb(0 0 0 / 25%);
+  box-shadow:
+    rgb(50 50 93 / 2%) 0 2px 5px -1px,
+    rgb(0 0 0 / 5%) 0 1px 3px -1px,
+    0 5px 6px -3px rgb(0 0 0 / 25%);
 }
 
 .card-header {
@@ -19,7 +29,7 @@
 }
 
 .sidebar-nav {
-  margin: .75rem;
+  margin: 0.75rem;
 
   .nav-link {
     @include border-radius($border-radius);
@@ -52,6 +62,9 @@
   display: none;
 }
 
+#mixBefore {
+  display: block;
+}
 
 /* item box */
 .select-box {
@@ -64,13 +77,13 @@
   margin: 5px;
   border-radius: 5px;
   font-size: 14px;
-  color: #5A5A5A;
+  color: #5a5a5a;
   box-sizing: border-box;
 }
 
 /* selected item box */
 .select-box.selected {
-  background: #64B5F6;
+  background: #64b5f6;
   color: white;
 }
 
@@ -129,7 +142,7 @@ h2 {
   font-weight: bold;
   padding: 1em 0 0.5em 0;
   margin-bottom: 1em;
-  border-bottom: 1px solid #ECECEB;
+  // border-bottom: 1px solid #ECECEB;
   color: black;
 }
 
@@ -160,7 +173,7 @@ h1 a {
 }
 
 pre {
-  background: #F5F5F5;
+  background: #f5f5f5;
   border-radius: 3px;
   margin: 0;
   padding: 20px;
@@ -175,10 +188,12 @@ pre {
 }
 
 .basic-btn {
-  border-radius: 35px !important;
+  border-radius: 0.375rem !important;
+  padding: 0.375rem 0.75rem !important;
   font-style: normal;
   font-weight: 700 !important;
   color: white !important;
+  width: 100%;
 }
 
 .basic-btn:hover {
@@ -186,65 +201,158 @@ pre {
   border: 1px solid black;
 }
 
+.form-btn {
+  border-radius: 0 !important;
+  padding: 1.1rem !important;
+  font-style: normal;
+  font-weight: 700 !important;
+  color: white !important;
+  width: 100%;
+}
+
+.form-btn:hover {
+  background-color: black;
+  border: 1px solid black;
+}
 
 // ============== ADD LABWARE ============== //
-.add-labware-slot-btn {
-  background-color: white;
-  border: none;
+.standard-btn {
+  background-color: #585858;
+  border: 2px solid #585858;
+  padding: 0.375rem 0.75rem !important;
+  font-size: 14px;
+  border-radius: 0 !important;
+  color: white;
   width: 100%;
-  height: 8rem;
-  text-align: center;
-  font-size: 50px;
+  font-weight: 900;
+}
+
+.standard-btn:active {
+  background-color: #585858;
+  border: 2px solid #585858;
+  box-shadow: none !important;
+  outline: 0;
+}
+
+.standard-btn:focus {
+  outline: 0;
+}
+
+.standard-btn:hover {
+  background-color: black;
+  border: 2px solid black;
+  border-radius: 0;
   color: #dedede;
   font-weight: 900;
+}
+
+.standard-btn.disabled {
+  background-color: black;
+  border: 2px solid black;
+  border-radius: 0;
+  color: #dedede;
+  font-weight: 900;
+  opacity: 0.2;
+}
+
+.cancel-btn {
+  background-color: transparent;
+  border-radius: 100%;
+  font-size: 16px;
+  color: #fff;
+  font-weight: 900;
+}
+
+// .cancel-btn:active {
+//   background-color: #ebedef;
+//   border: 2px solid #ebedef;
+//   box-shadow: none !important;
+//   outline: 0;
+// }
+
+// .cancel-btn:focus {
+//   outline: 0;
+// }
+
+// .cancel-btn:hover {
+//   background-color: transparent;
+//   border-radius: 100%;
+//   font-size: 16px;
+//   color: #fff;
+//   font-weight: 900;
+// }
+
+.add-labware-slot-btn-create {
+  background-color: white;
+  border: 6px solid #f1f1f1;
+  border-radius: 16px;
+  max-width: 100%;
+  text-align: center;
+  font-size: initial;
+  color: #585858 !important;
+  font-weight: 900;
+  padding: 0;
+}
+
+.add-labware-slot-btn-create:hover {
+  border: 6px solid #01aab1;
+  border-radius: 16px;
+  background-color: white !important;
+  color: #ffffff;
+}
+
+.add-labware-slot-btn {
+  background-color: white;
+  border: 6px solid #f1f1f1;
+  border-radius: 16px;
+  max-width: 100%;
+  text-align: center;
+  font-size: initial;
+  color: #fff;
+  font-weight: 900;
+  padding: 0;
+}
+
+.add-labware-slot-btn-img {
+  background-color: white;
+  border-radius: 16px;
+  max-width: 100%;
+  text-align: center;
+  font-size: initial;
+  background-size: cover !important;
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
 }
 
 .add-labware-slot-btn:active {
-  background-color: #585858 !important;
-  border: none !important;
+  background-color: #01aab1 !important;
+  border: 6px solid #f1f1f1;
+  border-radius: 16px;
   box-shadow: none !important;
-  color: #dedede !important;
+  color: #ffffff !important;
 }
 
 .add-labware-slot-btn:hover {
-  background-color: #585858;
-  color: #dedede;
+  border: 6px solid #01aab1;
+  border-radius: 16px;
+  background-color: white !important;
+  color: #ffffff;
 }
 
-.add-labware-btn {
-  background-color: white;
-  border: 2px solid #585858;
-  border-radius: 0;
-  color: #585858;
-  width: 100%;
-  height: 4em;
+.slot-label-row {
+  color: black;
+  padding: 4px;
+  border-radius: 16px;
+  font-weight: 100;
+  margin-top: 5px;
+  position: relative;
+  z-index: -1;
   text-align: center;
-  font-size: 20px;
-  font-weight: 900;
-  margin-bottom: 20px;
 }
 
-.add-labware-btn:active {
-  background-color: #585858 !important;
-  color: white !important;
-  border: none !important;
-  box-shadow: none !important;
-  outline: 0;
-}
-
-.add-labware-btn:focus {
-  outline: 0;
-}
-
-.add-labware-btn:hover {
-  background-color: #585858;
-  border: 2px solid #585858;
-  border-radius: 0;
-  color: #dedede;
-}
-
-.btn-selected {
-  background: #585858 !important;
+.add-labware-slot-btn-selected {
+  border: 6px solid #01aab1 !important;
+  color: #fff !important;
+  // border: 6px solid #f1f1f1;
 }
 
 .dot-div {
@@ -263,4 +371,485 @@ pre {
   width: 100%;
 }
 
+.action-row {
+  padding: 6px 6px 0 !important;
+}
+
+.trash-btn {
+  border: none;
+}
+
+.trash-btn:hover {
+  background: none;
+  border: none;
+  color: #b92626;
+}
+
+.slot-action-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.css-v68sna-control {
+  display: block;
+  width: 100%;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  border: var(--cui-border-width) solid var(--cui-form-select-border-color, var(--cui-border-color));
+  border-color: var(--cui-border-color) !important;
+  border-radius: 0.375rem !important;
+  transition:
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
+  border-style: none;
+}
+
+.css-blhudp-control:hover {
+  border-color: var(--cui-form-select-focus-border-color, #80d5d8) !important;
+  outline: 0 !important;
+  box-shadow: 0 0 0 0.25rem rgba(1, 170, 177, 0.25) !important;
+}
+
+.css-blhudp-control {
+  border-color: var(--cui-form-select-focus-border-color, #80d5d8) !important;
+  outline: 0 !important;
+  box-shadow: 0 0 0 0.25rem rgba(1, 170, 177, 0.25) !important;
+}
+
+.css-13iuoa8-control {
+  background: #ebedef !important;
+}
+
+.color-picker {
+  padding: 0 !important;
+  width: 100% !important;
+  box-shadow: none !important;
+  border-radius: var(--cui-border-radius) !important;
+  border: var(--cui-border-width) solid var(--cui-input-border-color, var(--cui-border-color)) !important;
+  margin-bottom: 6px;
+}
+
+.sketch-picker {
+  width: 30px;
+  box-shadow: none !important;
+}
+
+.add-labware-modal {
+  display: flex !important;
+  height: auto !important;
+  box-shadow: 0 0.25rem 1rem 0 rgba(0, 0, 0, 0.25);
+  width: calc(100% - 26rem);
+  right: 0 !important;
+  //overflow-y: scroll !important;
+}
+
+.add-labware-modal-tb {
+  display: flex !important;
+
+  box-shadow: 0 0.25rem 1rem 0 rgba(0, 0, 0, 0.25);
+  width: calc(100% - 26rem);
+  right: 0 !important;
+  overflow-y: scroll !important;
+}
+
+.modal {
+  left: auto !important;
+  right: 0 !important;
+}
+
+.modal-backdrop {
+  background-color: #000000b3;
+  opacity: 1 !important;
+}
+
+.modal-static .modal-dialog {
+  transform: scale(1) !important;
+}
+
+.modal-step-h {
+  position: absolute;
+  left: 16px;
+  font-weight: 900;
+}
+
+.modal-action-btn {
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.modal-action-btn:hover {
+  background: none;
+  border: none;
+  text-decoration: underline;
+  box-shadow: none;
+}
+
+.modal-action-btn:focus {
+  outline: none;
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.modal-action-btn:active {
+  background: none;
+  border: none;
+  text-decoration: underline;
+  box-shadow: none;
+}
+
+.modal-title {
+  font-size: large !important;
+  font-weight: 600 !important;
+  color: #666666;
+}
+
+.modal-subtitle {
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  color: #666666;
+}
+
+.modal-header-row {
+  display: flex;
+  margin: 0;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px 16px 10px;
+  border-bottom: var(--cui-modal-header-border-width) solid var(--cui-modal-header-border-color);
+  border-top-left-radius: var(--cui-modal-inner-border-radius);
+  border-top-right-radius: var(--cui-modal-inner-border-radius);
+}
+
 //=======================//
+
+.custom-breadcrumb {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  font-size: small;
+  color: #01aab1;
+  background: #e9ecef;
+  padding: 6px;
+  z-index: 10000000;
+  margin-bottom: 0;
+  border-radius: 0;
+}
+
+.swal2-confirm {
+  background: #01aab1 !important;
+  padding: 0.375rem 0.75rem !important;
+  font-style: normal;
+  font-weight: 700 !important;
+}
+
+.swal2-confirm:hover {
+  background: black !important;
+}
+
+.swal2-cancel {
+  background: #585858 !important;
+  padding: 0.375rem 0.75rem !important;
+  font-style: normal;
+  font-weight: 700 !important;
+}
+
+.swal2-cancel:hover {
+  background: black !important;
+}
+
+.swal2-popup .swal2-styled:focus {
+  box-shadow: none !important;
+}
+
+// Drag and Drop Steps
+.App {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.add-step-btn {
+  background-color: #585858;
+  border: 2px solid #585858;
+  padding: 0.375rem 0.75rem !important;
+  // border-radius: 0.375rem !important;
+  border-radius: 0 !important;
+  color: white;
+  width: 12em;
+  font-weight: 900;
+}
+
+.add-step-btn:active {
+  background-color: #585858;
+  border: 2px solid #585858;
+  box-shadow: none !important;
+  outline: 0;
+}
+
+.add-step-btn:focus {
+  outline: 0;
+}
+
+.add-step-btn:hover {
+  background-color: black;
+  border: 2px solid black;
+  border-radius: 0;
+  color: #dedede;
+  font-weight: 900;
+}
+
+.go-back-btn {
+  border: none;
+  color: #585858;
+}
+
+.go-back-btn:active {
+  background-color: transparent;
+  border: none;
+  box-shadow: none !important;
+  outline: 0;
+}
+
+.go-back-btn:focus {
+  background-color: transparent;
+  border: none;
+  outline: 0;
+}
+
+.go-back-btn:hover {
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  color: black;
+  font-weight: 900;
+}
+
+/* Apply a default margin-left for mobile devices */
+.flow-rate-col {
+  margin-left: 90px !important;
+}
+
+/* This media query will apply styles for screens that are wider than 768px */
+@media (min-width: 768px) {
+  .flow-rate-col {
+    margin-left: 126px !important;
+  }
+}
+
+.custom-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  /* Darken the background more */
+  /* Higher than the first modal */
+}
+
+.custom-tooltip .tooltip-inner {
+  min-width: 200px;
+  /* Minimum width */
+  max-width: 400px;
+  /* Maximum width */
+  word-wrap: break-word;
+  /* Break long words */
+  border-radius: 15px;
+  border: 2px solid #236b6f;
+  background: #cceeef;
+  color: #555555;
+}
+
+/* Normal state of the SVG with default stroke */
+.info-icon path {
+  stroke: #666666;
+}
+
+/* Hover state of the SVG changing the stroke and fill of specific paths */
+.info-icon:hover path {
+  stroke: #236b6f;
+  /* This changes the SVG's stroke color on hover */
+}
+
+/* Changing the fill of the circular path */
+.info-icon:hover path:first-child {
+  fill: #cceeef;
+  /* This changes the SVG's fill color on hover for the first path */
+}
+
+.delete-btn-trash {
+  background-color: transparent;
+  border: none;
+}
+
+.delete-btn-trash:hover {
+  background-color: transparent;
+}
+
+.profile-btn-steps {
+  border-radius: 10px;
+  border: 2px solid #414141;
+  background-color: white;
+  min-width: 120px;
+  max-height: 40px;
+  font-style: normal;
+  font-size: smaller;
+  font-weight: 400;
+  line-height: 123.4%;
+  margin-right: 20px;
+}
+
+// .profile-btn-steps:hover {
+//   border-color: #414141;
+// }
+
+.profile-btn-steps:active {
+  background-color: transparent !important;
+}
+
+.justify-start-force {
+  display: "flex" !important;
+  justify-content: flex-start !important;
+}
+
+.justify-end-force {
+  display: "flex" !important;
+  justify-content: flex-end !important;
+}
+
+.col-center-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.connection-outer {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.pair-cards {
+  color: #fff;
+  font-family: Roboto;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 150%;
+  padding: 16px 20px;
+  letter-spacing: 0.1px;
+  border-radius: 15px;
+  background: #01aab1;
+  margin-top: 30px;
+  display: flex;
+  /* Add flex display */
+  align-items: center;
+  /* Center items vertically */
+  justify-content: center;
+  flex-direction: row;
+  /* Align items to the start (left) */
+}
+
+.pair-cards.dragging {
+  color: #666;
+  background: #f2f2f2;
+}
+
+.dial-btn-left {
+  border-radius: 30px;
+  border: 3px solid #414141;
+  background-color: white;
+  min-width: 177px;
+  max-height: 40px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 123.4%;
+}
+
+// .dial-btn-left:hover {
+//   border: 5px solid #414141;
+//   background-color: white;
+// }
+
+.dial-btn-close {
+  border-radius: 30px;
+  border: 2px solid #414141;
+  background-color: #414141;
+  min-width: 177px;
+  max-height: 40px;
+  color: #ffffff;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 123.4%;
+}
+
+// .dial-btn-close:hover {
+//   border: 2px solid #414141;
+//   background-color: #414141;
+//   color: #FFFFFF;
+// }
+
+.dial-btn-save {
+  border-radius: 30px;
+  border: 2px solid #000000;
+  background-color: #000000;
+  min-width: 177px;
+  max-height: 40px;
+  color: #ffffff;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 123.4%;
+}
+
+.dial-btn-save:disabled {
+  border: 2px solid #cccccc;
+  background-color: #cccccc;
+  color: #ffffff;
+
+}
+
+// .dial-btn-save:hover {
+//   border: 5px solid #01AAB1;
+//   background-color: #01AAB1;
+//   color: #FFFFFF;
+// }
+
+.alert-danger-custom {
+  background-color: #f8d7da;
+  /* Light red for the interior */
+  border: 1px solid #e60000;
+  /* Darker shade of red for the stroke */
+  color: #721c24;
+  /* Text color */
+  padding: .75rem 1.25rem;
+  margin-bottom: 1rem;
+  border-radius: .25rem;
+}
+
+
+#gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.photo {
+  margin: 10px;
+}
+
+.photo img {
+  max-width: 100%;
+  height: auto;
+}
+
+.selected-step-green {
+  background: #a4dbdd;
+}

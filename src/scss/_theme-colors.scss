@@ -22,20 +22,25 @@ $light: $gray-100;
 
 $primary-gradient: (
   "start": tint-color($primary, 30%),
-  "stop": shade-color($primary, 10%)) !default;
+  "stop": shade-color($primary, 10%),
+) !default;
 
 $danger-gradient: (
   "start": tint-color($danger, 30%),
-  "stop": shade-color($danger, 10%)) !default;
+  "stop": shade-color($danger, 10%),
+) !default;
 
 $warning-gradient: (
   "start": tint-color($warning, 30%),
-  "stop": shade-color($warning, 10%)) !default;
+  "stop": shade-color($warning, 10%),
+) !default;
 
 $success-gradient: (
   "start": tint-color($success, 30%),
-  "stop": shade-color($success, 10%)) !default;
+  "stop": shade-color($success, 10%),
+) !default;
 
 $info-gradient: (
   "start": tint-color($info, 30%),
-  "stop": shade-color($info, 10%)) !default;
+  "stop": shade-color($info, 10%),
+) !default;
